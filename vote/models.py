@@ -19,6 +19,21 @@ class Video(models.Model):
     is_posted = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+    def convert_timestamp_to_seconds(timestamp):
+        parts = timestamp.split(":")
+        if len(parts) == 2:  #For minutes and seconds
+            return int(parts[0]) * 60 + int(parts[1])
+        elif len(parts) == 3:  # For hours minutes and seconds
+            return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
+        return 0 
+
+    def create_url(self):
+        seconds = Video.convert_timestamp_to_seconds(self.timestamp)
+        return f"https://www.youtube.com/embed/{self.video_id}?start={seconds}"
+    def comment_url(self):
+        return f"https://www.youtube.com/watch?v={self.video_id}&lc={self.comment_id}"
+
+
     def __str__(self):
         return f"{self.video_title} - {self.video_id} - {self.org_decision}"
 

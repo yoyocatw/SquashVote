@@ -1,13 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-    </head>
-    <body>
-	<h1>SquashVote</h1>	
-	<div>
-	    {% for video in videos %}	
-		<h3>{{video.video_id}}</h3> 
-	    {% endfor %}	
+{% extends 'vote/base.html'%}
+{% load static %}
+
+{% block content%}
+    <body class="bg-base-100">
+	<div class="bg-base-100 w-full mx-auto mt-5 flex flex-col items-center space-y-2">
+
+		<div class="flex flex-row flex-wrap items-center">
+		{% for video in videos %}	
+		<div class="card w-96 bg-base-200 px-6 card-md shadow-sm m-2 rounded-lg hover:bg-base-300">
+			<iframe width="340" height="200"
+			class="rounded-lg mt-4"
+			src="{{ video.create_url }}"
+			title="{{ video.title }}"
+			frameborder="0"
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+			allowfullscreen>
+			</iframe>
+			<div class="card-body relative">
+			  <a href="/video/{{ video.video_title}}" class="absolute inset-0" aria-label="{{ video.video_title }}"></a>
+
+			  <h2 class="card-title text-primary-content text-xl font-semibold font-body">{{video.video_title}}</h2>
+				<p class="inline-block font-body mt-2">{{ video.result.total_votes }} votes</p>
+			  
+			</div>
+				
+		 </div> 
+		{% endfor %}
+		</div>
+			
 	</div>
-    </body>
-</html>
+{% endblock %}

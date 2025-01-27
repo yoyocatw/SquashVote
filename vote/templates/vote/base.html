@@ -1,0 +1,24 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/output.css'%}">
+</head>
+<body data-theme="black" class="bg-base-100 min-h-screen overflow-x-hidden m-0 p-8">
+
+    <nav class="navbar bg-base-200 shadow-md h-12 mx-auto w-fit p-10 rounded-4xl mt-0 mb-10">
+
+	    <a href="/" class="text-3xl text-primary font-title mr-10">SquashVote</a>	
+        <div class="flex items-center space-x-4">
+        <a href="" class="btn btn-ghost text-primary-content text-sm px-3 py-1 rounded-md ">Archived Results</a>
+        <a class="btn btn-ghost text-primary-content text-sm px-3 py-1 rounded-md">About us</a>
+        </div>
+    </nav>
+
+	{% block content %}{% endblock %}
+
+</body>
+</html>
