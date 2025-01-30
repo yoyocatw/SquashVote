@@ -79,10 +79,10 @@ class Command(BaseCommand):
                     )
                     response = request.execute()
 
-                    self.stdout.write(self.style.SUCCESS(f"Comment Updated #######"))
+                    self.stdout.write(self.style.SUCCESS(f"Comment Updated {video.video_title}#######"))
                     stroke_percentage = (stroke_count / total_votes) * 100
                 else:
-                    print("There is no new votes")
+                    print(f"There is no new votes for: {video.video_id} {video.video_title}")
             else:
                 vote_amount = {"stroke": 0, "let": 0, "no_let": 0}
                 print("There are no votes")

@@ -1,26 +1,27 @@
 {% extends 'vote/base.html'%}
 {% load static %}
-
+{% block title%}SquashVote | Home{% endblock%}
 {% block content%}
-    <body class="bg-base-100">
 	<div class="bg-base-100 w-full mx-auto mt-5 flex flex-col items-center space-y-2">
 
-		<div class="flex flex-row flex-wrap items-center">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 		{% for video in videos %}	
-		<div class="card w-96 bg-base-200 px-6 card-md shadow-sm m-2 rounded-lg hover:bg-base-300">
-			<iframe width="340" height="200"
-			class="rounded-lg mt-4"
-			src="{{ video.create_url }}"
-			title="{{ video.title }}"
-			frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-			allowfullscreen>
-			</iframe>
-			<div class="card-body relative">
-			  <a href="/video/{{ video.video_title}}" class="absolute inset-0" aria-label="{{ video.video_title }}"></a>
+		<div class="card bg-base-200 w-80 md:w-96 card-lg p-1 rounded-2xl">
 
-			  <h2 class="card-title text-primary-content text-xl font-semibold font-body">{{video.video_title}}</h2>
-				<p class="inline-block font-body mt-2">{{ video.result.total_votes }} votes</p>
+			<figure class="w-full aspect-video">
+				<iframe 
+				class="rounded-lg w-full h-full"
+				src="{{ video.create_url }}"
+				title="{{ video.title }}"
+				frameborder="0"
+				allowfullscreen>
+				</iframe>
+			</figure>
+			<div class="card-body relative p-3 gap-y-0.5">
+			  <a href="/video/{{ video.video_id}}" class="absolute inset-0" aria-label="{{ video.video_title }}"></a>
+
+			  <h2 class="card-title justify-start text-primary-content text-xl font-semibold font-body">{{video.video_title}}</h2>
+			  <p class="inline-block font-body">{{ video.result.total_votes }} votes</p>
 			  
 			</div>
 				
