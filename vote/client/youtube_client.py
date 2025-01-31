@@ -13,7 +13,7 @@ def youtube_client():
 
     credentials = Credentials(
         None,
-        refresh_token= settings.GOOGLE_REFRESH_TOKEN,
+        refresh_token= settings.REFRESH_TOKEN,
         token_uri= settings.GOOGLE_TOKEN_URI,
         client_id= settings.GOOGLE_CLIENT_ID,
         client_secret= settings.GOOGLE_CLIENT_SECRET,
