@@ -2,6 +2,7 @@ vote/client/client_secret.json
 /node_modules
 vote/client/token.json
 dump.rdb
+tmp
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

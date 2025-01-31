@@ -1,0 +1,10 @@
+fly.toml
+.git/
+*.sqlite3
+.venv
+tmp
+vote/client/client_secret.json
+/node_modules
+vote/client/token.json
+dump.rdb
+.env

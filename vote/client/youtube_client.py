@@ -5,26 +5,37 @@ import googleapiclient.errors
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 import json
-
+from django.conf import settings
 def youtube_client():
     scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
     api_service_name = "youtube"
     api_version = "v3"
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    client_secrets_file = os.path.join(BASE_DIR, "client", "client_secret.json")
-    token_file = os.path.join(BASE_DIR, "client", "token.json")
 
-    credentials = None
-    if os.path.exists(token_file):
+    credentials = Credentials(
+        None,
+        refresh_token= settings.GOOGLE_REFRESH_TOKEN,
+        token_uri= settings.GOOGLE_TOKEN_URI,
+        client_id= settings.GOOGLE_CLIENT_ID,
+        client_secret= settings.GOOGLE_CLIENT_SECRET,
+    )
+    if credentials.expired and credentials.refresh_token:
         try:
-            with open(token_file, "r") as token:
-                credentials = Credentials.from_authorized_user_info(json.load(token), scopes=scopes)
-        except:
-            print('No token')
-            os.remove(token_file)
-            credentials = None
+            credentials.refresh(Request())
+        except Exception as e:
+            print(f"Token refresh failed: {e}")
+            return None 
 
-    if not credentials or not credentials.valid:
+   
+
+    youtube = googleapiclient.discovery.build(
+        api_service_name, api_version, credentials=credentials)
+    return youtube
+
+
+
+'''
+Manual Authentication
+ if not credentials or not credentials.valid:
         if credentials and credentials.expired and credentials.refresh_token:
             try:
                 credentials.refresh(Request())
@@ -34,11 +45,8 @@ def youtube_client():
         if not credentials:
             flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
                     client_secrets_file, scopes)
-            flow.redirect_uri = 'http://localhost:8080/'
+            flow.redirect_uri = settings.URL 
             credentials = flow.run_local_server()
         with open(token_file, "w") as file:
             file.write(credentials.to_json())
-
-    youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, credentials=credentials)
-    return youtube
+            '''

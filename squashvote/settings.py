@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-
+from dotenv import load_dotenv
+import dj_database_url
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,13 +23,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-x$g&kis7_)vo(4uzgx3^a!0iw$^!^o)r*6o_gsbnjb1=w&apc2"
+SECRET_KEY = os.environ.get("SECRET_KEY") 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG") == "True"
 
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.68.72', '127.0.0.1']
-
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "squashvote.fly.dev"]
+CSRF_TRUSTED_ORIGINS = ['https://squashvote.fly.dev']
+URL = "https://squashvote.fly.dev"
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET") 
+GOOGLE_CLIENT_ID= os.environ.get("GOOGLE_CLIENT_ID") 
+GOOGLE_AUTH_URI= os.environ.get("GOOGLE_AUTH_URI")
+GOOGLE_TOKEN_URI= os.environ.get("GOOGLE_TOKEN_URI")
+GOOGLE_REFRESH_TOKEN = os.getenv("GOOGLE_REFRESH_TOKEN")
 
 # Application definition
 
@@ -37,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "vote",
     "django_celery_beat",
@@ -44,6 +53,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -77,10 +87,9 @@ WSGI_APPLICATION = "squashvote.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": dj_database_url.config(
+        default='sqlite///' + os.path.join(BASE_DIR, "db.sqlite3")
+    ) 
 }
 
 
@@ -117,7 +126,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
