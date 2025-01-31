@@ -35,7 +35,7 @@ GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
 GOOGLE_CLIENT_ID= os.environ.get("GOOGLE_CLIENT_ID") 
 GOOGLE_AUTH_URI= os.environ.get("GOOGLE_AUTH_URI")
 GOOGLE_TOKEN_URI= os.environ.get("GOOGLE_TOKEN_URI")
-GOOGLE_REFRESH_TOKEN = os.getenv("GOOGLE_REFRESH_TOKEN")
+REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 
 # Application definition
 
