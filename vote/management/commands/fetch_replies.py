@@ -1,7 +1,7 @@
 from django.core.management import BaseCommand
 from vote.client.youtube_client import youtube_client
 from collections import Counter
-from vote.models import Video, Result, YoutubeQuota
+from vote.models import Video, Result, YoutubeQuota, VoteUser
 from django.utils.timezone import now
 
 
@@ -25,16 +25,21 @@ class Command(BaseCommand):
             quota.save()
             response = request.execute()
             replies = []
+            decisions = {"1": "stroke", "2": "let", "3": "no_let"}
+            result = []
             for item in response.get("items", []):
                 reply_text = item["snippet"]["textOriginal"]
                 replies.append(reply_text)
-
-            decisions = {"1": "stroke", "2": "let", "3": "no_let"}
-            result = []
-            for reply in replies:
-                clean_reply = reply.strip().lower()
+                clean_reply = reply_text.strip().lower()
                 if clean_reply in decisions:
                     result.append(decisions[clean_reply])
+                    # Check if user already voted
+                    youtube_user_id = item['snippet']['authorChannelId']['value']
+                    if not youtube_user_id:
+                        continue
+                    if VoteUser.objects.filter(video=video, youtube_user_id=youtube_user_id).exists():
+                        continue
+                    VoteUser.objects.create(video=video, youtube_user_id=youtube_user_id, vote=decisions[clean_reply])
 
             total_votes = len(result)
             if total_votes != 0:
@@ -77,7 +82,8 @@ class Command(BaseCommand):
                         f"({total_votes} votes)\n\n"
                         f"Stroke    {percentages['stroke']:>3.0f}% ({results.stroke})\n"
                         f"Let       {percentages['let']:>3.0f}% ({results.let})\n"
-                        f"No let    {percentages['no_let']:>3.0f}% ({results.no_let})"
+                        f"No let    {percentages['no_let']:>3.0f}% ({results.no_let})\n\n"
+                        f"Learn More: https://www.squashvote.fly.dev/video/{video.video_id}/"
                     )
                     request = youtube.comments().update(
                         part="snippet",

@@ -15,7 +15,10 @@ def index(request):
     quota, create = YoutubeQuota.objects.get_or_create(
         date=now().date(), defaults={"quota": 0}
     )
-    context = {"videos": videos, "quota": quota}
+    quota_reached = False
+    if quota.quota + 50 > 10000:
+        quota_reached = True
+    context = {"videos": videos, "quota": quota, "quota_reached": quota_reached}
     return render(request, "vote/index.html", context=context)
 
 
@@ -53,8 +56,10 @@ def video_form(request):
 
     return render(request, "vote/video_form.html", {"form": form})
 
+
 def about(request):
     return render(request, "vote/about.html")
+
 
 def archived(request):
     videos = (
@@ -64,6 +69,7 @@ def archived(request):
     )
     context = {"videos": videos}
     return render(request, "vote/archived.html", context=context)
+
 
 def archived_result(request, video_id):
     video = get_object_or_404(Video.objects.select_related("result"), video_id=video_id)

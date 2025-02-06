@@ -55,3 +55,13 @@ class YoutubeQuota(models.Model):
 
     def __str__(self):
         return f"{self.date}: {self.quota} api quota use"
+
+class VoteUser(models.Model):
+    youtube_user_id = models.CharField(max_length=255)
+    vote = models.CharField(max_length=20, choices=Video.Decision.choices)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ('video', 'youtube_user_id')
+    def __str__(self):
+        return f"{self.user_id} voted {self.vote} for {self.video.video_title}"

@@ -26,7 +26,7 @@ class Command(BaseCommand):
                     "Stroke     0%\n"
                     "Let    0%\n"
                     "No let     0%\n\n"
-                    "Learn More: (link)"
+                    f"Learn More: https://www.squashvote.fly.dev/video/{video.video_id}/"
                 )
 
                 request = youtube.commentThreads().insert(

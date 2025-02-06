@@ -3,10 +3,11 @@
 {% block title%}SquashVote | Home{% endblock%}
 {% block content%}
 	<div class="bg-base-100 w-full mx-auto mt-5 flex flex-col items-center space-y-2">
+		{% if quota_reached %}
 	    <div role="alert" class="rounded-xl p-2 bg-red-400 text-primary-content text-sm">
-			<h1>Daily Youtube API Quota: <strong>{{quota.quota}}/10,000</strong></h1>
-			<p class="text-xs">If the quota approaches the limit, updates will stop and resume the next day.</p>	    
+			<p class="text-md">API quota reached, updates will stop and resume tommorow.</p>	    
 	    </div>
+		{% endif %}
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 		{% for video in videos %}	
 		<div class="card bg-base-200 w-80 md:w-96 card-lg p-1 rounded-2xl">
