@@ -12,30 +12,54 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
-import dj_database_url
-load_dotenv()
+import environ
+from django.core.management.utils import get_random_secret_key
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env_file = os.path.join(BASE_DIR, ".env")
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
+
+DEBUG = env("DEBUG")
+
+if DEBUG:  # or check another condition
+    environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY") 
+SECRET_KEY = env.str("SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") == "True"
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost", "squashvote.fly.dev"]
-CSRF_TRUSTED_ORIGINS = ['https://squashvote.fly.dev']
+CSRF_TRUSTED_ORIGINS = ["https://squashvote.fly.dev"]
 URL = "https://squashvote.fly.dev"
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET") 
-GOOGLE_CLIENT_ID= os.environ.get("GOOGLE_CLIENT_ID") 
-GOOGLE_AUTH_URI= os.environ.get("GOOGLE_AUTH_URI")
-GOOGLE_TOKEN_URI= os.environ.get("GOOGLE_TOKEN_URI")
-REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
+GOOGLE_CLIENT_SECRET = env.str("GOOGLE_CLIENT_SECRET", default="dummy_secret")
+GOOGLE_CLIENT_ID = env.str("GOOGLE_CLIENT_ID", default="dummy_id")
+GOOGLE_AUTH_URI = env(
+    "GOOGLE_AUTH_URI", default="https://accounts.google.com/o/oauth2/auth"
+)
+GOOGLE_TOKEN_URI = env(
+    "GOOGLE_TOKEN_URI", default="https://accounts.google.com/o/oauth2/token"
+)
+REFRESH_TOKEN = env("REFRESH_TOKEN", default="dummy_token")
+
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 63072000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 # Application definition
 
@@ -49,6 +73,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "vote",
     "django_celery_beat",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -85,12 +110,7 @@ WSGI_APPLICATION = "squashvote.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    "default": dj_database_url.config(
-        default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-    ) 
-}
+DATABASES = {"default": env.db()}
 
 
 # Password validation
@@ -139,4 +159,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery
-CELERY_BROKER_URL = os.environ.get("REDIS_URL")
+CELERY_BROKER_URL = env.str("REDIS_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = env.str("CELERY_RESULT_BACKEND", "django-db")
+CELERY_BEAT_DB_BACKEND = "django-db"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

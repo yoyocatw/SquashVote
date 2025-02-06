@@ -1,19 +1,28 @@
 from django.core.management import BaseCommand
 from vote.client.youtube_client import youtube_client
 from collections import Counter
-from vote.models import Video, Result
+from vote.models import Video, Result, YoutubeQuota
+from django.utils.timezone import now
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+        quota, create = YoutubeQuota.objects.get_or_create(
+            date=now().date(), defaults={"quota": 0}
+        )
         youtube = youtube_client()
         active_video = Video.objects.filter(is_active=True, is_posted=True).exclude(
             comment_id__isnull=True
         )
 
         for video in active_video:
+            if quota.quota + 50 > 10000:
+                print("Quota reached for the day")
+                break
             request = youtube.comments().list(part="snippet", parentId=video.comment_id)
+            quota.quota += 1
+            quota.save()
             response = request.execute()
             replies = []
             for item in response.get("items", []):
@@ -78,11 +87,19 @@ class Command(BaseCommand):
                         },
                     )
                     response = request.execute()
+                    quota.quota += 50
+                    quota.save()
 
-                    self.stdout.write(self.style.SUCCESS(f"Comment Updated {video.video_title}#######"))
+                    self.stdout.write(
+                        self.style.SUCCESS(
+                            f"Comment Updated {video.video_title}#######"
+                        )
+                    )
                     stroke_percentage = (stroke_count / total_votes) * 100
                 else:
-                    print(f"There is no new votes for: {video.video_id} {video.video_title}")
+                    print(
+                        f"There is no new votes for: {video.video_id} {video.video_title}"
+                    )
             else:
                 vote_amount = {"stroke": 0, "let": 0, "no_let": 0}
                 print("There are no votes")

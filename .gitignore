@@ -3,6 +3,8 @@ vote/client/client_secret.json
 vote/client/token.json
 dump.rdb
 tmp
+*.sqlite
+*.sqlite3
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

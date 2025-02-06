@@ -1,0 +1,29 @@
+{% extends 'vote/base.html'%}
+{% load static %}
+{% block title%}SquashVote | Home{% endblock%}
+{% block content%}
+
+  <main class="container mx-auto px-4 py-8">
+    <section class="mb-12">
+      <h2 class="text-2xl font-semibold mb-4 text-primary-content">What is this?</h2>
+      <p class="leading-relaxed text-pretty">
+        As a squash player, something we can all relate to is being frustrated at a terrible call by the referee. I love watching PSA matches; however, sometimes, I get upset with a referee’s call, especially at such a high level. Especially now that squash has made the Olympics, it is important to bring awareness to referee standards. So I thought, why not create a platform where squash fans like myself can vote on what they believe the correct decision should be?
+      </p>
+    </section>
+    <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4 text-primary-content">How does it work?</h2>
+        <p class="leading-relaxed text-pretty">
+            When you see a comment made by @SquashVote, press reply and reply with the number.
+        </p>
+        <ul>
+            <li>1 for Stroke</li>
+            <li>2 for Let</li>
+            <li>3 for No let</li>
+        </ul>
+        <p class="alert bg-red-400 text-primary-content">Please reply with only digit 1, 2, and 3 !</p>
+      </section>
+
+    
+  </main>
+
+{% endblock %}

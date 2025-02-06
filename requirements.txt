@@ -18,6 +18,8 @@ cycler==0.12.1
 dj-database-url==2.3.0
 Django==5.1.5
 django-celery-beat==2.7.0
+django-celery-results==2.5.1
+django-environ==0.12.0
 django-timezone-field==7.1
 fonttools==4.55.3
 gitdb==4.0.12
@@ -50,6 +52,7 @@ pillow==11.1.0
 prompt_toolkit==3.0.50
 proto-plus==1.25.0
 protobuf==5.29.1
+psycopg==3.2.4
 psycopg2-binary==2.9.10
 pyarrow==18.1.0
 pyasn1==0.6.1
@@ -59,7 +62,6 @@ Pygments==2.19.1
 pyparsing==3.2.0
 python-crontab==3.2.0
 python-dateutil==2.9.0.post0
-python-dotenv==1.0.1
 pytz==2024.2
 redis==5.2.1
 referencing==0.35.1

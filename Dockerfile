@@ -21,6 +21,9 @@ RUN set -ex && \
     pip install -r /tmp/requirements.txt && \
     rm -rf /root/.cache/
 COPY . /code
+ENV DATABASE_URL "sqlite://:memory:"
+ENV SECRET_KEY "iJtvIwzWpK59lw35BtLgfwJVNa0xNjP99dslXHZoe2Bz6Qjynh"
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 

@@ -1,7 +1,6 @@
 from django.db import models
 from datetime import date
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.utils.text import slugify
+from django.utils.timezone import now
 
 
 # Create your models here.
@@ -22,11 +21,11 @@ class Video(models.Model):
 
     def convert_timestamp_to_seconds(timestamp):
         parts = timestamp.split(":")
-        if len(parts) == 2:  #For minutes and seconds
+        if len(parts) == 2:  # For minutes and seconds
             return int(parts[0]) * 60 + int(parts[1])
         elif len(parts) == 3:  # For hours minutes and seconds
             return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
-        return 0 
+        return 0
 
     def create_url(self):
         seconds = Video.convert_timestamp_to_seconds(self.timestamp)
@@ -34,7 +33,6 @@ class Video(models.Model):
 
     def comment_url(self):
         return f"https://www.youtube.com/watch?v={self.video_id}&lc={self.comment_id}"
-
 
     def __str__(self):
         return f"{self.video_title} - {self.video_id} - {self.org_decision}"
@@ -49,3 +47,11 @@ class Result(models.Model):
 
     def __str__(self):
         return f"Votes for {self.video.video_title}: Stroke-{self.stroke}, Let-{self.let}, No Let-{self.no_let}"
+
+
+class YoutubeQuota(models.Model):
+    date = models.DateField(default=now, unique=True)
+    quota = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.date}: {self.quota} api quota use"

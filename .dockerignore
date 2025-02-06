@@ -1,10 +1,7 @@
 fly.toml
 .git/
 *.sqlite3
-.venv
-tmp
-vote/client/client_secret.json
-/node_modules
-vote/client/token.json
-dump.rdb
+*.sqlite
+venv
 .env
+vote/client/client_secret.json

@@ -1,16 +1,22 @@
 from django.core.management.base import BaseCommand
-from vote.models import Video, Result
+from vote.models import Video, Result, YoutubeQuota
 from vote.client.youtube_client import youtube_client
-
+from django.utils.timezone import now
 
 class Command(BaseCommand):
     help = "Post a comment to Youtube"
 
     def handle(self, *args, **options):
+        quota, create = YoutubeQuota.objects.get_or_create(
+            date=now().date(), defaults={"quota": 0}
+        )
         youtube = youtube_client()
         not_posted = Video.objects.filter(is_posted=False, comment_id__isnull=True)
         if not_posted.exists():
             for video in not_posted:
+                if quota.quota + 50 > 10000:
+                    print("Quota reached for the day")
+                    break
                 print("Posting Comment ######")
                 comment = (
                     f"{video.timestamp} *What is your decision?*\n"
@@ -33,6 +39,8 @@ class Command(BaseCommand):
                     },
                 )
                 response = request.execute()
+                quota.quota += 50
+                quota.save()
                 video.comment_id = response["id"]
                 video.is_posted = True
                 video.save()
