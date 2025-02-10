@@ -83,7 +83,6 @@ class Command(BaseCommand):
                         f"Stroke    {percentages['stroke']:>3.0f}% ({results.stroke})\n"
                         f"Let       {percentages['let']:>3.0f}% ({results.let})\n"
                         f"No let    {percentages['no_let']:>3.0f}% ({results.no_let})\n\n"
-                        f"Learn More: https://www.squashvote.fly.dev/video/{video.video_id}/"
                     )
                     request = youtube.comments().update(
                         part="snippet",

@@ -41,9 +41,9 @@ SECRET_KEY = env.str("SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "squashvote.fly.dev"]
-CSRF_TRUSTED_ORIGINS = ["https://squashvote.fly.dev"]
-URL = "https://squashvote.fly.dev"
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "squashvote.fly.dev", "squashvote.wtf", "www.squashvote.wtf"]
+CSRF_TRUSTED_ORIGINS = ["https://squashvote.fly.dev", "https://squashvote.wtf", "https://www.squashvote.wtf"]
+URL = "https://squashvote.wtf"
 GOOGLE_CLIENT_SECRET = env.str("GOOGLE_CLIENT_SECRET", default="dummy_secret")
 GOOGLE_CLIENT_ID = env.str("GOOGLE_CLIENT_ID", default="dummy_id")
 GOOGLE_AUTH_URI = env(
@@ -57,9 +57,11 @@ REFRESH_TOKEN = env("REFRESH_TOKEN", default="dummy_token")
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 63072000
+SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/videoform/'
 
 # Application definition
 

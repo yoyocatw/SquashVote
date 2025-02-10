@@ -17,6 +17,7 @@ cron-descriptor==1.4.5
 cycler==0.12.1
 dj-database-url==2.3.0
 Django==5.1.5
+django-admin-honeypot==1.1.0
 django-celery-beat==2.7.0
 django-celery-results==2.5.1
 django-environ==0.12.0

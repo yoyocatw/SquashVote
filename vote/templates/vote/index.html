@@ -1,6 +1,6 @@
 {% extends 'vote/base.html'%}
 {% load static %}
-{% block title%}SquashVote | Home{% endblock%}
+{% block title%}SquashVote - Vote on PSA Squash Referee Decisions{% endblock%}
 {% block content%}
 	<div class="bg-base-100 w-full mx-auto mt-5 flex flex-col items-center space-y-2">
 		{% if quota_reached %}
@@ -25,7 +25,7 @@
 			  <a href="/video/{{ video.video_id}}" class="absolute inset-0" aria-label="{{ video.video_title }}"></a>
 
 			  <h2 class="card-title justify-start text-primary-content text-xl font-semibold font-body">{{video.video_title}}</h2>
-			  <p class="inline-block font-body">{{ video.result.total_votes }} votes</p>
+			  <p class="inline-block font-body">{{ video.result.total_votes|default:"0" }} votes</p>
 			  
 			</div>
 				

@@ -3,6 +3,9 @@ from .forms import VideoForm
 from .models import Video, YoutubeQuota
 from django.http import JsonResponse
 from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
+
+
 
 
 # Create your views here.
@@ -44,7 +47,7 @@ def chart(request, video_id):
     }
     return JsonResponse(data)
 
-
+@login_required
 def video_form(request):
     if request.method == "POST":
         form = VideoForm(request.POST)
