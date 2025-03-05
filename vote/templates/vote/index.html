@@ -8,9 +8,9 @@
 			<p class="text-md">API quota reached, updates will stop and resume tommorow.</p>	    
 	    </div>
 		{% endif %}
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+		<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap8">
 		{% for video in videos %}	
-		<div class="card bg-base-200 w-80 md:w-96 card-lg p-1 rounded-2xl">
+		<div class="card bg-base-200 max-w-md card-lg p-1 rounded-2xl">
 
 			<figure class="w-full aspect-video">
 				<iframe 
@@ -18,13 +18,14 @@
 				src="{{ video.create_url }}"
 				title="{{ video.title }}"
 				frameborder="0"
+				allow="encrypted-media; picture-in-picture"
 				allowfullscreen>
 				</iframe>
 			</figure>
 			<div class="card-body relative p-3 gap-y-0.5">
 			  <a href="/video/{{ video.video_id}}" class="absolute inset-0" aria-label="{{ video.video_title }}"></a>
 
-			  <h2 class="card-title justify-start text-primary-content text-xl font-semibold font-body">{{video.video_title}}</h2>
+			  <h2 class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0">{{video.video_title}}</h2>
 			  <p class="inline-block font-body">{{ video.result.total_votes|default:"0" }} votes</p>
 			  
 			</div>

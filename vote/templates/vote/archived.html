@@ -22,8 +22,8 @@
 			<div class="card-body relative p-3 gap-y-0.5">
 			  <a href="/archived/{{ video.video_id}}" class="absolute inset-0" aria-label="{{ video.video_title }}"></a>
 
-			  <h2 class="card-title justify-start text-primary-content text-xl font-semibold font-body">{{video.video_title}}</h2>
-			  <p class="inline-block font-body">{{ video.result.total_votes }} votes</p>
+			  <h2 class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0">{{video.video_title}}</h2>
+			  <p class="inline-block font-body">{{ video.result.total_votes|default:"0" }} votes</p>
 			  
 			</div>
 				

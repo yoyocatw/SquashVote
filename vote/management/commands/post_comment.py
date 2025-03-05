@@ -23,13 +23,13 @@ class Command(BaseCommand):
                     break
                 self.stdout.write("Posting Comment ######")
                 comment = (
-                    f"{video.timestamp} *What is your decision?*\n"
-                    "Reply: [ 1 for *Stroke* ], [ 2 for *Let* ], [ 3 for *No Let* ]\n"
+                    f"{video.timestamp} What is your call?\n"
+                    "Reply: [ 1 for Stroke ], [ 2 for Let ], [ 3 for No Let ]\n"
                     "Results👇\n"
                     "(0 votes)\n\n"
-                    "Stroke     0%\n"
-                    "Let    0%\n"
-                    "No let     0%\n\n"
+                    "Stroke  0%\n"
+                    "Let     0%\n"
+                    "No let  0%\n"
                 )
                 try:
                     request = youtube.commentThreads().insert(

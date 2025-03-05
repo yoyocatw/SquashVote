@@ -29,7 +29,7 @@ class Video(models.Model):
 
     def create_url(self):
         seconds = Video.convert_timestamp_to_seconds(self.timestamp)
-        return f"https://www.youtube.com/embed/{self.video_id}?start={seconds}&modestbranding=1&rel=0"
+        return f"https://www.youtube-nocookie.com/embed/{self.video_id}?start={seconds}&modestbranding=1&rel=0"
 
     def comment_url(self):
         return f"https://www.youtube.com/watch?v={self.video_id}&lc={self.comment_id}"
