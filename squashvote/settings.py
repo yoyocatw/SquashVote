@@ -18,7 +18,6 @@ from django.core.management.utils import get_random_secret_key
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 env = environ.Env(
-    # set casting, default value
     DEBUG=(bool, False)
 )
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +28,7 @@ if os.path.exists(env_file):
 
 DEBUG = env("DEBUG")
 
-if DEBUG:  # or check another condition
+if DEBUG:  
     environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
@@ -41,8 +40,8 @@ SECRET_KEY = env.str("SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "squashvote.fly.dev", "squashvote.wtf", "www.squashvote.wtf"]
-CSRF_TRUSTED_ORIGINS = ["https://squashvote.fly.dev", "https://squashvote.wtf", "https://www.squashvote.wtf"]
+ALLOWED_HOSTS = ["squashvote.wtf", "www.squashvote.wtf", "squashvote.fly.dev"]
+CSRF_TRUSTED_ORIGINS = ["https://squashvote.wtf", "https://www.squashvote.wtf"]
 URL = "https://squashvote.wtf"
 GOOGLE_CLIENT_SECRET = env.str("GOOGLE_CLIENT_SECRET", default="dummy_secret")
 GOOGLE_CLIENT_ID = env.str("GOOGLE_CLIENT_ID", default="dummy_id")
@@ -53,10 +52,11 @@ GOOGLE_TOKEN_URI = env(
     "GOOGLE_TOKEN_URI", default="https://accounts.google.com/o/oauth2/token"
 )
 REFRESH_TOKEN = env("REFRESH_TOKEN", default="dummy_token")
-
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+CANONICAL_DOMAIN = 'squashvote.wtf'
+SECURE_SSL_REDIRECT = False 
+SECURE_SSL_HOST = "squashvote.wtf" # Remove for local development
+SESSION_COOKIE_SECURE = True # Change to True for production
+CSRF_COOKIE_SECURE = True # Change to True for production
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
@@ -82,6 +82,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'vote.middleware.CanonicalUrlMiddleware', #Remove for local development
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

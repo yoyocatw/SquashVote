@@ -1,38 +1,132 @@
-{% extends 'vote/base.html'%}
-{% load static %}
-{% block title%}SquashVote - Vote on PSA Squash Referee Decisions{% endblock%}
+{% extends 'vote/base.html'%} {% load static %} 
+{% block title%}SquashVote - So you think you can ref?{% endblock%} 
 {% block content%}
-	<div class="bg-base-100 w-full mx-auto mt-5 flex flex-col items-center space-y-2">
-		{% if quota_reached %}
-	    <div role="alert" class="rounded-xl p-2 bg-red-400 text-primary-content text-sm">
-			<p class="text-md">API quota reached, updates will stop and resume tommorow.</p>	    
-	    </div>
-		{% endif %}
-		<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap8">
-		{% for video in videos %}	
-		<div class="card bg-base-200 max-w-md card-lg p-1 rounded-2xl">
 
-			<figure class="w-full aspect-video">
-				<iframe 
-				class="rounded-lg w-full h-full"
-				src="{{ video.create_url }}"
-				title="{{ video.title }}"
-				frameborder="0"
-				allow="encrypted-media; picture-in-picture"
-				allowfullscreen>
-				</iframe>
-			</figure>
-			<div class="card-body relative p-3 gap-y-0.5">
-			  <a href="/video/{{ video.video_id}}" class="absolute inset-0" aria-label="{{ video.video_title }}"></a>
+<!--Banner-->
+<div
+  id="sticky-banner"
+  tabindex="-1"
+  class="fixed top-0 start-0 z-50 flex justify-between w-full p-4 bg-gray-600"
+>
+  <!--bg-gray-50 dark:bg-gray-700 dark:border-gray-600-->
+  <div class="flex items-center mx-auto">
+    <p class="flex items-center text-sm font-normal text-gray-200">
+      <span
+        >New to Squash?
+        <a
+          href="{% url 'rules' %}"
+          class="inline font-medium text-blue-400 underline hover:no-underline"
+          >Learn Squash Rules</a
+        ></span
+      >
+    </p>
+  </div>
+  <div class="flex items-center">
+    <button
+      id="close-banner"
+      type="button"
+      class="shrink-0 inline-flex justify-center w-7 h-7 items-center text-black hover:text-gray-900 rounded-lg text-md p-1.5 cursor-pointer"
+    >
+      <svg
+        class="w-3 h-3"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 14 14"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+        />
+      </svg>
+      <span class="sr-only">Close banner</span>
+    </button>
+  </div>
+</div>
+<h1
+  class="font-black text-2xl sm:text-3xl md:text-4xl mb-5 lg:text-5xl font-videotitle text-nowrap mx-auto mt-5"
+>
+  So you think you can ref &#63;
+</h1>
+<div class="max-w-screen mb-28 px-2 sm:px-3 md:px-4">
+  <div
+    class="bg-base-100 w-full mt-5 flex flex-col items-center space-y-2 flex-grow"
+  >
+    <div
+      class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full"
+    >
+      {% for video in videos %}
+      <div
+        class="card relative bg-base-200 card-xl w-full md:card-xl p-1 rounded-2xl transform transition duration-300 ease-in-out hover:scale-110 shadow-lgx"
+      >
+        <figure class="w-full aspect-video">
+          <iframe
+            class="rounded-lg w-full h-full"
+            src="{{ video.create_url }}"
+            title="{{ video.title }}"
+            frameborder="0"
+            allow="encrypted-media; picture-in-picture"
+            allowfullscreen
+          >
+          </iframe>
+        </figure>
+        <div class="card-body relative p-3 gap-y-0.5 group">
+          <a
+            href="{% url 'video_result' video.video_id %}"
+            class="absolute inset-0"
+            aria-label="{{ video.video_title }}"
+          ></a>
 
-			  <h2 class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0">{{video.video_title}}</h2>
-			  <p class="inline-block font-body">{{ video.result.total_votes|default:"0" }} votes</p>
-			  
-			</div>
-				
-		 </div> 
-		{% endfor %}
-		</div>
-			
-	</div>
+          <h2
+            class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0"
+          >
+            {{video.video_title}}
+          </h2>
+          <p class="inline-block font-body">
+            {{ video.result.total_votes|default:"0" }} votes
+          </p>
+          <a class="underline text-primary mt-2 text-md font-body">
+            Go vote &#10140;
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<footer
+  class="footer footer-horizontal footer-center bg-base-100 border-t text-base-content rounded p-4 mt-5 -mb-4"
+>
+  <div class="space-y-2">
+    <nav class="grid grid-flow-row sm:grid-flow-col gap-3">
+      <a class="link link-hover" href="{% url 'about' %}">About SquashVote</a>
+      <a class="link link-hover" href="{% url 'rules' %}">
+        Learn Squash Rules</a
+      >
+      <a
+        href="mailto:illreadit@squashvote.wtf"
+        target="_blank"
+        class="link-hover link"
+        >Contact me 💌</a
+      >
+    </nav>
+    <aside class="text-xs md:text-sm">
+      <p>
+        Copyright © <span id="year"></span> - SquashVote. All right reserved.
+      </p>
+    </aside>
+  </div>
+</footer>
+
+{% endblock %} 
+{% block scripts %}
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
 {% endblock %}

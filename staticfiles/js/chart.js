@@ -5,10 +5,10 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch(`/chart/${videoId}/`)  
     .then(response => response.json())
     .then(data => {
-        console.log("Chart Data:", data);
+        // console.log("Chart Data:", data);
         const chart = document.getElementById('chart').getContext('2d');
         new Chart(chart, {
-            type: 'bar',  
+            type: 'bar',
             data: {
                 labels: data.labels,
                 datasets: [{
@@ -20,6 +20,12 @@ document.addEventListener("DOMContentLoaded", function() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                indexAxis: 'y',
+                elements: {
+                    bar: {
+                      borderWidth: 4,
+                    }
+                  },
                 scales: { 
                     y: 
                     { 

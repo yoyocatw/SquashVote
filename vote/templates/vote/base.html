@@ -9,59 +9,50 @@
     <meta name="keywords" content="Squash, PSA, SquashVote, referee decisions, let or no let, stroke or let, PSA squash, squash community, controversial decision">
     <meta name="author" content="SquashVote">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="SquashVote - Vote on PSA Squash Referee Decisions">
+    <meta property="og:title" content="SquashVote - So you think you can ref?">
     <meta property="og:description" content="Think the ref got it wrong? Vote on controversial squash calls in PSA matches and see what the community thinks.">
     <meta property="og:url" content="https://squashvote.wtf">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="SquashVote">
+    {% if "fly.dev" in request.get_host %}
+      <meta name="robots" content="noindex, nofollow">
+    {% endif %}
     <link rel="canonical" href="https://squashvote.wtf">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" integrity="sha384-T/4KgSWuZEPozpPz7rnnp/5lDSnpY1VPJCojf1S81uTHS1E38qgLfMgVsAeRCWc4" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script>
+    <script type="text/javascript" src="{% static 'js/banner.js' %}" defer></script>
     <title>{% block title%}{% endblock%}</title>
     <link rel="stylesheet" href="{% static 'css/output.css'%}">
     <script type="text/javascript" src="{% static 'js/chart.js' %}" defer></script>
-    <script type="text/javascript" src="{% static 'js/progress.js' %}" defer></script>
+    
+
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_io/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon_io/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'favicon_io/site.webmanifest' %}">
+    <script defer data-domain="squashvote.wtf" src="https://plausible.io/js/script.js"></script>
 </head>
-<body data-theme="black" class="bg-base-100 min-h-screen overflow-x-hidden overflow-y-scroll m-0 p-8">
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-theme="black" class="bg-base-100 min-h-screen overflow-x-hidden overflow-y-scroll m-0 px-2 py-6 md:p-3.5 flex flex-col">
+
+
       <div class="navbar bg-base-100 border border-base-200 rounded-2xl">
         <div class="navbar-start">
-          <div class="dropdown">
-            <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h7" />
-              </svg>
-            </div>
-            <ul
-              tabindex="0"
-              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-              <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
-              <li><a class="rounded-2xl" href="{% url 'archived' %}">Archived results</a></li>
-            </ul>
-          </div>
-          <a href="/" class="btn btn-ghost text-xl text-primary font-title rounded-2xl">SquashVote</a>
+          <a href="/" class="btn btn-ghost text-2xl text-primary font-title rounded-2xl">SquashVote</a>
         </div>
-        <div class=" navbar-end hidden md:flex">
+        <div class="navbar-end hidden md:flex">
           <ul class="menu menu-horizontal px-1 font-body text-md">
             <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
-            <li><a class="rounded-2xl" href="{% url 'archived' %}">Archived results</a></li>
+            <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
           </ul>
         </div>
       </div> 
 
-
+    
     {% block content %}{% endblock %}
-    {% block scripts %}{% endblock %}
+    {% block scripts %} 
+    
+    {% endblock %}
 </body>
 </html>
