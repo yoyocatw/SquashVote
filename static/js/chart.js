@@ -70,8 +70,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         if (response.ok) {
             const chartContainer = document.getElementById("chart-container");
+            const commentSection = document.getElementById("comment-section");
+            if (commentSection) {
+                commentSection.classList.remove("hidden");
+            }
             if (chartContainer) {
-                chartContainer.style.display = "block";
                 chartContainer.classList.remove("hidden");
             }
             fetchChartData();

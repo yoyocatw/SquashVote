@@ -17,9 +17,7 @@ from django.core.management.utils import get_random_secret_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
+env = environ.Env(DEBUG=(bool, False))
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env_file = os.path.join(BASE_DIR, ".env")
@@ -28,7 +26,7 @@ if os.path.exists(env_file):
 
 DEBUG = env("DEBUG")
 
-if DEBUG:  
+if DEBUG:
     environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
@@ -40,7 +38,15 @@ SECRET_KEY = env.str("SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = ["squashvote.wtf", "www.squashvote.wtf", "squashvote.fly.dev"]
+ALLOWED_HOSTS = [
+    "squashvote.wtf",
+    "www.squashvote.wtf",
+    "squashvote.fly.dev",
+    "localhost",
+    "127.0.0.1",
+    "192.168.68.55.nip.io",
+    "0.0.0.0",
+]
 CSRF_TRUSTED_ORIGINS = ["https://squashvote.wtf", "https://www.squashvote.wtf"]
 URL = "https://squashvote.wtf"
 GOOGLE_CLIENT_SECRET = env.str("GOOGLE_CLIENT_SECRET", default="dummy_secret")
@@ -52,17 +58,18 @@ GOOGLE_TOKEN_URI = env(
     "GOOGLE_TOKEN_URI", default="https://accounts.google.com/o/oauth2/token"
 )
 REFRESH_TOKEN = env("REFRESH_TOKEN", default="dummy_token")
-CANONICAL_DOMAIN = 'squashvote.wtf'
-SECURE_SSL_REDIRECT = False 
-SECURE_SSL_HOST = "squashvote.wtf" # Remove for local development
-SESSION_COOKIE_SECURE = True # Change to True for production
-CSRF_COOKIE_SECURE = True # Change to True for production
+CANONICAL_DOMAIN = "squashvote.wtf"
+SECURE_SSL_REDIRECT = False
+# SECURE_SSL_HOST = "squashvote.wtf" # Remove for local development
+SESSION_COOKIE_SECURE = False  # Change to True for production
+CSRF_COOKIE_SECURE = False  # Change to True for production
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/videoform/'
-
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/videoform/"
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 365 * 10
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,7 +89,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    'vote.middleware.CanonicalUrlMiddleware', #Remove for local development
+    #'vote.middleware.CanonicalUrlMiddleware', #Remove for local development
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

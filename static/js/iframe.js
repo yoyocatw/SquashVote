@@ -1,7 +1,10 @@
 
 function initYouTubeClip(videoId, startTime) {
+    var tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     let player;
-    const endTime = startTime + 30;
   
     window.onYouTubeIframeAPIReady = function () {
       player = new YT.Player('player', {
@@ -9,7 +12,7 @@ function initYouTubeClip(videoId, startTime) {
         width: "100%",
         videoId: videoId,
         playerVars: {
-          autoplay: 1,
+          autoplay: 0,
           controls: 1,
           modestbranding: 1,
           rel: 0,
@@ -27,4 +30,4 @@ function initYouTubeClip(videoId, startTime) {
       }
     };
   }
-  
+

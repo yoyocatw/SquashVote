@@ -22,16 +22,18 @@
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
     
     <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script>
-    <script type="text/javascript" src="{% static 'js/banner.js' %}" defer></script>
     <title>{% block title%}{% endblock%}</title>
     <link rel="stylesheet" href="{% static 'css/output.css'%}">
     <script type="text/javascript" src="{% static 'js/chart.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}">
+    <script src="{% static 'js/lite-yt-embed.js' %}" defer></script>
     
 
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_io/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon_io/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'favicon_io/site.webmanifest' %}">
+    
     <script defer data-domain="squashvote.wtf" src="https://plausible.io/js/script.js"></script>
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-theme="black" class="bg-base-100 min-h-screen overflow-x-hidden overflow-y-scroll m-0 px-2 py-6 md:p-3.5 flex flex-col">

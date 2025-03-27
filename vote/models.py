@@ -14,9 +14,16 @@ class Video(models.Model):
     date = models.DateField(default=date.today)
     video_title = models.CharField(max_length=500)
     timestamp = models.CharField(max_length=50)
-    video_id = models.CharField(max_length=512, unique=True)
+    video_id = models.CharField(max_length=512)
     org_decision = models.CharField(max_length=20, choices=Decision.choices)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["video_id", "timestamp"], name="unique_video_id_timestamp"
+            ),
+        ]
 
     def convert_timestamp_to_seconds(timestamp):
         parts = timestamp.split(":")
@@ -30,10 +37,10 @@ class Video(models.Model):
         seconds = Video.convert_timestamp_to_seconds(self.timestamp)
         end_seconds = seconds + 30
         return f"https://www.youtube-nocookie.com/embed/{self.video_id}?start={seconds}&end={str(end_seconds)}&autoplay=0&modestbranding=1&rel=0&controls=0"
+
     def go_to_youtube(self):
         seconds = Video.convert_timestamp_to_seconds(self.timestamp)
         return f"https://www.youtube.com/watch?v={self.video_id}&t={seconds}"
-    
 
     def __str__(self):
         return f"{self.video_title} - {self.video_id} - {self.org_decision}"
@@ -55,13 +62,64 @@ class VoteUser(models.Model):
     vote = models.CharField(
         max_length=20,
         choices=[("let", "Let"), ("stroke", "Stroke"), ("nolet", "No Let")],
+        null=True,
+        blank=True,
+        default=None,
     )
-    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey(
+        "Comment", on_delete=models.CASCADE, null=True, blank=True
+    )
     session_id = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     class Meta:
-        unique_together = ("video", "user")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["video", "user"], name="unique_user_video_vote"
+            ),
+            models.UniqueConstraint(
+                fields=["video", "session_id"], name="unique_session_video_vote"
+            ),
+            models.UniqueConstraint(
+                fields=["comment", "user"], name="unique_user_comment_vote"
+            ),
+            models.UniqueConstraint(
+                fields=["comment", "session_id"], name="unique_session_comment_vote"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.user} voted {self.vote} for {self.video.video_title}"
+
+
+class Comment(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="comments")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, default="Anonymous"
+    )
+    anonymous_id = models.CharField(max_length=255, null=True, blank=True)
+    comment = models.TextField()
+    comment_vote = models.PositiveIntegerField(default=0, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.user} commented on {self.video.video_title}"
+
+
+class Reply(models.Model):
+    comment = models.ForeignKey(
+        Comment, on_delete=models.CASCADE, related_name="replies"
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True, default="Anonymous"
+    )
+    anonymous_id = models.CharField(max_length=255, null=True, blank=True)
+    reply = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user} replied to {self.comment.user} on {self.comment.video.video_title}"

@@ -17,3 +17,12 @@ VOTE_CHOICES = [
 
 class VoteForm(forms.Form):
     vote = forms.ChoiceField(choices=VOTE_CHOICES, widget=forms.RadioSelect)
+
+# forms.py
+from django import forms
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'What are your thoughts?'}),
+        label=''
+    )

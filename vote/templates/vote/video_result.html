@@ -8,11 +8,12 @@
 	</div>
     <div class="w-full max-w-4xl">
 		<div class="relative w-full aspect-video rounded-lg overflow-hidden">
-			<div id="player"></div> <!-- YouTube Player -->
+			<div id="player"></div> <!--YouTube Player-->
+			
 		</div>
 		<div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
 			<button 
-			  onclick="restartClip()" 
+			  onclick="restartClip()"
 			  class="btn btn-wide rounded-full bg-white text-black font-semibold font-body text-lg hover:bg-gray-100">
 			  🔁 Replay Clip
 			</button>
@@ -22,9 +23,6 @@
 			  🔗 Watch on YouTube ➤
 			</a>
 		  </div>
-		  
-		  
-		  
 	</div>
     <div class="w-full max-w-4xl text-start space-y-1">
         
@@ -38,7 +36,7 @@
             </div>
 			<div id="vote-section">
 				{% if already_voted %}
-				{% include "vote/already_voted.html" %}
+				{% include "vote/partials/already_voted.html" %}
 				{% else %}
 				<form id="vote-form" hx-target="#vote-section" hx-post="{% url 'video_result' video.video_id%}" hx-swap='outerHTML'>
 					{% csrf_token %}
@@ -65,24 +63,50 @@
         </div>
     </div>
 	
-	<div class="max-w-4xl p-4 border w-full h-[60vh] mx-auto rounded-lg {% if not already_voted %}hidden{% endif %} scroll-" id="chart-container">
-		<p class="text-xs text-center ">Tap a bar to see vote count.</p>
+	<div class="max-w-4xl p-4 border w-full h-[60vh] mx-auto rounded-lg {% if not already_voted %}hidden{% endif %}" id="chart-container">
+		<p class="text-xs text-center">Tap a bar to see vote count.</p>
 		<canvas id="chart" class="w-full h-[400px]" video-id="{{ video.video_id }}"></canvas>
 	</div>
     
+	<!--Comment Section-->
+<div class="w-full max-w-4xl p-4 items-center {% if not already_voted %} hidden {%endif%}" id="comment-section">
+	<h2 class="text-xl font-semibold mb-4">Comments</h2>
+  
+	<!-- Comment Form -->
+	<form hx-post="{% url 'post_comment' video.video_id %}" hx-swap="beforeend" hx-target="#comments" hx-on::after-request="this.reset()" class="mb-6 ">
+		{% csrf_token %}
+	  <textarea name="comment" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500 resize-none" placeholder="What are your thoughts on the decision?" required></textarea>
+	  <div class="mt-2 flex justify-end">
+		<button type="submit" class=" cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Post</button>
+	  </div>
+	</form>
+
+	<div id="comments" class="flex flex-col justify-between gap-4">
+	{% if not video.comments.exists %}
+	<p id="no-comment" class="text-gray-500">No comments yet... Don't be shy, start one 😆</p>
+	{% else %}
+	
+	{% for comment in video.comments.all %}
+		<div class="flex flex-col flex-1 border-b border-gray-600 py-4">
+            {% include "vote/partials/comment_section.html" %}
+        </div>
+  {% endfor %}
+  	
+  {% endif %}
+</div>	
 </div>
+
 
 
 {% endblock %}
 
 {% block scripts %}
-<script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
-	document.addEventListener('DOMContentLoaded', function () {
-		initYouTubeClip("{{ video.video_id }}", {{start}});
+	document.addEventListener("DOMContentLoaded", () => {
+		initYouTubeClip('{{ video.video_id }}', {{ start }});
 	});
 </script>
+
   
-
-
 {% endblock %}

@@ -1,0 +1,12 @@
+{% load timestamp %}
+<p hx-swap-oob="delete:#no-comment"></p>
+<div class="text-base font-body whitespace-pre-line min-h-8 mt-0.5">{{comment.comment}}</div>
+<div class="flex flex-row items-center gap-1">
+    <span class="text-xs opacity-60 mr-2">
+        By <span class=""><span>{{comment.user.username|default:"Anonymous"}}</span></span> <span>{{comment.created_at|comment_time}}</span>
+        
+    </span>
+    <button hx-post="{% url 'upvote' comment.id %}" hx-target="#vote-count-{{ comment.id }}" hx-swap="outerHTML" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="cursor-pointer" id="upvote">👍 <span class="text-sm" id="">{% include "vote/partials/upvote_comment.html" %}</span></button>
+    <button class="btn btn-ghost btn-xs" aria-label="Show or hide replies to comment">[–]</button>
+    <button class="btn btn-ghost btn-xs" aria-label="Reply to comment">Reply</button>
+</div>
