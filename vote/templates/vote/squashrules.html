@@ -1,0 +1,55 @@
+{% extends 'vote/base.html' %}
+{% load static %}
+{% block title %}SquashVote | Squash Rules{% endblock %}
+
+{% block content %}
+<main class="container mx-auto px-4 py-8 flex flex-col gap-6">
+    <div class="text-start items-center w-full max-w-4xl mt-4 flex flex-row ">
+		<a href="{% url 'index' %}" class="btn border-none bg-base-100 font-black text-lg md:text-2xl">&#8592;</a>
+		<h1 class="text-2xl font-semibold text-primary-content font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0 tracking-wide">Learn Squash Rules</h1>
+	</div>
+  
+  <section>
+    <p class="leading-relaxed font-body text-pretty text-lg">
+        New to squash? You’re not alone! Understanding what a “let” or “stroke” actually means will help you make SquashVote a whole lot more fun, and you’ll actually know when the ref got it wrong.
+        I recommend giving the rules a quick look before diving into SquashVote even if you're already a experienced squash player.
+    </p>
+  </section>
+
+  <!-- Video Section -->
+  <section>
+    <h2 class="text-xl font-semibold mb-3 text-primary-content">Check out this quick video ⬇️</h2>
+    <div class="w-full aspect-video rounded-lg overflow-hidden shadow-lg">
+      <iframe 
+        class="w-full h-full"
+        src="https://www.youtube.com/embed/Km5TMstbE34"
+        title="How To Play Squash: A Beginners Guide – Equipment, Rules and Tactics!"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </section>
+
+  <!-- External Link Section -->
+  <section>
+    <h2 class="text-2xl font-semibold mb-4 text-primary-content">Want more?</h2>
+    <p class="leading-relaxed text-pretty text-base">
+      Check out the official squash rulebook here: 
+      <a href="https://worldsquashofficiating.com/home/rules-of-squash/" 
+         target="_blank" 
+         class="text-primary underline hover:text-orange-300 font-semibold">
+         WSO: Rules of Squash
+      </a>
+    </p>
+  </section>
+
+  <!-- Call-to-Action Section -->
+  <section>
+    <a href="{% url 'index' %}" class="btn btn-wide rounded-xl btn-primary">
+      Go try what you learned!
+    </a>
+  </section>
+
+</main>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'vote/base.html'%}
+{% load static %}
+{% block title%}SquashVote | About {% endblock%}
+{% block content%}
+
+  <main class="container mx-auto px-4 py-8">
+    <section class="mb-12">
+      <h2 class="text-3xl font-semibold mb-4 text-primary-content">What is this?</h2>
+      <p class="leading-relaxed text-pretty">
+        As a squash player, I know how frustrating it can be when a referee makes a terrible call. I love watching PSA matches, but even at the highest level, a call can leave you flabbergasted. Now that squash is headed to the Olympics, it's more important than ever to shine a light on referee standards. So I decided to create a platform where squash fans like myself can vote on what you think the correct decision should be.
+      </p>
+    </section>
+      <section class="mb-12">
+        <a href="{% url 'index'%}" class="btn btn-wide rounded-xl btn-primary"> Go Vote Now!</a>
+      </section>
+
+      <section>
+        <h2 class="text-3xl font-semibold mb-4 text-primary-content">What's next?</h2>
+        <p class="leading-relaxed text-pretty text-lg">
+          I am currently working on adding more features to this platform. Some of the features I am working on include:
+        </p>
+        <ul class="list-disc list-inside">
+          <li>Adding a comment section where users can use to discuss their thoughts</li>
+          <li>Allow users to upload their own video</li>
+        </ul>
+      </section>
+    
+  </main>
+
+{% endblock %}

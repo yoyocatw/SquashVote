@@ -1,0 +1,139 @@
+{% load timestamp %} 
+{% for comment in comments %}
+<div
+  class="flex flex-col flex-1 border-b border-gray-600 py-4"
+  id="comment-{{ comment.id }}"
+>
+  <p hx-swap-oob="delete:#no-comment"></p>
+  <div x-data="{ collapsed: false, reply: false, showReplies: false }">
+    <!-- Comment Header -->
+    <div class="flex items-center gap-2 text-xs text-gray-500">
+      <button
+        @click="collapsed = !collapsed"
+        class="text-blue-500 hover:underline"
+      >
+        <span
+          x-text="collapsed ? '&#8853;' : '&#8854;'"
+          class="text-base cursor-pointer"
+        ></span>
+      </button>
+      <span>{{ comment.user.username|default:"Anonymous" }}</span>
+      <span>· {{ comment.created_at|comment_time }}</span>
+      <div id="report-{{ comment.id }}">
+        {% if comment.id in reported %}
+          <button class="cursor-pointer text-red-600 text-xs" disabled>
+            &#9873;
+          </button>
+        {% else %}
+          <button
+            hx-post="{% url 'report' comment.id %}"
+            hx-target="#report-{{ comment.id }}"
+            hx-swap="outerHTML"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-confirm="Are you sure you want to report this comment?"
+            class="cursor-pointer text-xs"
+          >
+            &#9873;
+          </button>
+        {% endif %}
+      </div>
+      
+      
+    </div>
+
+
+    <!-- Comment Body -->
+    <div
+      x-show="!collapsed"
+      x-transition
+      class="mt-2 whitespace-normal text-base text-pretty font-body font-semibold"
+    >
+      {{ comment.comment }}
+    </div>
+
+    <div x-show="!collapsed">
+      <div class="flex flex-row items-center gap-1 text-sm">
+        
+        <button
+          hx-post="{% url 'like_comment' comment.id %}"
+          hx-target="#vote-count-{{ comment.id }}"
+          hx-swap="outerHTML"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          class="cursor-pointer text-xs"
+          id="upvote"
+        >
+
+          👍 <span class="text-xs">{% include "vote/partials/like_comment.html" with num_likes=num_likes %}</span>
+        </button>
+
+        <!-- Show/Hide Replies Button -->
+        {% if comment.replies.all|length > 0 %}
+        <button
+          class="btn btn-ghost btn-xs"
+          @click="showReplies = !showReplies;
+          if (!showReplies) {
+            reply = false;
+          }"
+          aria-label="Show or hide replies"
+        >
+          <span x-text="showReplies ? '[–]' : '[+]'" class="cursor-pointer"></span>
+        </button>
+        {% endif %}
+        <button
+          @click="reply = !reply;
+          if (reply) {
+            showReplies = true;
+          }"
+          class="btn btn-ghost btn-xs"
+          aria-label="Reply to comment"
+        >
+          Reply
+        </button>
+      </div>
+
+      <!-- Reply Form -->
+      <div x-show="reply" class="mt-2">
+        <form
+          hx-post="{% url 'post_reply' comment.id %}"
+          hx-target="#replies-{{ comment.id }}"
+          hx-swap="beforeend"
+          hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+          hx-on::after-request="this.reset(); reply = false; showReplies = true"
+        >
+          {% csrf_token %}
+          <textarea
+            name="reply_content"
+            required
+            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500 resize-none"
+          ></textarea>
+          <button
+            type="submit"
+            class="text-white bg-blue-600 px-2 py-1 text-sm mt-1 rounded-lg cursor-pointer"
+            
+          >
+            Post Reply
+          </button>
+        </form>
+      </div>
+
+      <!-- Replies  -->
+      <div id="replies-{{comment.id}}" x-show="showReplies" class="ml-6" style="display: none;">
+        {% for reply in comment.replies.all %}
+        {% if comment.replies.all|length > 0 %}
+            {% include "vote/partials/replies.html" with reply=reply reported=reported %}
+        {% else %}
+          <p>No replies yet...</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+      
+  </div>
+  
+</div>
+
+{% empty %}
+<p id="no-comment" class="text-gray-500 font-body py-4">
+  No comments yet... Don’t be shy, start one 😆
+</p>
+{% endfor %}
