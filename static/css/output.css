@@ -2875,11 +2875,6 @@
     --tw-border-style: none;
     border-style: none;
   }
-  .alert-error {
-    border-color: var(--color-error);
-    color: var(--color-error-content);
-    --alert-color: var(--color-error);
-  }
   .border-base-200 {
     border-color: var(--color-base-200);
   }
