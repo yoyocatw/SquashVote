@@ -18,8 +18,7 @@ def index(request):
     videos = (
         Video.objects.filter(is_active=True).select_related("result").order_by("-date")
     )
-    for video in videos:
-        video.start = Video.convert_timestamp_to_seconds(video.timestamp)
+
 
     # Sorting Videos
     sorted_by = request.GET.get("sort", "newest")

@@ -24,7 +24,7 @@
     </div>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
       <button onclick="restartClip()" class="btn btn-wide rounded-full bg-white text-black font-semibold font-body text-lg hover:bg-gray-100">
-        🔁 Play Clip
+        🔁 Replay
       </button>
       <a href="{{ video.go_to_youtube }}" target="_blank" class="link rounded-full text-primary font-medium">
         🔗 Watch on YouTube ➤
@@ -64,7 +64,7 @@
                 <span>🫳 No Let</span>
               </div>
             </div>
-            <button type="submit" class="btn rounded-4xl bg-primary text-primary-content text-md">
+            <button hx-on:click="voteConfetti()" id="vote-button" type="submit" class="btn rounded-4xl bg-primary text-primary-content text-md">
               Vote
             </button>
           </form>
@@ -172,8 +172,9 @@
   });
 });
 
-
-
-
+// const voteButton = document.querySelector('#vote-button');
+// voteButton.addEventListener('click', function() {
+//   voteConfetti();
+// })
 </script>
 {% endblock %}

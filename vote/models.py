@@ -37,10 +37,14 @@ class Video(models.Model):
         seconds = Video.convert_timestamp_to_seconds(self.timestamp)
         end_seconds = seconds + 30
         return f"https://www.youtube-nocookie.com/embed/{self.video_id}?start={seconds}&end={str(end_seconds)}&autoplay=0&modestbranding=1&rel=0&controls=0"
-
+    @property
     def go_to_youtube(self):
         seconds = Video.convert_timestamp_to_seconds(self.timestamp)
         return f"https://www.youtube.com/watch?v={self.video_id}&t={seconds}"
+    @property
+    def start(self):
+        return Video.convert_timestamp_to_seconds(self.timestamp)
+
 
     def __str__(self):
         return f"{self.video_title} - {self.video_id} - {self.org_decision}"
