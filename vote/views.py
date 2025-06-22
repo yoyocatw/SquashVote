@@ -16,7 +16,7 @@ def get_session_id(request):
 
 def index(request):
     videos = (
-        Video.objects.filter(is_active=True).select_related("result").order_by("-date")
+        Video.objects.filter(is_active=True, needs_review=False).select_related("result")
     )
 
 
@@ -147,18 +147,39 @@ def chart(request, video_id):
     return JsonResponse(data)
 
 
-@login_required
 def video_form(request):
     if request.method == "POST":
         form = VideoForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("/")
+            video = form.save(commit=False)
+            video.video_id = form.cleaned_data["video_id"]
+            video.is_active = False
+            video.save()
+            return redirect("confirm")
     else:
         form = VideoForm()
 
     return render(request, "vote/video_form.html", {"form": form})
 
+def confirm(request):
+    return render(request, "vote/confirm.html")
+
+@login_required
+def review(request):
+    videos = Video.objects.filter(needs_review=True).order_by("-date")
+    return render(request, "vote/review.html", {"videos": videos})
+
+def accept_video(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    video.is_active = True
+    video.needs_review = False
+    video.save()
+    return HttpResponse("Accepted")
+
+def reject_video(request, video_id):
+    video = get_object_or_404(Video, id=video_id)
+    video.delete()
+    return HttpResponse("Rejected")
 
 def about(request):
     return render(request, "vote/about.html")
