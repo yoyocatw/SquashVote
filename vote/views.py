@@ -15,10 +15,9 @@ def get_session_id(request):
 
 
 def index(request):
-    videos = (
-        Video.objects.filter(is_active=True, needs_review=False).select_related("result")
+    videos = Video.objects.filter(is_active=True, needs_review=False).select_related(
+        "result"
     )
-
 
     # Sorting Videos
     sorted_by = request.GET.get("sort", "newest")
@@ -49,8 +48,8 @@ def user_already_voted(request, video):
     return (vote is not None, vote.vote if vote else None)
 
 
-def video_result(request, video_id):
-    video = get_object_or_404(Video.objects.select_related("result"), video_id=video_id)
+def video_result(request, pk, slug=None):
+    video = get_object_or_404(Video.objects.select_related("result"), pk=pk)
     start = Video.convert_timestamp_to_seconds(video.timestamp)
     already_voted, vote = user_already_voted(request, video)
     session_id = get_session_id(request)
@@ -101,9 +100,9 @@ def video_result(request, video_id):
     liked_comments = CommentLike.objects.filter(
         session_id=session_id, comment__video__video_id=video.video_id
     ).values_list("comment_id", flat=True)
-    reported = CommentReport.objects.filter(session_id=session_id, comment__video__video_id=video.video_id).values_list(
-        "comment_id", flat=True
-    )
+    reported = CommentReport.objects.filter(
+        session_id=session_id, comment__video__video_id=video.video_id
+    ).values_list("comment_id", flat=True)
 
     # HTMX paritals return
     if request.method == "GET" and "sort" in request.GET:
@@ -161,13 +160,23 @@ def video_form(request):
 
     return render(request, "vote/video_form.html", {"form": form})
 
+
 def confirm(request):
     return render(request, "vote/confirm.html")
+
 
 @login_required
 def review(request):
     videos = Video.objects.filter(needs_review=True).order_by("-date")
+
+    for video in videos:
+        duplicates = []
+        same_id = Video.objects.filter(video_id=video.video_id).exclude(id=video.id)
+        for video in same_id:
+            duplicates.append(video)
+        video.same_id = duplicates
     return render(request, "vote/review.html", {"videos": videos})
+
 
 def accept_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
@@ -176,10 +185,12 @@ def accept_video(request, video_id):
     video.save()
     return HttpResponse("Accepted")
 
+
 def reject_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     video.delete()
     return HttpResponse("Rejected")
+
 
 def about(request):
     return render(request, "vote/about.html")

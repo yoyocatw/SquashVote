@@ -12,15 +12,19 @@ from .views import (
     report_comment,
     confirm,
     review,
-    accept_video, 
-    reject_video
+    accept_video,
+    reject_video,
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("", index, name="index"),
-    path("video/<str:video_id>/", video_result, name="video_result"),
+    path(
+        "video/<int:video_id>/accept/", accept_video, name="accept_video"
+    ),  # Has to be before video_result or it will match wrong.
+    path("video/<int:video_id>/reject/", reject_video, name="reject_video"),
+    path("video/<int:pk>/<slug:slug>/", video_result, name="video_result"),
     path("videoform/", video_form, name="video_form"),
     path("chart/<str:video_id>/", chart, name="chart"),
     path("about/", about, name="about"),
@@ -33,6 +37,4 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("confirm/", confirm, name="confirm"),
     path("review/", review, name="review"),
-    path("video/<int:video_id>/accept/", accept_video, name="accept_video"),
-    path("video/<int:video_id>/reject/", reject_video, name="reject_video"),
 ]

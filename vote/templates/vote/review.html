@@ -6,11 +6,14 @@
 {% endblock %}
 
 {% block content %}
-{% for video in videos %}
     <h1> Review Page</h1>
+
+<div class="grid grid-flow-col gap-4">
+
+{% for video in videos %}
       <div
       id="video-{{ video.id }}"
-        class="card relative bg-base-200 card-xl w-fit md:card-xl p-1 rounded-2xl transform transition duration-300 ease-in-out hover:scale-110 shadow-lgx"
+        class="card relative bg-base-200 card-xl max-w-xl p-1 rounded-2xl shadow-lgx"
       >
         <figure class="w-full aspect-video">
 		  <lite-youtube referrerpolicy="no-referrer-when-downgrade"  videoid="{{ video.video_id }}" params="start={{ video.start }}&modestbranding=1&rel=0&controls=1&autohide=1" playlabel="Play {{ video.video_title }}" title="{{video.video_title}}" class="w-full h-full"></lite-youtube>
@@ -24,19 +27,20 @@
             {{video.video_title}}
           </h2>
           <button 
-          class="btn btn-success"
+          class="btn btn-success mb-2"
           hx-post="{% url 'accept_video' video.id %}" 
-          hx-swap="none" 
-          hx-on="htmx:afterRequest: document.getElementById('video-{{ video.id }}').remove()"
-        >Accept</button>
+          hx-target="#video-{{ video.id }}"
+          hx-swap="delete">
+              Accept</button>
         <button 
           class="btn btn-error"
           hx-post="{% url 'reject_video' video.id %}" 
-          hx-swap="none" 
-          hx-on="htmx:afterRequest: document.getElementById('video-{{ video.id }}').remove()"
+          hx-target='#video-{{video.id}}'
+          hx-swap="delete"
         >Reject</button>
         </div>
 
       </div>
 {% endfor %}
+</div>
 {% endblock %}
