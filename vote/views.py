@@ -18,7 +18,10 @@ def index(request):
     videos = Video.objects.filter(is_active=True, needs_review=False).select_related(
         "result"
     )
-
+    # Category videos
+    category = request.GET.get("category", "all")
+    if category != "all":
+        videos = videos.filter(category__iexact=category)
     # Sorting Videos
     sorted_by = request.GET.get("sort", "newest")
     if sorted_by == "most_votes":
@@ -27,14 +30,15 @@ def index(request):
         videos = videos.order_by("date")
     else:
         videos = videos.order_by("-date")
-    if request.method == "GET" and "sort" in request.GET:
+
+    if request.headers.get("HX-Request"):
         return render(
             request,
             "vote/partials/video_grid.html",
-            {"videos": videos, "sorted_by": sorted_by},
+            {"videos": videos, "sorted_by": sorted_by, "category": category},
         )
 
-    context = {"videos": videos, "sorted_by": sorted_by}
+    context = {"videos": videos, "sorted_by": sorted_by, "category": category}
     return render(request, "vote/index.html", context=context)
 
 

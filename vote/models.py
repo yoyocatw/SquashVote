@@ -10,6 +10,9 @@ class Video(models.Model):
         STROKE = "Stroke"
         LET = "Let"
         NO_LET = "No Let"
+    class Category(models.TextChoices):
+        PSA = "PSA"
+        AMATEUR = "Amateur"
     email = models.EmailField(max_length=254, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     video_title = models.CharField(max_length=500)
@@ -18,6 +21,7 @@ class Video(models.Model):
     org_decision = models.CharField(max_length=20, choices=Decision.choices)
     is_active = models.BooleanField(default=False)
     needs_review = models.BooleanField(default=True)
+    category = models.CharField(max_length=10, choices=Category.choices, null=True, blank=True)
 
     class Meta:
         constraints = [

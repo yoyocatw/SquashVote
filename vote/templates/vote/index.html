@@ -51,44 +51,90 @@
 >
   So you think you can ref &#63;
 </h1>
-<div class="items-center justify-center flex space-x-2">
+<div class="flex flex-row items-center justify-center space-x-2 mb-5">
+  
+<div class="items-center justify-center flex space-x-2 p-2">
   <div class="dropdown items-center">
     <input
       type="radio"
-      name="metaframeworks"
-      aria-label="New"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-full font-bold transition-all duration-150 focus:underline"
+      name="category"
+      value="all"
+      aria-label="All"
+      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
       hx-target="#videos"
-      hx-get="{% url 'index' %}?sort=newest"
+      hx-get="{% url 'index' %}?sort={{ sorted_by }}"
       hx-swap="innerHTML"
-      {% if sort_by == "newest" %}checked{% endif %}
+      {% if category == "all" %}checked{% endif %}
       checked
     />
     <input
       type="radio"
-      name="metaframeworks"
-      aria-label="Top"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-full font-bold transition-all duration-150 focus:underline"
-      hx-get="{% url 'index' %}?sort=most_votes"
+      name="category"
+      value="psa"
+      aria-label="PSA"
+      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
+      hx-get="{% url 'index' %}?sort={{ sorted_by }}"
       hx-target="#videos"
       hx-swap="innerHTML"
-      {% if sort_by == "most_votes" %}checked{% endif %}
+      {% if category == "psa" %}checked{% endif %}
     />
     <input
       type="radio"
-      name="metaframeworks"
-      aria-label="Old"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-full font-bold transition-all duration-150 focus:underline"
-      hx-get="{% url 'index' %}?sort=oldest"
+      name="category"
+      value="amateur"
+      aria-label="Amateur"
+      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
+      hx-get="{% url 'index' %}?sort={{ sorted_by }}"
       hx-target="#videos"
       hx-swap="innerHTML"
-      {% if sort_by == "oldest" %}checked{% endif %}
+      {% if category == "amateur" %}checked{% endif %}
     />
   </div>
 </div>
-<div  class="max-w-screen mb-28 px-2 sm:px-3 md:px-4">
+<div>|</div>
+<div class="items-center justify-center flex space-x-2 p-2">
+  <div class="dropdown items-center">
+    <input
+      type="radio"
+      name="sort"
+      value="newest"
+      aria-label="New"
+      class="btn  w-auto px-4 py-2 font-body text-sm rounded-lg font-bold transition-all duration-150 focus:underline"
+      hx-target="#videos"
+      hx-get="{% url 'index' %}?category={{ category }}"
+      hx-swap="innerHTML"
+      {% if sorted_by == "newest" %}checked{% endif %}
+      checked
+    />
+    <input
+      type="radio"
+      name="sort"
+      value="most_votes"
+      aria-label="Top"
+      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
+      hx-get="{% url 'index' %}?category={{ category }}"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+      {% if sorted_by == "most_votes" %}checked{% endif %}
+    />
+    <input
+      type="radio"
+      name="sort"
+      value="oldest"
+      aria-label="Old"
+      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
+      hx-get="{% url 'index' %}?category={{ category }}"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+      {% if sorted_by == "oldest" %}checked{% endif %}
+    />
+  </div>
+</div>
+</div>
+
+<div class="max-w-screen mb-28 px-2 sm:px-3 md:px-4">
   <div
-    class="bg-base-100 w-full mt-5 flex flex-col items-center space-y-2 flex-grow"
+    class="bg-base-100 w-full mt-5 flex flex-col items-center space-y-2 flex-grow p-2"
   >
     <div id="videos"
       class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full"

@@ -15,7 +15,7 @@ class VideoForm(forms.ModelForm):
 
     class Meta:
         model = Video
-        fields = ["email", "video_title", "timestamp", "org_decision"]
+        fields = ["email", "video_title", "timestamp", "org_decision", "category"]
 
     def clean(self):
         cleaned = super().clean()
