@@ -171,14 +171,15 @@ def confirm(request):
 
 @login_required
 def review(request):
-    videos = Video.objects.filter(needs_review=True).order_by("-date")
+    videos = Video.objects.filter(needs_review=True).order_by("date")
 
     for video in videos:
         duplicates = []
         same_id = Video.objects.filter(video_id=video.video_id).exclude(id=video.id)
-        for video in same_id:
-            duplicates.append(video)
+        for dup in same_id:  # 👈 don't use 'video' again here
+            duplicates.append(dup)
         video.same_id = duplicates
+
     return render(request, "vote/review.html", {"videos": videos})
 
 

@@ -51,86 +51,104 @@
 >
   So you think you can ref &#63;
 </h1>
-<div class="flex flex-row items-center justify-center space-x-2 mb-5">
-  
-<div class="items-center justify-center flex space-x-2 p-2">
-  <div class="dropdown items-center">
+<div class="flex flex-col md:flex-row items-center justify-center mb-5">
+
+  <!-- category -->
+  <div class="flex space-x-2 p-2">
     <input
       type="radio"
       name="category"
       value="all"
       aria-label="All"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
-      hx-target="#videos"
-      hx-get="{% url 'index' %}?sort={{ sorted_by }}"
-      hx-swap="innerHTML"
+      class="btn rounded-xl"
       {% if category == "all" %}checked{% endif %}
-      checked
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"
     />
     <input
       type="radio"
       name="category"
       value="psa"
       aria-label="PSA"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
-      hx-get="{% url 'index' %}?sort={{ sorted_by }}"
+      class="btn rounded-xl"
+      {% if category == "psa" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
       hx-target="#videos"
       hx-swap="innerHTML"
-      {% if category == "psa" %}checked{% endif %}
     />
     <input
       type="radio"
       name="category"
       value="amateur"
       aria-label="Amateur"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
-      hx-get="{% url 'index' %}?sort={{ sorted_by }}"
+      class="btn rounded-xl"
+      {% if category == "amateur" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
       hx-target="#videos"
       hx-swap="innerHTML"
-      {% if category == "amateur" %}checked{% endif %}
     />
   </div>
-</div>
-<div>|</div>
-<div class="items-center justify-center flex space-x-2 p-2">
-  <div class="dropdown items-center">
+
+  <!-- divider -->
+  <div class="hidden md:block border-l-2 border-base-content h-12 mx-2 opacity-50"></div>
+  <div class="md:hidden block border-t-2 border-base-content w-32 my-2 mx-auto opacity-50"></div>
+
+
+  <!-- sort -->
+  <div class="flex space-x-2 p-2">
     <input
       type="radio"
       name="sort"
       value="newest"
       aria-label="New"
-      class="btn  w-auto px-4 py-2 font-body text-sm rounded-lg font-bold transition-all duration-150 focus:underline"
-      hx-target="#videos"
-      hx-get="{% url 'index' %}?category={{ category }}"
-      hx-swap="innerHTML"
+      class="btn rounded-xl"
       {% if sorted_by == "newest" %}checked{% endif %}
-      checked
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"
     />
+
     <input
       type="radio"
       name="sort"
       value="most_votes"
       aria-label="Top"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
-      hx-get="{% url 'index' %}?category={{ category }}"
+      class="btn rounded-xl"
+      {% if sorted_by == "most_votes" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
       hx-target="#videos"
       hx-swap="innerHTML"
-      {% if sorted_by == "most_votes" %}checked{% endif %}
     />
+
     <input
       type="radio"
       name="sort"
       value="oldest"
       aria-label="Old"
-      class="btn w-auto px-4 py-2 font-body text-sm rounded-lg  font-bold transition-all duration-150 focus:underline"
-      hx-get="{% url 'index' %}?category={{ category }}"
+      class="btn rounded-xl"
+      {% if sorted_by == "oldest" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
       hx-target="#videos"
       hx-swap="innerHTML"
-      {% if sorted_by == "oldest" %}checked{% endif %}
     />
+
   </div>
+
 </div>
-</div>
+
 
 <div class="max-w-screen mb-28 px-2 sm:px-3 md:px-4">
   <div
