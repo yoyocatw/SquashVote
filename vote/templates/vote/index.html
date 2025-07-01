@@ -162,30 +162,46 @@
   </div>
 </div>
 
-<footer
-  class="footer footer-horizontal footer-center bg-base-100 border-t text-base-content rounded p-4 mt-5 -mb-4"
->
-  <div class="space-y-2">
-    <nav class="grid grid-flow-row sm:grid-flow-col gap-3">
-      <a class="link link-hover" href="{% url 'about' %}">About SquashVote</a>
-      <a class="link link-hover" href="{% url 'rules' %}">
-        Learn Squash Rules</a
-      >
-      <a
-        href="mailto:illreadit@squashvote.wtf"
-        target="_blank"
-        class="link-hover link"
-        >Contact me 💌</a
-      >
-    </nav>
-    <aside class="text-xs md:text-sm">
-      <p>
-        Copyright © <span id="year"></span> - SquashVote. All right reserved.
-      </p>
-    </aside>
-  </div>
-</footer>
 
+<footer class="bg-base-200 text-base-content py-10 px-6">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+    
+    <!-- Left: Navigation Links -->
+    <nav>
+      <h6 class="footer-title mb-4 text-base-content/80">Links</h6>
+      <ul class="space-y-2">
+        <li><a class="link link-hover" href="{% url 'about' %}">About SquashVote</a></li>
+        <li><a class="link link-hover" href="{% url 'rules' %}">Learn Squash Rules</a></li>
+        <li><a class="link link-hover" href="{% url 'video_form' %}">Upload a Video</a></li>
+        <li><a href="mailto:illreadit@squashvote.wtf" class="link-hover link">Contact me 💌</a></li>
+      </ul>
+    </nav>
+
+    <!-- Right: Substack Newsletter -->
+    <div>
+      <h6 class="footer-title mb-4 text-base-content/80">Newsletter</h6>
+      <p class="text-sm mb-4 max-w-md">
+        Subscribe to our Substack to get decision result updates delivered straight to your inbox.
+      </p>
+      <iframe
+        src="https://squashvote.substack.com/embed"
+        width="100%"
+        height="200"
+        style="border:1px solid #EEE; background:white; border-radius: 0.5rem;"
+        frameborder="0"
+        scrolling="no"
+      ></iframe>
+    </div>
+
+  </div>
+  </footer>
+<footer class="footer sm:footer-horizontal footer-center bg-base-100 text-base-content p-4">
+  <aside>
+    <p>
+        Copyright © <span id="year"></span> - SquashVote. All right reserved.
+    </p>
+  </aside>
+</footer>
 {% endblock %} 
 {% block scripts %}
 

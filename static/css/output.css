@@ -2993,6 +2993,12 @@
   .mt-6 {
     margin-top: calc(var(--spacing) * 6);
   }
+  .footer-title {
+    margin-bottom: calc(0.25rem * 2);
+    text-transform: uppercase;
+    opacity: 60%;
+    font-weight: 600;
+  }
   .-mb-4 {
     margin-bottom: calc(var(--spacing) * -4);
   }
@@ -3368,6 +3374,9 @@
   .h-full {
     height: 100%;
   }
+  .h-screen {
+    height: 100vh;
+  }
   .min-h-screen {
     min-height: 100vh;
   }
@@ -3402,6 +3411,9 @@
   .w-52 {
     width: calc(var(--spacing) * 52);
   }
+  .w-80 {
+    width: calc(var(--spacing) * 80);
+  }
   .w-auto {
     width: auto;
   }
@@ -3428,6 +3440,9 @@
   }
   .max-w-6xl {
     max-width: var(--container-6xl);
+  }
+  .max-w-7xl {
+    max-width: var(--container-7xl);
   }
   .max-w-lg {
     max-width: var(--container-lg);
@@ -3576,6 +3591,9 @@
   }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
+  }
+  .gap-10 {
+    gap: calc(var(--spacing) * 10);
   }
   .space-y-1 {
     :where(& > :not(:last-child)) {
@@ -3789,6 +3807,9 @@
   .p-8 {
     padding: calc(var(--spacing) * 8);
   }
+  .p-10 {
+    padding: calc(var(--spacing) * 10);
+  }
   .menu-title {
     padding-inline: calc(0.25rem * 3);
     padding-block: calc(0.25rem * 2);
@@ -3804,6 +3825,9 @@
   }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
+  }
+  .px-6 {
+    padding-inline: calc(var(--spacing) * 6);
   }
   .py-1 {
     padding-block: calc(var(--spacing) * 1);
@@ -3822,6 +3846,9 @@
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
+  }
+  .py-10 {
+    padding-block: calc(var(--spacing) * 10);
   }
   .py-12 {
     padding-block: calc(var(--spacing) * 12);
@@ -3966,6 +3993,9 @@
   }
   .text-base-content {
     color: var(--color-base-content);
+  }
+  .text-base-content\/80 {
+    color: color-mix(in oklab, var(--color-base-content) 80%, transparent);
   }
   .text-black {
     color: var(--color-black);
@@ -4345,6 +4375,14 @@
     &:focus {
       --tw-outline-style: none;
       outline-style: none;
+    }
+  }
+  .sm\:footer-horizontal {
+    @media (width >= 40rem) {
+      grid-auto-flow: column;
+      &.footer-center {
+        grid-auto-flow: row dense;
+      }
     }
   }
   .sm\:grid-flow-col {
