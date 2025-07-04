@@ -3,53 +3,56 @@
 {% block title %}SquashVote | Squash Rules{% endblock %}
 
 {% block content %}
-<main class="container mx-auto px-4 py-8 flex flex-col gap-6">
-    <div class="text-start items-center w-full max-w-4xl mt-4 flex flex-row ">
-		<a href="{% url 'index' %}" class="btn border-none bg-base-100 font-black text-lg md:text-2xl">&#8592;</a>
-		<h1 class="text-2xl font-semibold text-primary-content font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0 tracking-wide">Learn Squash Rules</h1>
-	</div>
-  
-  <section>
-    <p class="leading-relaxed font-body text-pretty text-lg">
-        New to squash? You’re not alone! Understanding what a “let” or “stroke” actually means will help you make SquashVote a whole lot more fun, and you’ll actually know when the ref got it wrong.
-        I recommend giving the rules a quick look before diving into SquashVote even if you're already a experienced squash player.
-    </p>
-  </section>
+<div class="hero p-4 py-32 md:py-40 bg-base-100">
+  <div class="hero-content text-center">
+    <div class="max-w-lg">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black font-videotitle whitespace-nowrap">Learn <span class="underline decoration-wavy decoration-2 decoration-primary">Squash Rules</span></h1>
+      <p class="py-6 text-base">
+            As a squash player, I know how frustrating it can be when a referee makes a terrible call. I love watching PSA matches, but even at the highest level, a call can leave you flabbergasted. Now that squash is headed to the Olympics, it's more important than ever to shine a light on referee standards. So I decided to create a platform where squash fans like myself can vote on what you think the correct decision should be.
+      </p>
+      <p class="text-5xl">&#x2193;</p>
+    </div>
+  </div>
+</div>
 
-  <!-- Video Section -->
-  <section>
-    <h2 class="text-xl font-semibold mb-3 text-primary-content">Check out this quick video ⬇️</h2>
-    <div class="w-full aspect-video rounded-lg overflow-hidden shadow-lg">
-      <iframe 
-        class="w-full h-full"
+
+
+<section class="bg-base-100 py-32 md:py-40 w-screen">
+    <div class="mx-auto h-full flex max-w-6xl flex-col px-4 md:px-8 gap-8 md:flex-row md:gap-16">
+        <iframe 
+        class="rounded-2xl w-full h-full object-contain md:w-1/2 aspect-video"
         src="https://www.youtube.com/embed/Km5TMstbE34"
         title="How To Play Squash: A Beginners Guide – Equipment, Rules and Tactics!"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen>
       </iframe>
+        <div class="max-w-lg space-y-6 md:space-y-8">
+            <h2 class="text-3xl font-black leading-tight tracking-tight md:text-4xl md:leading-tight lg:text-5xl text-primary-content">Check out this quick video</h2>
+            <p class="leading-relaxed text-body"> 
+                
+            </p>
+            <a class="btn-primary btn-block btn shadow-lg md:btn-wide rounded-xl" href="{% url 'index'%}">Try what you learned &#x279C;</a>
+        </div>
     </div>
-  </section>
-
-  <!-- External Link Section -->
-  <section>
-    <h2 class="text-2xl font-semibold mb-4 text-primary-content">Want more?</h2>
-    <p class="leading-relaxed text-pretty text-base">
-      Check out the official squash rulebook here: 
+</section>
+<section class="bg-base-100 py-32 md:py-40 w-screen">
+  <div class="mx-auto h-full flex items-center justify-center max-w-6xl flex-col px-4 md:px-8 gap-8 md:flex-row md:gap-16">
+    <div class="max-w-md space-y-6">
+      <h2 class="text-3xl font-black leading-tight tracking-tight md:text-4xl text-primary-content">
+        Want to dive deeper?
+      </h2>
+      <p class="leading-relaxed text-pretty text-base">
+        I highly recommend checking out the official squash rules. It will really help you enjoy the site even more.
+      </p>
       <a href="https://worldsquashofficiating.com/home/rules-of-squash/" 
          target="_blank" 
-         class="text-primary underline hover:text-orange-300 font-semibold">
-         WSO: Rules of Squash
+         class="btn btn-primary btn-wide rounded-xl shadow-lg">
+        Explore the Official Rules 📖
       </a>
-    </p>
-  </section>
+    </div>
+  </div>
+</section>
 
-  <!-- Call-to-Action Section -->
-  <section>
-    <a href="{% url 'index' %}" class="btn btn-wide rounded-xl btn-primary">
-      Go try what you learned!
-    </a>
-  </section>
 
-</main>
 {% endblock %}

@@ -12,7 +12,7 @@ function initYouTubeClip(videoId, startTime) {
         width: "100%",
         videoId: videoId,
         playerVars: {
-          autoplay: 1,
+          autoplay: 0,
           controls: 0,
           modestbranding: 1,
           rel: 0,

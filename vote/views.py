@@ -212,8 +212,8 @@ def rules(request):
     return render(request, "vote/squashrules.html")
 
 
-def post_comment(request, video_id):
-    video = get_object_or_404(Video, video_id=video_id)
+def post_comment(request, pk):
+    video = get_object_or_404(Video, pk=pk)
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():

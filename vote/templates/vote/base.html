@@ -21,7 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-b0GXujLkk9eYYSmcSfoyZbfyElGAQnDyY0skCHSG6w3JgTMFnz11ggrTAr7seu9f" crossorigin="anonymous" defer></script>
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb" crossorigin="anonymous" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" integrity="sha284-GvJ24O7Bpn7zLnkTzKFwaPO0Ucz0nnJRkkn2xS0+SZ8vuCMYn/PjC/h+WIehnGSM" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" integrity="sha384-GvJ24O7Bpn7zLnkTzKFwaPO0Ucz0nnJRkkn2xS0+SZ8vuCMYn/PjC/h+WIehnGSM" crossorigin="anonymous"></script>
     
     <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script>
     <title>{% block title%}{% endblock%}</title>
@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}">
     <script src="{% static 'js/lite-yt-embed.js' %}" defer></script>
     <script src="{% static 'js/confetti.js' %}" defer></script>
+    <script src="{% static 'js/modal.js' %}" defer></script>
     
 
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
@@ -40,53 +41,57 @@
     <script defer data-domain="squashvote.wtf" src="https://plausible.io/js/script.js"></script>
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-theme="black" class="bg-base-100 min-h-screen overflow-x-hidden overflow-y-scroll m-0   flex flex-col">
+    <div class="drawer drawer-end">
+    <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
 
-    <div class="w-full px-4 md:px-8 pb-4 md:pb-8 py-8">
-    <div class="navbar bg-base-100 shadow-sm shadow-white rounded-2xl mx-auto">
-        <div class="navbar-start">
-            <a href="/" class="btn btn-ghost text-2xl text-primary font-title rounded-2xl">SquashVote</a>
-        </div>
-        <div class="md:hidden navbar-end">
-            <div class="dropdown dropdown-end">
-                <button class="btn btn-square btn-ghost font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
-                        viewBox="0 0 24 24" 
-                        class="inline-block h-8 w-8 stroke-white">
-                        <path stroke-linecap="round" stroke-linejoin="round" 
-                        stroke-width="2" 
-                        d="M4 6h16M4 12h16M4 18h16">
-                        </path>
-                    </svg>
-                </button>
-                <ul tabindex="0"
-                    class="menu dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-200 rounded-box w-52">
+    {# ───── This is your main page content (including the navbar) ───── #}
+    <div class="drawer-content flex flex-col flex-grow">
 
-                    <li>
-                        <a class="font-body hover:bg-base-300 rounded-2xl transition" href="{% url 'about' %}">
-                            About SquashVote
-                        </a>
-                    </li>
-                    <li>
-                        <a class="font-body hover:bg-base-300 rounded-2xl transition" href="{% url 'rules' %}">
-                            Learn Squash Rules
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="navbar-end hidden md:flex">
+      {# ───── Navbar ───── #}
+      <div class="w-full px-4 md:px-8 pb-4 md:pb-8 py-8">
+        <div class="navbar bg-base-100 shadow-sm shadow-white rounded-2xl mx-auto">
+          <div class="navbar-start">
+            <a href="/" class="btn btn-ghost text-2xl text-primary font-title rounded-2xl">
+              SquashVote
+            </a>
+          </div>
+
+          {# ───── Mobile toggle button ───── #}
+          <div class="navbar-end md:hidden">
+            <label for="my-drawer-4" class="btn btn-ghost p-2">
+              <img
+                src="{% static 'images/line-white.svg' %}"
+                alt="Menu"
+                class="h-6 w-6"
+              />
+            </label>
+          </div>
+
+          {# ───── Desktop links ───── #}
+          <div class="navbar-end hidden md:flex">
             <ul class="menu menu-horizontal px-1 font-body text-md">
-                <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
-                <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
+              <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload a video</a></li>
+              <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
+              <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
             </ul>
-
+          </div>
         </div>
-      </div> 
       </div>
 
     
     {% block content %}{% endblock %}
     {% block scripts %} 
     {% endblock %}
+    </div>
+    <div class="drawer-side">
+      <label for="my-drawer-4" class="drawer-overlay"></label>
+      <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+        <li><a href="{% url 'video_form' %}" class="text-2xl font-semibold ">SquashVote.wtf</a></li>
+        <li><a href="{% url 'video_form' %}" class="underline text-lg">Upload a video</a></li>
+        <li><a href="{% url 'about' %}" class="underline text-lg">About SquashVote</a></li>
+        <li><a href="{% url 'rules' %}" class="underline text-lg">Learn Squash Rules</a></li>
+      </ul>
+    </div>
+  </div>
 </body>
 </html>

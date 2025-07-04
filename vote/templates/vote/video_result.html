@@ -92,7 +92,7 @@
     
     <!-- Comment Form -->
     <form
-      hx-post="{% url 'post_comment' video_id=video.video_id %}"
+      hx-post="{% url 'post_comment' pk=video.pk %}"
       hx-swap="innerHTML"
       hx-target="#comments"
       hx-on::after-request="this.reset()"

@@ -2,48 +2,27 @@
 {% block title%}SquashVote - So you think you can ref?{% endblock%} 
 {% block content%}
 
-<!--Banner-->
-<div
-  id="sticky-banner"
-  tabindex="-1"
-  class="fixed top-0 start-0 z-50 flex justify-between w-full p-4 bg-gray-600"
->
-  <!--bg-gray-50 dark:bg-gray-700 dark:border-gray-600-->
-  <div class="flex items-center mx-auto">
-    <p class="flex items-center text-sm font-normal text-gray-200">
-      <span
-        >New to Squash?
-        <a
-          href="{% url 'rules' %}"
-          class="inline font-medium text-blue-400 underline hover:no-underline"
-          >Learn Squash Rules</a
-        ></span
-      >
-    </p>
-  </div>
-  <div class="flex items-center">
-    <button
-      id="close-banner"
-      type="button"
-      class="shrink-0 inline-flex justify-center w-7 h-7 items-center text-black hover:text-gray-900 rounded-lg text-md p-1.5 cursor-pointer"
-    >
-      <svg
-        class="w-3 h-3"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 14 14"
-      >
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-        />
-      </svg>
-      <span class="sr-only">Close banner</span>
-    </button>
+<div id="myModal" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden ">
+  <div class="bg-white p-6 rounded-xl shadow-lg w-96 text-center">
+    <button id="closeModal" class="float-right text-gray-900 text-4xl hover:text-black cursor-pointer">&times;</button>
+    <h2 class="text-xl font-semibold mb-4 text-black">❤️ Support SquashVote!</h2>
+    <p class="mb-2 text-gray-800">Enjoying the site? Support us:</p>
+    <div class="space-y-2 mb-4 flex flex-col">
+      <a href="https://your-substack-link" target="_blank" id="substackLink" class="text-blue-600 underline">
+        👉 Subscribe on Substack
+      </a>
+      <a href="https://www.buymeacoffee.com/yourname" target="_blank" id="coffeeLink" class="text-blue-600 underline">
+        👉 Buy Me a Coffee ☕️
+      </a>
+    </div>
+    <div class="border-t border-gray-300 pt-4">
+      <p class="text-gray-800">
+        I highly recommend taking a moment to
+        <a href="/rules" target="_blank" class="text-blue-600 underline">
+          review the squash rules
+        </a>.
+      </p>
+    </div>
   </div>
 </div>
 <h1
@@ -51,16 +30,20 @@
 >
   So you think you can ref &#63;
 </h1>
+
+<!-- Filter buttons-->
 <div class="flex flex-col md:flex-row items-center justify-center">
 
   <!-- category -->
   <div class="flex space-x-2 p-2">
+
+  <div>
     <input
       type="radio"
+      id="all"
       name="category"
       value="all"
-      aria-label="All"
-      class="btn btn-sm rounded-xl"
+      class="hidden peer"
       {% if category == "all" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -68,12 +51,16 @@
       hx-target="#videos"
       hx-swap="innerHTML"
     />
+    <label for="all" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">All</label>
+  </div>
+
+  <div>
     <input
       type="radio"
+      id="psa"
       name="category"
       value="psa"
-      aria-label="PSA"
-      class="btn btn-sm rounded-xl"
+      class="hidden peer"
       {% if category == "psa" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -81,12 +68,16 @@
       hx-target="#videos"
       hx-swap="innerHTML"
     />
+    <label for="psa" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">PSA</label>
+  </div>
+
+  <div>
     <input
       type="radio"
+      id="amateur"
       name="category"
       value="amateur"
-      aria-label="Amateur"
-      class="btn btn-sm rounded-xl"
+      class="hidden peer"
       {% if category == "amateur" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -94,21 +85,23 @@
       hx-target="#videos"
       hx-swap="innerHTML"
     />
+    <label for="amateur" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">Amateur</label>
   </div>
+</div>
 
   <!-- divider -->
   <div class="hidden md:block border-l-2 border-base-content h-12 mx-2 opacity-50"></div>
   <div class="md:hidden block border-t-2 border-base-content w-32 my-2 mx-auto opacity-50"></div>
 
 
-  <!-- sort -->
   <div class="flex space-x-2 p-2">
+  <div>
     <input
       type="radio"
+      id="new"
       name="sort"
       value="newest"
-      aria-label="New"
-      class="btn btn-sm rounded-xl"
+      class="hidden peer"
       {% if sorted_by == "newest" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -116,13 +109,16 @@
       hx-target="#videos"
       hx-swap="innerHTML"
     />
+    <label for="new" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">New</label>
+  </div>
 
+  <div>
     <input
       type="radio"
+      id="top"
       name="sort"
       value="most_votes"
-      aria-label="Top"
-      class="btn btn-sm rounded-xl"
+      class="hidden peer"
       {% if sorted_by == "most_votes" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -130,27 +126,38 @@
       hx-target="#videos"
       hx-swap="innerHTML"
     />
+    <label for="top" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">Top</label>
+  </div>
 
+  <div>
     <input
       type="radio"
+      id="old"
       name="sort"
       value="oldest"
-      aria-label="Old"
-      class="btn btn-sm rounded-xl"
+      class="hidden peer"
       {% if sorted_by == "oldest" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
       hx-trigger="change"
       hx-target="#videos"
-      hx-swap="innerHTML"
-    />
-
+      hx-swap="innerHTML"/>
+    <label for="old" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">Old</label>
   </div>
+</div>
 
+</div>
+<div class="flex items-center justify-center py-4 md:py-8">
+  <a
+    href="{% url 'video_form' %}"
+    class="inline-flex items-center px-3 py-2 text-black bg-secondary font-medium rounded-lg shadow-md hover:scale-110 transition"
+  >
+    Upload Video <img src="{% static 'images/upload.svg' %}" class="w-3 h-3 ml-2">
+  </a>
 </div>
 
 
-<div id="videos" class="p-6 pb-20 pt-4 md:py-20 bg-base-100">
+<div id="videos" class="p-6 pb-20 pt-4 md:py-16 bg-base-100">
       {% include "vote/partials/video_grid.html" with videos=videos %} {% comment %} {% if videos|length == 0 %} <p class="text-center text-gray-500">No videos available.</p> {% endif %} {% endcomment %}
 </div>
 
@@ -197,10 +204,5 @@
 
 {% endblock %} 
 {% block scripts %}
-
-<script type="text/javascript" src="{% static 'js/banner.js' %}"></script>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
 
 {% endblock %}
