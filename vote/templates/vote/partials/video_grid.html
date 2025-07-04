@@ -1,6 +1,7 @@
-{% for video in videos %}
+<div  class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
+{% for video in page_obj %}
       <div
-        class="card relative bg-base-200 card-xl w-full md:card-xl p-1 rounded-2xl transform transition duration-300 ease-in-out hover:scale-110 shadow-lgx"
+        class="card relative bg-base-200 card-xl w-full md:card-xl p-1 rounded-2xl transform transition duration-300 ease-in-out hover:scale-105 shadow-lgx"
       >
         <figure class="w-full aspect-video">
 		  <lite-youtube referrerpolicy="no-referrer-when-downgrade"  videoid="{{ video.video_id }}" params="start={{ video.start }}&modestbranding=1&rel=0&controls=1&autohide=1" playlabel="Play {{ video.video_title }}" title="{{video.video_title}}" class="w-full h-full"></lite-youtube>
@@ -26,3 +27,39 @@
         </div>
       </div>
 {% endfor %}
+</div>
+
+
+<div class=" w-full flex justify-center items-center gap-2 mt-10 flex-wrap">
+  {% if page_obj.has_previous %}
+    <button
+      hx-get="?page={{ page_obj.previous_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+      class="btn btn-outline rounded-lg"
+    >← Prev</button>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if num == page_obj.number %}
+      <span class="btn btn-active rounded-lg">{{ num }}</span>
+    {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+      <button
+        hx-get="?page={{ num }}&category={{ category }}&sort={{ sorted_by }}"
+        hx-target="#videos"
+        hx-swap="innerHTML"
+        class="btn btn-ghost rounded-lg"
+      >{{ num }}</button>
+    {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+    <button
+      hx-get="?page={{ page_obj.next_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+      class="btn btn-outline rounded-lg"
+    >Next →</button>
+  {% endif %}
+</div>
+

@@ -51,7 +51,7 @@
 >
   So you think you can ref &#63;
 </h1>
-<div class="flex flex-col md:flex-row items-center justify-center mb-5">
+<div class="flex flex-col md:flex-row items-center justify-center">
 
   <!-- category -->
   <div class="flex space-x-2 p-2">
@@ -60,7 +60,7 @@
       name="category"
       value="all"
       aria-label="All"
-      class="btn rounded-xl"
+      class="btn btn-sm rounded-xl"
       {% if category == "all" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -73,7 +73,7 @@
       name="category"
       value="psa"
       aria-label="PSA"
-      class="btn rounded-xl"
+      class="btn btn-sm rounded-xl"
       {% if category == "psa" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -86,7 +86,7 @@
       name="category"
       value="amateur"
       aria-label="Amateur"
-      class="btn rounded-xl"
+      class="btn btn-sm rounded-xl"
       {% if category == "amateur" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -108,7 +108,7 @@
       name="sort"
       value="newest"
       aria-label="New"
-      class="btn rounded-xl"
+      class="btn btn-sm rounded-xl"
       {% if sorted_by == "newest" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -122,7 +122,7 @@
       name="sort"
       value="most_votes"
       aria-label="Top"
-      class="btn rounded-xl"
+      class="btn btn-sm rounded-xl"
       {% if sorted_by == "most_votes" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -136,7 +136,7 @@
       name="sort"
       value="oldest"
       aria-label="Old"
-      class="btn rounded-xl"
+      class="btn btn-sm rounded-xl"
       {% if sorted_by == "oldest" %}checked{% endif %}
       hx-get="{% url 'index' %}"
       hx-include="[name='category'], [name='sort']"
@@ -150,20 +150,12 @@
 </div>
 
 
-<div class="max-w-screen mb-28 px-2 sm:px-3 md:px-4">
-  <div
-    class="bg-base-100 w-full mt-5 flex flex-col items-center space-y-2 flex-grow p-2"
-  >
-    <div id="videos"
-      class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full"
-    >
+<div id="videos" class="p-6 pb-20 pt-4 md:py-20 bg-base-100">
       {% include "vote/partials/video_grid.html" with videos=videos %} {% comment %} {% if videos|length == 0 %} <p class="text-center text-gray-500">No videos available.</p> {% endif %} {% endcomment %}
-    </div>
-  </div>
 </div>
 
 
-<footer class="bg-base-200 text-base-content py-10 px-6">
+<footer class="bg-base-200 text-base-content pt-10 pb-4 px-6">
   <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
     
     <!-- Left: Navigation Links -->
@@ -194,14 +186,15 @@
     </div>
 
   </div>
-  </footer>
-<footer class="footer sm:footer-horizontal footer-center bg-base-100 text-base-content p-4">
+  <div class="footer sm:footer-horizontal footer-center text-base-content p-4">
   <aside>
     <p>
         Copyright © <span id="year"></span> - SquashVote. All right reserved.
     </p>
   </aside>
-</footer>
+  </div>
+  </footer>
+
 {% endblock %} 
 {% block scripts %}
 

@@ -90,6 +90,7 @@ class VoteUser(models.Model):
         return f"{self.user} voted {self.vote} for {self.video.video_title}"
 
 
+#TODO: Videos with the video_id causes issue, use video.id
 class Comment(models.Model):
     parent = models.ForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies"

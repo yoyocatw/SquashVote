@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-
+from django.core.paginator import Paginator
 
 # Create your views here.
 def get_session_id(request):
@@ -31,14 +31,24 @@ def index(request):
     else:
         videos = videos.order_by("-date")
 
+    paginator = Paginator(videos, 6)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "videos": videos,
+        "sorted_by": sorted_by,
+        "category": category,
+        "page_obj": page_obj,
+    }
+    #HTMX reload
     if request.headers.get("HX-Request"):
         return render(
             request,
             "vote/partials/video_grid.html",
-            {"videos": videos, "sorted_by": sorted_by, "category": category},
+            context,
         )
-
-    context = {"videos": videos, "sorted_by": sorted_by, "category": category}
+    # Full page reload
     return render(request, "vote/index.html", context=context)
 
 
@@ -135,10 +145,8 @@ def video_result(request, pk, slug=None):
     return render(request, "vote/video_result.html", context=context)
 
 
-def chart(request, video_id):
-    video = video = get_object_or_404(
-        Video.objects.select_related("result"), video_id=video_id
-    )
+def chart(request, pk):
+    video = get_object_or_404(Video.objects.select_related("result"), pk=pk)
     data = {
         "labels": ["Stroke", "Let", "No Let"],
         "data": [
@@ -148,7 +156,6 @@ def chart(request, video_id):
         ],
     }
     return JsonResponse(data)
-
 
 def video_form(request):
     if request.method == "POST":
