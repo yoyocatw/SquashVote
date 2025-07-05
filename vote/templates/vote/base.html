@@ -1,0 +1,82 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="SquashVote lets squash fans vote on controversial PSA referee decisions. Participate, see live results, and decide if it's a stroke, let, or no let!">
+    <meta name="keywords" content="Squash, PSA, SquashVote, referee decisions, let or no let, stroke or let, PSA squash, squash community, controversial decision">
+    <meta name="author" content="SquashVote">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="SquashVote - So you think you can ref?">
+    <meta property="og:description" content="Think the ref got it wrong? Vote on controversial squash calls in PSA matches and see what the community thinks.">
+    <meta property="og:url" content="https://squashvote.wtf">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SquashVote">
+    {% if "fly.dev" in request.get_host %}
+      <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+    <link rel="canonical" href="https://squashvote.wtf">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-b0GXujLkk9eYYSmcSfoyZbfyElGAQnDyY0skCHSG6w3JgTMFnz11ggrTAr7seu9f" crossorigin="anonymous" defer></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" integrity="sha384-GvJ24O7Bpn7zLnkTzKFwaPO0Ucz0nnJRkkn2xS0+SZ8vuCMYn/PjC/h+WIehnGSM" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script>
+    <title>{% block title%}{% endblock%}</title>
+    <link rel="stylesheet" href="{% static 'css/output.css'%}">
+    <script type="text/javascript" src="{% static 'js/chart.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}">
+    <script src="{% static 'js/lite-yt-embed.js' %}" defer></script>
+    <script src="{% static 'js/confetti.js' %}" defer></script>
+    <script src="{% static 'js/modal.js' %}" defer></script>
+    
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_io/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon_io/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'favicon_io/site.webmanifest' %}">
+    
+    <script defer data-domain="squashvote.wtf" src="https://plausible.io/js/script.js"></script>
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-theme="black" class="bg-base-100 min-h-screen  overflow-y-scroll m-0   flex flex-col">
+    <div class="flex flex-col flex-grow">
+
+      <div class="w-full px-4 md:px-8 pb-4 md:pb-8 py-8">
+        <nav class="navbar bg-base-100 shadow-sm shadow-white rounded-2xl mx-auto">
+          <div class="navbar-start">
+            <a href="/" class="btn btn-ghost text-2xl text-primary font-title rounded-2xl">
+              SquashVote
+            </a>
+          </div>
+          <div class="navbar-end md:hidden dropdown dropdown-bottom dropdown-center">
+            <label tabindex="0" class="btn btn-ghost p-2">
+              <img src="{% static 'images/line-white.svg' %}" alt="Menu" class="h-6 w-6" />
+            </label>
+            <ul
+              tabindex="0"
+              class="menu dropdown-content bg-base-100 rounded-box w-52 p-2 shadow"
+            >
+              <li><a href="{% url 'video_form' %}" class="underline">&#x2601; Upload a video</a></li>
+              <li><a href="{% url 'about' %}" class="underline">&#x270C; About SquashVote</a></li>
+              <li><a href="{% url 'rules' %}" class="underline">&#x1F4DA; Learn Squash Rules</a></li>
+            </ul>
+          </div>
+          <div class="navbar-end hidden md:flex">
+            <ul class="menu menu-horizontal px-1 font-body text-md">
+              <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload a video</a></li>
+              <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
+              <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+    
+    {% block content %}{% endblock %}
+    {% block scripts %} 
+    {% endblock %}
+  </div>
+</body>
+</html>

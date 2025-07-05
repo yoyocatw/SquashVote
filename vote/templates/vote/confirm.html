@@ -1,0 +1,16 @@
+{% extends "vote/base.html" %}
+{% load static %}
+{% block title %}
+  Confirm Video Upload
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+  <img src="{% static 'images/drinking.svg' %}" alt="Creature Drinking" class="w-32 mb-6">
+  <h1 class="text-3xl font-bold text-primary-content font-videotitle mb-6">Thank you for uploading a video</h1>
+  <p class="text-primary-content">Your video has been successfully uploaded and is now under review.</p>
+  <a href="{% url 'video_form' %}" class="mt-6 text-primary-content underline hover:text-primary">Upload another video &#x279C;</a>
+  <a href="{% url 'index' %}" class="mt-2 text-primary-content underline hover:text-primary">Back to Homepage &#x279C;</a>
+</div>
+
+{% endblock %}

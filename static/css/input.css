@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+@plugin "daisyui";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@plugin "daisyui/theme" {
+  name: "black";
+  default: true;
+  --color-primary: #FF2800;
+  --color-secondary: #fcf000;
+  --color-base-100: #0f0f0f;
+  --color-base-200: #272727;
+  --color-base-300: #18181b;
+}
+@theme {  
+  --font-title: "Cinzel", "serif";
+  --font-videotitle: "Roboto", "sans-serif";
+  --font-body: "Lato", "sans-serif";
+}

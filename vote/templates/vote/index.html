@@ -1,0 +1,205 @@
+{% extends 'vote/base.html'%} {% load static %} 
+{% block title%}SquashVote - So you think you can ref?{% endblock%} 
+{% block content%}
+
+<div id="myModal" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden ">
+  <div class="bg-white p-6 rounded-xl shadow-lg w-96 text-center">
+    <button id="closeModal" class="float-right text-gray-900 text-4xl hover:text-black cursor-pointer">&times;</button>
+    <h2 class="text-xl font-semibold mb-4 text-black">❤️ Support SquashVote!</h2>
+    <p class="mb-2 text-gray-800">Enjoying the site? Support us:</p>
+    <div class="space-y-2 mb-4 flex flex-col">
+      <a href="https://your-substack-link" target="_blank" id="substackLink" class="text-blue-600 underline">
+        👉 Subscribe on Substack
+      </a>
+      <!--
+      <a href="/" target="_blank" id="coffeeLink" class="text-blue-600 underline">
+        👉 Buy Me a Coffee ☕️
+      </a>
+    -->
+    </div>
+    <div class="border-t border-gray-300 pt-4">
+      <p class="text-gray-800">
+        I highly recommend taking a moment to
+        <a href="/rules" target="_blank" class="text-blue-600 underline">
+          review the squash rules
+        </a>.
+      </p>
+    </div>
+  </div>
+</div>
+<h1
+  class="font-black text-2xl sm:text-3xl md:text-4xl mb-5 lg:text-5xl font-videotitle text-nowrap mx-auto mt-5"
+>
+  So you think you can ref &#63;
+</h1>
+
+<!-- Filter buttons-->
+<div class="flex flex-col md:flex-row items-center justify-center">
+
+  <!-- category -->
+  <div class="flex space-x-2 p-2">
+
+  <div>
+    <input
+      type="radio"
+      id="all"
+      name="category"
+      value="all"
+      class="hidden peer"
+      {% if category == "all" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+    />
+    <label for="all" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">All</label>
+  </div>
+
+  <div>
+    <input
+      type="radio"
+      id="psa"
+      name="category"
+      value="psa"
+      class="hidden peer"
+      {% if category == "psa" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+    />
+    <label for="psa" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">PSA</label>
+  </div>
+
+  <div>
+    <input
+      type="radio"
+      id="amateur"
+      name="category"
+      value="amateur"
+      class="hidden peer"
+      {% if category == "amateur" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+    />
+    <label for="amateur" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">Amateur</label>
+  </div>
+</div>
+
+  <!-- divider -->
+  <div class="hidden md:block border-l-2 border-base-content h-12 mx-2 opacity-50"></div>
+  <div class="md:hidden block border-t-2 border-base-content w-32 my-2 mx-auto opacity-50"></div>
+
+
+  <div class="flex space-x-2 p-2">
+  <div>
+    <input
+      type="radio"
+      id="new"
+      name="sort"
+      value="newest"
+      class="hidden peer"
+      {% if sorted_by == "newest" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+    />
+    <label for="new" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">New</label>
+  </div>
+
+  <div>
+    <input
+      type="radio"
+      id="top"
+      name="sort"
+      value="most_votes"
+      class="hidden peer"
+      {% if sorted_by == "most_votes" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+    />
+    <label for="top" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">Top</label>
+  </div>
+
+  <div>
+    <input
+      type="radio"
+      id="old"
+      name="sort"
+      value="oldest"
+      class="hidden peer"
+      {% if sorted_by == "oldest" %}checked{% endif %}
+      hx-get="{% url 'index' %}"
+      hx-include="[name='category'], [name='sort']"
+      hx-trigger="change"
+      hx-target="#videos"
+      hx-swap="innerHTML"/>
+    <label for="old" class="btn btn-sm rounded-xl cursor-pointer peer-checked:bg-primary peer-checked:text-white">Old</label>
+  </div>
+</div>
+
+</div>
+<div class="flex items-center justify-center py-4 md:py-8">
+  <a
+    href="{% url 'video_form' %}"
+    class="inline-flex items-center px-3 py-2 text-black bg-secondary font-medium rounded-lg shadow-md hover:scale-110 transition"
+  >
+    Upload Video <img src="{% static 'images/upload.svg' %}" class="w-3 h-3 ml-2">
+  </a>
+</div>
+
+
+<div id="videos" class="p-6 pb-20 pt-4 md:py-16 bg-base-100">
+      {% include "vote/partials/video_grid.html" with videos=videos %} {% comment %} {% if videos|length == 0 %} <p class="text-center text-gray-500">No videos available.</p> {% endif %} {% endcomment %}
+</div>
+
+
+<footer class="bg-base-200 text-base-content pt-10 pb-4 px-6">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+    
+    <!-- Left: Navigation Links -->
+    <nav>
+      <h6 class="footer-title mb-4 text-base-content/80">Links</h6>
+      <ul class="space-y-2">
+        <li><a class="link link-hover" href="{% url 'about' %}">About SquashVote</a></li>
+        <li><a class="link link-hover" href="{% url 'rules' %}">Learn Squash Rules</a></li>
+        <li><a class="link link-hover" href="{% url 'video_form' %}">Upload a Video</a></li>
+        <li><a href="mailto:illreadit@squashvote.wtf" class="link-hover link">Contact me 💌</a></li>
+      </ul>
+    </nav>
+
+    <!-- Right: Substack Newsletter -->
+    <div>
+      <h6 class="footer-title mb-4 text-base-content/80">Newsletter</h6>
+      <p class="text-sm mb-4 max-w-md">
+        Subscribe to our Substack to get decision result updates delivered straight to your inbox.
+      </p>
+      <a href="https://squashvote.substack.com" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition" target="_blank" rel="noopener noreferrer">Subscribe on Substack 👉</a>
+</div>
+
+    </div>
+
+  </div>
+  <div class="footer sm:footer-horizontal footer-center text-base-content p-4">
+  <aside>
+    <p>
+        Copyright © <span id="year"></span> - SquashVote. All right reserved.
+    </p>
+  </aside>
+  </div>
+  </footer>
+
+{% endblock %} 
+{% block scripts %}
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "vote/base.html" %}
+{% load static %}
+
+{% block title %}
+  Review Videos
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center"><h1 class="text-3xl font-bold text-primary-content mb-6">Review Videos</h1></div>
+
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+  {% for video in videos %}
+    <div
+      id="video-{{ video.id }}"
+      class="card bg-base-200 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-200"
+    >
+      <figure class="aspect-video w-full bg-base-300">
+        <lite-youtube
+          referrerpolicy="no-referrer-when-downgrade"
+          videoid="{{ video.video_id }}"
+          params="start={{ video.start }}&modestbranding=1&rel=0&controls=1&autohide=1"
+          playlabel="Play {{ video.video_title }}"
+          title="{{ video.video_title }}"
+          class="w-full h-full rounded-t-2xl"
+        ></lite-youtube>
+      </figure>
+      <div class="card-body p-4 space-y-3">
+        <h2 class="text-lg font-semibold text-primary-content truncate">
+          {{ video.video_title }}
+        </h2>
+        <p>Category: {{ video.category }}</p>
+        <p>Email: {{ video.email }}</p>
+        {% if video.same_id %}
+            <div class="alert alert-warning text-sm my-2 flex flex-col">
+              ⚠️ Possible duplicate submissions:
+                {% for dup in video.same_id %}
+                  <p>Timestamp: {{ dup.timestamp }}</p>
+                  <p>Title: {{ dup.video_title}} </p>
+                {% endfor %}
+
+            </div>
+          {% endif %}
+        <div class="flex gap-2">
+          <button 
+            class="btn btn-success flex-1"
+            hx-post="{% url 'accept_video' video.id %}" 
+            hx-target="#video-{{ video.id }}"
+            hx-swap="delete"
+          >
+            Accept
+          </button>
+          <button 
+            class="btn btn-error flex-1"
+            hx-post="{% url 'reject_video' video.id %}" 
+            hx-target="#video-{{ video.id }}"
+            hx-swap="delete"
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

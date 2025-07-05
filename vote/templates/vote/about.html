@@ -1,0 +1,133 @@
+{% extends 'vote/base.html'%}
+{% load static %}
+{% block title%}SquashVote | About {% endblock%}
+{% block content%}
+<div class="hero p-4 py-32 md:py-40 bg-base-100">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <img class="w-32 md:w-48 mx-auto mb-6" src="{% static 'images/welcome.svg' %}" alt="Welcome image">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black font-videotitle whitespace-nowrap">About <span class="bg-secondary text-black p-2">SquashVote.wtf</span></h1>
+      <p class="py-6">
+            A place for squash fans to vote...
+      </p>
+      <a class="btn btn-primary rounded-xl" href="{% url 'index'%}">Try your first call &#x279C;</a>
+    </div>
+  </div>
+</div>
+
+
+
+<section class="bg-base-100 py-16 md:py-32 w-screen">
+    <div class="mx-auto flex max-w-6xl flex-col px-4 md:px-8 gap-8 md:flex-row md:gap-16">
+        <img class="rounded-2xl w-full object-contain md:w-1/2" src={% static 'images/maker.svg'%}> 
+        <div class="max-w-lg space-y-6 md:space-y-8">
+            <h2 class="text-3xl font-black leading-tight tracking-tight md:text-4xl md:leading-tight lg:text-5xl text-primary-content">Why I created SquashVote.wtf?</h2>
+            <p class="leading-relaxed text-body"> 
+                As a squash player, I know how frustrating it can be when a referee makes a terrible call. I love watching PSA matches, but even at the highest level, a call can leave you flabbergasted. Now that squash is headed to the Olympics, it's more important than ever to shine a light on referee standards. So I decided to create a platform where squash fans like myself can vote on what you think the correct decision should be.
+            </p>
+            <a class="btn-primary btn-block btn shadow-lg md:btn-wide rounded-xl" href="{% url 'index'%}">Make a vote &#x279C;</a>
+        </div>
+    </div>
+</section>
+
+<section class="p-6 py-20 md:py-32 bg-base-100">
+  <div class="text-center max-w-4xl mx-auto">
+    <h2 class="text-4xl md:text-5xl font-bold text-primary-content tracking-tight mb-4">
+      How it works
+    </h2>
+    <p class="text-lg text-body mb-10">
+      Watch the call. Cast your vote. See what others think.
+    </p>
+
+    <!-- Steps with emoji in step-icon slot -->
+    <div class="flex justify-center mb-10">
+      <ul class="steps max-w-3xl w-full steps-horizontal">
+        <li class="step step-primary">
+          <span class="step-icon">👀</span>
+          <span class="text-lg font-semibold">Watch</span>
+        </li>
+        <li class="step step-primary">
+          <span class="step-icon">✋</span>
+          <span class="text-lg font-semibold">Vote</span>
+        </li>
+        <li class="step step-primary">
+          <span class="step-icon">📊</span>
+          <span class="text-lg font-semibold">See Results</span>
+        </li>
+        <li class="step step-primary">
+          <span class="step-icon ">💬</span>
+          <span class="text-lg font-semibold">Comment</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- CTA Button -->
+    <a 
+      href="{% url 'index' %}" 
+      class="btn btn-md bg-secondary text-black rounded-xl ">
+      Watch a decision now &#x279C;
+    </a>
+  </div>
+</section>
+
+
+
+
+<section class="py-12 bg-base-100">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-10 text-primary-content">What People Are Saying!</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      
+     <div class="card card-xl bg-base-200 shadow-md p-4 rounded-xl shadow-primary">
+        <div class="card-body">
+          <p class="italic text-base text-primary-content font-body">"These are my favourite posts here ngl"</p>
+          <div class="mt-3 text-sm text-gray-400">– u/davetharave</div>
+        </div>
+      </div>
+
+      <div class="card card-xl bg-base-300 shadow-md p-4 rounded-xl shadow-secondary rotate-1">
+        <div class="card-body">
+          <p class="italic text-base text-primary-content font-body">"Awesome idea dude, excited to see what more you have in store!"</p>
+          <div class="mt-3 text-sm text-gray-400">– u/Feisty_Efficiency346</div>
+        </div>
+      </div>
+
+      <div class="card card-xl bg-base-200 shadow-md p-4 rounded-xl shadow-primary -rotate-2">
+        <div class="card-body">
+          <p class="italic text-base text-primary-content font-body">"Ha! this is a fun site."</p>
+          <div class="mt-3 text-sm text-gray-400">– u/dimsumham</div>
+        </div>
+      </div>
+
+      <div class="card card-xl bg-base-300 shadow-md p-4 rounded-xl shadow-secondary rotate-2">
+        <div class="card-body">
+          <p class="italic text-base text-primary-content font-body">"First I've seen of this website. Nice job!"</p>
+          <div class="mt-3 text-sm text-gray-400">– u/Dick_Sharpe</div>
+        </div>
+      </div>
+
+      <div class="card card-xl bg-base-200 shadow-md p-4 rounded-xl shadow-primary">
+        <div class="card-body">
+          <p class="italic text-base text-primary-content font-body">"Wow such a nice concept"</p>
+          <div class="mt-3 text-sm text-gray-400">– u/paulipe91</div>
+        </div>
+      </div>
+
+      <div class="card card-xl bg-base-300 shadow-md p-4 rounded-xl shadow-secondary -rotate-1">
+        <div class="card-body">
+          <p class="italic text-base text-primary-content font-body">"Good stuff I like this"</p>
+          <div class="mt-3 text-sm text-gray-400">– u/T_GamingCheetah</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="flex justify-center items-center">
+<img class="w-full max-w-2xl object-cover" src="{% static 'images/happy.svg' %}" alt="Thank You">
+</div>
+
+
+
+
+{% endblock %}

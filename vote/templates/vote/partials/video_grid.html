@@ -1,0 +1,65 @@
+<div  class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
+{% for video in page_obj %}
+      <div
+        class="card relative bg-base-200 card-xl w-full md:card-xl p-1 rounded-2xl transform transition duration-300 ease-in-out hover:scale-105 shadow-lgx"
+      >
+        <figure class="w-full aspect-video">
+		  <lite-youtube referrerpolicy="no-referrer-when-downgrade"  videoid="{{ video.video_id }}" params="start={{ video.start }}&modestbranding=1&rel=0&controls=1&autohide=1" playlabel="Play {{ video.video_title }}" title="{{video.video_title}}" class="w-full h-full"></lite-youtube>
+        </figure>
+        <div class="card-body relative p-3 gap-y-0.5 group">
+          <a
+            href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
+            class="absolute inset-0"
+            aria-label="{{ video.video_title }}"
+          ></a>
+
+          <h2
+            class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0"
+          >
+            {{video.video_title}}
+          </h2>
+          <p class="inline-block font-body">
+            {{ video.result.total_votes|default:"0" }} votes
+          </p>
+          <a class="underline text-primary mt-2 text-md font-body">
+            Go vote &#10140;
+          </a>
+        </div>
+      </div>
+{% endfor %}
+</div>
+
+
+<div class=" w-full flex justify-center items-center gap-2 mt-10 flex-wrap">
+  {% if page_obj.has_previous %}
+    <button
+      hx-get="?page={{ page_obj.previous_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+      class="btn btn-outline rounded-lg"
+    >← Prev</button>
+  {% endif %}
+
+  {% for num in page_obj.paginator.page_range %}
+    {% if num == page_obj.number %}
+      <span class="btn btn-active rounded-lg">{{ num }}</span>
+    {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+      <button
+        hx-get="?page={{ num }}&category={{ category }}&sort={{ sorted_by }}"
+        hx-target="#videos"
+        hx-swap="innerHTML"
+        class="btn btn-ghost rounded-lg"
+      >{{ num }}</button>
+    {% endif %}
+  {% endfor %}
+
+  {% if page_obj.has_next %}
+    <button
+      hx-get="?page={{ page_obj.next_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+      hx-target="#videos"
+      hx-swap="innerHTML"
+      class="btn btn-outline rounded-lg"
+    >Next →</button>
+  {% endif %}
+</div>
+

@@ -1,0 +1,28 @@
+{% load timestamp %} 
+<div class="border-b border-gray-600 py-4">
+    <div class="text-base text-pretty font-body">
+        <p>{{ reply.comment }}</p>
+    </div>
+    <div class="flex items-center gap-2 text-xs text-gray-500">
+        <span class="text-sm">{{ reply.user.username|default:"Anonymous" }}</span>
+        <span>· {{ reply.created_at|comment_time }}</span>
+        <div id="report-reply-{{ reply.id }}">
+            {% if reply.id in reported %}
+              <button class="cursor-pointer text-red-600 text-xs" disabled>
+                &#9873;
+              </button>
+            {% else %}
+              <button
+                hx-post="{% url 'report' reply.id %}"
+                hx-target="#report-reply-{{ reply.id }}"
+                hx-swap="outerHTML"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-confirm="Are you sure you want to report this comment?"
+                class="cursor-pointer text-xs"
+              >
+                &#9873;
+              </button>
+            {% endif %}
+          </div>
+    </div>
+</div>
