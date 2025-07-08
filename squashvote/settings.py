@@ -45,16 +45,12 @@ ALLOWED_HOSTS = [
 ]
 CSRF_TRUSTED_ORIGINS = ["https://squashvote.wtf", "https://www.squashvote.wtf"]
 URL = "https://squashvote.wtf"
-GOOGLE_CLIENT_SECRET = env.str("GOOGLE_CLIENT_SECRET", default="dummy_secret")
-GOOGLE_CLIENT_ID = env.str("GOOGLE_CLIENT_ID", default="dummy_id")
-GOOGLE_AUTH_URI = env(
-    "GOOGLE_AUTH_URI", default="https://accounts.google.com/o/oauth2/auth"
-)
-GOOGLE_TOKEN_URI = env(
-    "GOOGLE_TOKEN_URI", default="https://accounts.google.com/o/oauth2/token"
-)
-GOOGLE_API = env("GOOGLE_API")
-REFRESH_TOKEN = env("REFRESH_TOKEN", default="dummy_token")
+GOOGLE_CLIENT_SECRET = env.str("GOOGLE_CLIENT_SECRET", default=get_random_secret_key())
+GOOGLE_CLIENT_ID = env.str("GOOGLE_CLIENT_ID", default=get_random_secret_key())
+GOOGLE_AUTH_URI = env("GOOGLE_AUTH_URI", default=get_random_secret_key())
+GOOGLE_TOKEN_URI = env("GOOGLE_TOKEN_URI", default="https://accounts.google.com/o/oauth2/token")
+GOOGLE_API = env("GOOGLE_API", default=get_random_secret_key())
+REFRESH_TOKEN = env("REFRESH_TOKEN", default=get_random_secret_key())
 CANONICAL_DOMAIN = "squashvote.wtf"
 SECURE_SSL_REDIRECT = False
 SECURE_SSL_HOST = "squashvote.wtf"  # Remove for local development
