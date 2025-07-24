@@ -55,17 +55,20 @@
               <img src="{% static 'images/line-white.svg' %}" alt="Menu" class="h-6 w-6" />
             </label>
             <ul
-              tabindex="0"
-              class="menu dropdown-content bg-base-100 rounded-box w-52 p-2 shadow"
-            >
-              <li><a href="{% url 'video_form' %}" class="underline">&#x2601; Upload a video</a></li>
-              <li><a href="{% url 'about' %}" class="underline">&#x270C; About SquashVote</a></li>
-              <li><a href="{% url 'rules' %}" class="underline">&#x1F4DA; Learn Squash Rules</a></li>
+                tabindex="0"
+                class="menu dropdown-content bg-base-100 rounded-box w-52 p-2 shadow"
+                >
+                <li><a href="{% url 'video_form' %}" class="underline">&#x2601; Upload a video</a></li>
+                <li><a class="underline" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
+
+                <li><a href="{% url 'about' %}" class="underline">&#x270C; About SquashVote</a></li>
+                <li><a href="{% url 'rules' %}" class="underline">&#x1F4DA; Learn Squash Rules</a></li>
             </ul>
           </div>
           <div class="navbar-end hidden md:flex">
             <ul class="menu menu-horizontal px-1 font-body text-md">
               <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload a video</a></li>
+              <li><a class="rounded-2xl" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
               <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
               <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
             </ul>
