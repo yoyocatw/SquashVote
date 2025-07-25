@@ -1,31 +1,50 @@
 <div  class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
-{% for video in page_obj %}
-      <div
-        class="card relative bg-base-200 card-xl w-full md:card-xl p-1 rounded-2xl transform transition duration-300 ease-in-out hover:scale-105 shadow-lgx"
-      >
-        <figure class="w-full aspect-video">
-		  <lite-youtube referrerpolicy="no-referrer-when-downgrade"  videoid="{{ video.video_id }}" params="start={{ video.start }}&modestbranding=1&rel=0&controls=1&autohide=1" playlabel="Play {{ video.video_title }}" title="{{video.video_title}}" class="w-full h-full"></lite-youtube>
-        </figure>
+    {% for video in page_obj %}
+    <!-- Card as a link so click anywhere goes into the vote page -->
+    <a 
+        href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
+        aria-label="{{ video.video_title }}"
+        class="card relative bg-base-100 card-xl w-full md:card-xl p-1 transform transition duration-300 ease-in-out hover:scale-105 shadow-lgx">
         <div class="card-body relative p-3 gap-y-0.5 group">
-          <a
-            href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
-            class="absolute inset-0"
-            aria-label="{{ video.video_title }}"
-          ></a>
+            <figure class="w-full aspect-video relative overflow-hidden rounded">
+                <img
+                loading="lazy"
+                src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg"
+                alt="{{ video.video_title }}"
+                class="w-full h-full object-cover"
+                />
+                <!-- Play icon overlay -->
+                <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-12 h-12 text-red-600"
+                        viewBox="0 0 100 70"
+                        >
+                        <!-- red, rounded‑corner background -->
+                        <rect width="100" height="70" rx="14" fill="currentColor"/>
 
-          <h2
-            class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0"
-          >
+                        <!-- white play triangle -->
+                        <polygon points="40,20 40,50 70,35" fill="#fff"/>
+                    </svg>
+
+                </div>
+            </figure>
+
+            <h2
+                class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0"
+                >
             {{video.video_title}}
           </h2>
           <p class="inline-block font-body">
             {{ video.result.total_votes|default:"0" }} votes
           </p>
+          <!-- Go Vote button
           <a class="underline text-primary mt-2 text-md font-body">
             Go vote &#10140;
           </a>
+          -->
         </div>
-      </div>
+      </a>
 {% endfor %}
 </div>
 
