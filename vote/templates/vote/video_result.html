@@ -64,7 +64,7 @@
                 <span>🫳 No Let</span>
               </div>
             </div>
-            <button hx-on:click="voteConfetti()" id="vote-button" type="submit" class="btn rounded-4xl bg-primary text-primary-content text-md" :disabled="!vote">
+            <button @click="voteConfetti()" id="vote-button" type="submit" class="btn rounded-4xl bg-primary text-primary-content text-md" :disabled="!vote">
               Vote
             </button>
           </form>
