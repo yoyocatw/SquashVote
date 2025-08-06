@@ -12,7 +12,7 @@
     <a href="{% url 'index' %}" class="btn border-none bg-base-100 font-black text-lg md:text-2xl">
       &#8592;
     </a>
-    <h1 class="text-2xl font-semibold text-primary-content font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0 tracking-wide">
+    <h1 class="text-2xl font-semibold text-base-content font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0 tracking-wide">
       {{ video.video_title }}
     </h1>
   </div>
@@ -34,7 +34,7 @@
 
   <!-- Voting Section -->
   <div class="w-full max-w-4xl text-start space-y-1">
-    <div class="bg-transparent text-white rounded-lg shadow-lg  p-4 space-y-4">
+    <div class="bg-transparent text-base-content rounded-lg shadow-lg  p-4 space-y-4">
       
 
       <div id="vote-section">
@@ -51,17 +51,17 @@
           >
             {% csrf_token %}
             <div class="space-y-4 mb-4">
-              <div class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl">
+              <div class="flex space-x-2 checked:bg-primary focus-within:bg-base-00 rounded-2xl">
                 <input type="radio" name="vote" value="stroke" class="radio" x-model="vote" />
-                <span>✊ Stroke</span>
+                <span class="text-base-content font-semibold">✊ Stroke</span>
               </div>
               <div class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl">
                 <input type="radio" name="vote" value="let" class="radio" x-model="vote" />
-                <span>👆️ Let</span>
+                <span class="text-base-content font-semibold">👆️ Let</span>
               </div>
               <div class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl">
                 <input type="radio" name="vote" value="nolet" class="radio" x-model="vote" />
-                <span>🫳 No Let</span>
+                <span class="text-base-content font-semibold">🫳 No Let</span>
               </div>
             </div>
             <button @click="voteConfetti()" id="vote-button" type="submit" class="btn rounded-4xl bg-primary text-primary-content text-md" :disabled="!vote">

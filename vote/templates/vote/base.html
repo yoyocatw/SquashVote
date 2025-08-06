@@ -1,7 +1,7 @@
 {% load static%}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="custom">
 <head>
   <!--- Meta Tags --->
     <meta charset="UTF-8">
@@ -45,15 +45,15 @@
     
     
 </head>
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-theme="black" class="bg-base-100 min-h-screen  overflow-y-scroll m-0   flex flex-col">
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'  class="bg-base-100 min-h-screen  overflow-y-scroll m-0   flex flex-col">
     <div class="flex flex-col flex-grow">
 
       <div class="w-full px-4 md:px-8 pb-4 md:pb-8 py-8">
-        <nav class="navbar bg-base-100 shadow-sm shadow-white rounded-2xl mx-auto">
+        <nav class="navbar bg-base-300 shadow-sm shadow-white rounded-2xl mx-auto">
           <div class="navbar-start">
             <a href="/" class="btn btn-ghost text-3xl font-bold font-bebas tracking-wide rounded-2xl text-primary">
                 <span>
-                    SquashVote<span class="text-white tracking-normal">.wtf</span>
+                    SquashVote<span class="text-base-content tracking-normal">.wtf</span>
                 </span>
             </a>
 
@@ -64,7 +64,7 @@
             </label>
             <ul
                 tabindex="0"
-                class="menu dropdown-content bg-base-100 rounded-box w-52 p-2 shadow"
+                class="menu dropdown-content bg-base-300 rounded-box w-52 p-2 shadow"
                 >
                 <li><a href="{% url 'video_form' %}" class="underline">&#x2601; Upload a video</a></li>
                 <li><a class="underline" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
@@ -74,7 +74,7 @@
             </ul>
           </div>
           <div class="navbar-end hidden md:flex">
-            <ul class="menu menu-horizontal px-1 font-body text-md">
+            <ul class="menu menu-horizontal px-1 text-base-content font-body text-md">
               <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload a video</a></li>
               <li><a class="rounded-2xl" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
               <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>

@@ -1,4 +1,4 @@
-<div  class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full">
+<div  class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full bg-base-100">
     {% for video in page_obj %}
     <!-- Card as a link so click anywhere goes into the vote page -->
     <a 
@@ -31,7 +31,7 @@
             </figure>
 
             <h2
-                class="justify-start text-primary-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0"
+                class="justify-start text-base-content text-xl font-semibold font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0"
                 >
             {{video.video_title}}
           </h2>
