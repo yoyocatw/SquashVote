@@ -54,9 +54,9 @@ GOOGLE_API = env("GOOGLE_API", default=get_random_secret_key())
 REFRESH_TOKEN = env("REFRESH_TOKEN", default=get_random_secret_key())
 CANONICAL_DOMAIN = "squashvote.wtf"
 SECURE_SSL_REDIRECT = False
-#SECURE_SSL_HOST = "squashvote.wtf"  # Remove for local development
-SESSION_COOKIE_SECURE = False  # Change to True for production
-CSRF_COOKIE_SECURE = False  # Change to True for production
+SECURE_SSL_HOST = "squashvote.wtf"  # Remove for local development
+SESSION_COOKIE_SECURE = True  # Change to True for production
+CSRF_COOKIE_SECURE = True  # Change to True for production
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
@@ -85,7 +85,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    #"vote.middleware.CanonicalUrlMiddleware",  # Remove for local development
+    "vote.middleware.CanonicalUrlMiddleware",  # Remove for local development
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

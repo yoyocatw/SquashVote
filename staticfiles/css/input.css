@@ -1,8 +1,6 @@
-/* --- FONTS --- */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..0,900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-/* --- TAILWIND & DAISYUI --- */
 @import "tailwindcss";
 @tailwind base;
 @tailwind components;
@@ -13,16 +11,15 @@
 
 @plugin "daisyui/theme" {
   name: "customblack";
-  default: true; /* Set this to true to make it the default */
+  default: true;
   color-scheme: "dark";
   
-  /* Required colors */
   --color-primary: #FF2800;
   --color-primary-content: #FFFFFF;
   --color-secondary: #fcf0;
   --color-secondary-content: #111111;
   --color-accent: #37cdbe;
-  --color-accent-content: #163835;
+  --color-accent-content: #E5E4E2;
   --color-neutral: #3d4451;
   --color-neutral-content: #ffffff;
   --color-base-100: #0f0f0f;
@@ -35,9 +32,8 @@
   --color-error: #f87272;
 }
 
-/* 3. Define your second custom theme */
 @plugin "daisyui/theme" {
-  name: "custom"; /* This was the name of your other theme */
+  name: "custom"; 
   default: false;
   color-scheme: "light";
 
@@ -46,16 +42,13 @@
   --color-secondary: oklch(0.9351 0.1979 104.66);
   --color-secondary-content: oklch(0% 0 0);
   --color-accent: oklch(77% 0.152 181.912);
-  /* ...and so on for all your 'custom' theme colors */
   --color-base-100: oklch(98% 0.003 247.858);
   --color-base-content: oklch(21% 0.006 285.885);
-  
-  /* Customizing layout variables */
   --rounded-box: 0.25rem;
   --rounded-btn: 1rem;
 }
-/* --- YOUR CUSTOM TAILWIND THEME EXTENSIONS --- */
-/* This is the correct place for custom utility values */
+
+
 @theme { 
   --font-videotitle: "Roboto", "sans-serif";
   --font-body: "Lato", "sans-serif";
