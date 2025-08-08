@@ -1,6 +1,5 @@
 /*! tailwindcss v4.1.11 | MIT License | https://tailwindcss.com */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..0,900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap');
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -53,6 +52,7 @@
     --text-4xl--line-height: calc(2.5 / 2.25);
     --text-5xl: 3rem;
     --text-5xl--line-height: 1;
+    --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
@@ -73,9 +73,8 @@
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
-    --font-videotitle: "Roboto", "sans-serif";
-    --font-body: "Lato", "sans-serif";
-    --font-bebas: "Bebas Neue", "serif";
+    --font-videotitle: "Montserrat", sans-serif;
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
   }
 }
 @layer base {
@@ -3201,9 +3200,6 @@
   .text-start {
     text-align: start;
   }
-  .font-bebas {
-    font-family: var(--font-bebas);
-  }
   .font-body {
     font-family: var(--font-body);
   }
@@ -3265,6 +3261,10 @@
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
+  }
+  .font-normal {
+    --tw-font-weight: var(--font-weight-normal);
+    font-weight: var(--font-weight-normal);
   }
   .font-semibold {
     --tw-font-weight: var(--font-weight-semibold);
@@ -3528,13 +3528,13 @@
       --cardtitle-fs: 1.375rem;
     }
   }
-  .btn-accent {
-    --btn-color: var(--color-accent);
-    --btn-fg: var(--color-accent-content);
-  }
   .btn-error {
     --btn-color: var(--color-error);
     --btn-fg: var(--color-error-content);
+  }
+  .btn-neutral {
+    --btn-color: var(--color-neutral);
+    --btn-fg: var(--color-neutral-content);
   }
   .btn-primary {
     --btn-color: var(--color-primary);
@@ -3845,6 +3845,12 @@
     }
   }
 }
+html, body {
+  font-family: var(--font-body);
+}
+h1, h2, .sv-title {
+  letter-spacing: 0.01em;
+}
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {
     color-scheme: light;
@@ -4073,7 +4079,7 @@
     --color-secondary: #fcf0;
     --color-secondary-content: #111111;
     --color-accent: #37cdbe;
-    --color-accent-content: #163835;
+    --color-accent-content: #E5E4E2;
     --color-neutral: #3d4451;
     --color-neutral-content: #ffffff;
     --color-base-100: #0f0f0f;

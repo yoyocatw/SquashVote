@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Lato:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..0,900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap');
 
 @import "tailwindcss";
 @tailwind base;
@@ -49,8 +48,11 @@
 }
 
 
-@theme { 
-  --font-videotitle: "Roboto", "sans-serif";
-  --font-body: "Lato", "sans-serif";
-  --font-bebas: "Bebas Neue", "serif";
+@theme {
+  --font-bebas: "Bebas Neue", sans-serif;
+  --font-videotitle: "Montserrat", sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
 }
+
+html, body { font-family: var(--font-body); }
+h1, h2, .sv-title { letter-spacing: 0.01em; }

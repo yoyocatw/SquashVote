@@ -42,7 +42,6 @@ ALLOWED_HOSTS = [
     "squashvote.wtf",
     "www.squashvote.wtf",
     "squashvote.fly.dev",
-    "127.0.0.1"
 ]
 CSRF_TRUSTED_ORIGINS = ["https://squashvote.wtf", "https://www.squashvote.wtf"]
 URL = "https://squashvote.wtf"
