@@ -1,6 +1,6 @@
 
 <div class="border rounded-lg p-4 mb-4">
-    <div class="text-sm text-gray-300 border-b pb-2 flex justify-between">
+    <div class="text-sm text-base-content border-b pb-2 flex justify-between">
         <span>{{ video.result.total_votes|default:"0" }} votes</span>
     </div>
     <p class="text-lg my-2">Original Referee Decision: <span class="font-semibold text-primary-content">{{ video.org_decision }}</span></p>
@@ -9,7 +9,7 @@
 <div class="flex justify-center">
     <div class="join join-vertical">
         <a class="btn btn-primary btn-wide rounded-t-lg join-item border-b-2" href="{% url 'index' %}">Watch more →</a>
-        <a class="btn btn-neutral btn-wide rounded-b-lg join-item" href="{% url 'video_form'%}">Upload your own video →</a>
+        <a class="btn bg-base-300 btn-wide rounded-b-lg join-item" href="{% url 'video_form'%}">Upload your own video →</a>
     </div>
     
 </div>

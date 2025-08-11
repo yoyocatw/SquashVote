@@ -1,5 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let myChart; 
+    let myChart;
+
+    // Helper function to get the current theme colors
+    function getThemeColors() {
+        const style = getComputedStyle(document.documentElement);
+        return {
+            textColor: style.getPropertyValue('--color-base-content').trim(),
+            gridColor: style.getPropertyValue('--color-base-300').trim()
+        };
+    }
 
     function fetchChartData() {
         const chartElement = document.getElementById("chart");
@@ -11,14 +20,13 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(`/chart/${videoId}/`)
             .then(response => response.json())
             .then(data => {
-               // console.log("Chart Data:", data);
-
                 if (myChart) {
                     myChart.destroy();
-                    myChart = null;
                 }
 
+                const colors = getThemeColors();
                 const chartContext = chartElement.getContext("2d");
+
                 myChart = new Chart(chartContext, {
                     type: "bar",
                     data: {
@@ -36,19 +44,26 @@ document.addEventListener("DOMContentLoaded", function () {
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                ticks: { 
-                                    font: { size: 16 }, 
-                                    color: "#ffffff", 
+                                ticks: {
+                                    font: { size: 16 },
+                                    color: colors.textColor,
                                     stepSize: 5,
                                     callback: function(value) {
                                         return Number.isInteger(value) ? value : '';
-                                  } 
+                                    }
                                 }
                             },
                             x: {
                                 beginAtZero: true,
-                                ticks: { font: { size: 16 }, color: "#ffffff" },
-                                grid: { color: "#4D4D4D", lineWidth: 1, offset: true }
+                                ticks: {
+                                    font: { size: 16 },
+                                    color: colors.textColor
+                                },
+                                grid: {
+                                    color: colors.gridColor,
+                                    lineWidth: 1,
+                                    offset: true
+                                }
                             }
                         },
                         borderRadius: 5,
@@ -61,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetchChartData();
 
+    // Re-fetch chart data after a vote
     async function handleVote(event) {
         event.preventDefault();
         const data = new FormData(this);
@@ -86,4 +102,20 @@ document.addEventListener("DOMContentLoaded", function () {
         voteForm.addEventListener("submit", handleVote);
     }
 
+ // to check when the theme changes
+    const themeObserver = new MutationObserver((mutationsList, observer) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                if (myChart) {
+                    const newColors = getThemeColors();
+                    myChart.options.scales.x.ticks.color = newColors.textColor;
+                    myChart.options.scales.y.ticks.color = newColors.textColor;
+                    myChart.options.scales.x.grid.color = newColors.gridColor;
+                    myChart.update();
+                }
+            }
+        }
+    });
+
+    themeObserver.observe(document.documentElement, { attributes: true });
 });
