@@ -21,10 +21,12 @@
   <div class="w-full max-w-4xl">
     <div class="plyr__video-embed" id="player" data-start="{{ video.start }}">
       <iframe
-        src="https://www.youtube.com/embed/{{ video.video_id }}?origin={{ request.scheme }}://{{ request.get_host }}&iv_load_policy=3&modestbranding=1&playsinline=1&showinfo=0&rel=0&enablejsapi=1"
+        src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?origin={{ request.scheme }}://{{ request.get_host }}&iv_load_policy=3&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&autoplay=1&mute=1"
         allowfullscreen
-        allowtransparency
-        allow="autoplay"
+        playsinline
+        webkit-playsinline
+        allow="autoplay; encrypted-media; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"
       ></iframe>
       </div>
       <div class="text-xs font-semibold text-center">Double tap to enter/exit fullscreen</div>
