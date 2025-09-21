@@ -24,19 +24,23 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-b0GXujLkk9eYYSmcSfoyZbfyElGAQnDyY0skCHSG6w3JgTMFnz11ggrTAr7seu9f" crossorigin="anonymous" defer></script>
     <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb" crossorigin="anonymous" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" integrity="sha384-GvJ24O7Bpn7zLnkTzKFwaPO0Ucz0nnJRkkn2xS0+SZ8vuCMYn/PjC/h+WIehnGSM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" integrity="sha384-Rv68Y7adOjMMJc1/xFMcdNvXre/HF51to4GZjBALmXr7ABnVl5V4UajJwBu7zbhN" crossorigin="anonymous"></script>
     <script defer data-domain="squashvote.wtf" src="https://plausible.io/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js" integrity="sha384-9l0HtvnB08o05/gpJ0/s/MH6b4qnQsdwaxyvtOJY/j8yiQWS1kAmsRQVMgKxcREb" crossorigin="anonymous"></script>
+    <script src="https://cdn.plyr.io/3.8.3/plyr.polyfilled.js" integrity="sha384-iAy9VO7sNMH8mOr6bGRA6MdB22EHvw2c74F3tPAvAaAatZ0PADU/RhsjULVd+9lC" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" integrity="sha384-mWgx5KwsVShLoiXSRO82DWIn+f6hsOnRC3VbXlik2HTBIcBMYI+jAA0PJ7A7EfRL" crossorigin="anonymous">
+    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
     <!--Own js files-->
-    <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script>
+    <!-- <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script> -->
     <title>{% block title%}{% endblock%}</title>
     <link rel="preload" href="{% static 'css/output.css' %}" as="style">
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <script type="text/javascript" src="{% static 'js/chart.js' %}" defer></script>
-    <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}">
-    <script src="{% static 'js/lite-yt-embed.js' %}" defer></script>
+    <!-- <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}"> -->
+    <!-- <script src="{% static 'js/lite-yt-embed.js' %}" defer></script> -->
     <script src="{% static 'js/confetti.js' %}" defer></script>
     <script src="{% static 'js/modal.js' %}" defer></script>
+    <script src="{% static 'js/plyr.js' %}" defer></script>
 
     
     <!--Favicons-->
@@ -61,12 +65,11 @@
         color: var(--color-base-content);
       }
     </style>
-    
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'  class="bg-base-100 min-h-screen  overflow-y-scroll m-0   flex flex-col">
     <div class="flex flex-col flex-grow">
 
-      <div class="w-full px-4 md:px-8 pb-4 md:pb-8 py-8">
+      <div class="w-full px-2 md:px-8 pb-4 md:pb-8 py-8">
         <nav class="navbar bg-base-300 shadow-sm shadow-white rounded-2xl mx-auto">
           <div class="navbar-start">
             <a href="/" class="btn btn-ghost text-3xl font-bold font-bebas tracking-wide rounded-2xl text-primary">
@@ -91,6 +94,7 @@
 
                 <li><a href="{% url 'about' %}" class="underline">&#x270C; About SquashVote</a></li>
                 <li><a href="{% url 'rules' %}" class="underline">&#x1F4DA; Learn Squash Rules</a></li>
+                <li><li><a class="rounded-2xl btn btn-info" href="https://ko-fi.com/squashvote" target="_blank">Support me ☕</a> </li>
             </ul>
             <div class="btn btn-circle btn-ghost mr-2">
               <label class="swap swap-rotate">
@@ -99,6 +103,16 @@
                 <svg class="swap-off h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
               </label>
             </div>
+          </div>
+          <div class="navbar-center hidden md:flex">
+            
+            <ul class="menu menu-horizontal px-1 text-base-content font-body text-md">
+              <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload a video</a></li>
+              <li><a class="rounded-2xl" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
+              <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
+              <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
+    
+            </ul>
           </div>
           <div class="navbar-end hidden md:flex">
             <div class="btn btn-circle btn-ghost mr-2">
@@ -109,20 +123,50 @@
                 
               </label>
             </div>
-            <ul class="menu menu-horizontal px-1 text-base-content font-body text-md">
-              <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload a video</a></li>
-              <li><a class="rounded-2xl" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
-              <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
-              <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
-            </ul>
+            <a href="https://ko-fi.com/squashvote" target="_blank" rel="noopener"
+              class="btn normal-case rounded-2xl bg-[#73d1fa] text-black border-none shadow-md hover:brightness-95">
+              Support me ☕
+            </a>
           </div>
         </nav>
       </div>
 
     
+      <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden ">
+        <div class="bg-white p-6 rounded-xl shadow-lg w-96 text-center">
+          <button id="closeModal" class="float-right text-gray-900 text-4xl hover:text-black cursor-pointer">&times;</button>
+          <h2 class="text-xl font-semibold mb-4 text-black">❤️ Support SquashVote!</h2>
+          <p class="mb-2 text-gray-800">Enjoying the site? Support us:</p>
+          <div class="space-y-2 mb-4 flex flex-col">
+            <a href="https://your-substack-link" target="_blank" id="substackLink" class="text-blue-600 underline">
+              👉 Subscribe on Substack
+            </a>
+            <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support me on Ko-fi', '#73d1fa', 'I2I21H4X8O');kofiwidget2.draw();</script> 
+          </div>
+          <div class="border-t border-gray-300 pt-4">
+            <p class="text-gray-800">
+              I highly recommend taking a moment to
+              <a href="/rules" target="_blank" class="text-blue-600 underline">
+                review the squash rules
+              </a>.
+            </p>
+          </div>
+        </div>
+      </div>
     {% block content %}{% endblock %}
     {% block scripts %} 
     {% endblock %}
   </div>
+
+<!-- <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+<script>
+  kofiWidgetOverlay.draw('squashvote', {
+    'type': 'floating-chat',
+    'floating-chat.donateButton.text': 'Support me',
+    'floating-chat.donateButton.background-color': '#ff38b8',
+    'floating-chat.donateButton.text-color': '#fff'
+  });
+</script> -->
 </body>
+
 </html>

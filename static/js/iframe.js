@@ -1,4 +1,6 @@
 
+// Not using anymore using Plyr library instead. Kept for reference.
+// This is a basic implementation of YouTube IFrame API to play a specific clip from a YouTube video.
 function initYouTubeClip(videoId, startTime) {
     var tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/iframe_api";

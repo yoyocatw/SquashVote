@@ -54,7 +54,7 @@ REFRESH_TOKEN = env("REFRESH_TOKEN", default=get_random_secret_key())
 CANONICAL_DOMAIN = "squashvote.wtf"
 SECURE_SSL_REDIRECT = False
 SECURE_SSL_HOST = "squashvote.wtf"  # Remove for local development
-SESSION_COOKIE_SECURE = True  # Change to True for production
+SESSION_COOKIE_SECURE = True # Change to True for production
 CSRF_COOKIE_SECURE = True # Change to True for production
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -65,7 +65,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 365 * 10
 
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
-# Application definition
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -76,8 +76,6 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "vote",
-    "django_celery_beat",
-    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -162,9 +160,3 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Celery
-CELERY_BROKER_URL = env.str("REDIS_URL", "redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = env.str("CELERY_RESULT_BACKEND", "django-db")
-CELERY_BEAT_DB_BACKEND = "django-db"
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

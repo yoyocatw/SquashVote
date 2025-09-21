@@ -4,7 +4,6 @@ from django.utils.timezone import now
 from django.contrib.auth.models import User
 
 
-# Create your models here.
 class Video(models.Model):
     class Decision(models.TextChoices):
         STROKE = "Stroke"
@@ -15,7 +14,7 @@ class Video(models.Model):
         AMATEUR = "Amateur"
     email = models.EmailField(max_length=254, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
-    video_title = models.CharField(max_length=500) 
+    video_title = models.CharField(max_length=500)
     timestamp = models.CharField(max_length=50)
     video_id = models.CharField(max_length=512) # The YouTube video ID NOT THE PK that is autogenerate
     org_decision = models.CharField(max_length=20, choices=Decision.choices)

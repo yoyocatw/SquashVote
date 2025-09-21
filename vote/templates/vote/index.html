@@ -3,31 +3,7 @@
 {% block title%}SquashVote - So you think you can ref?{% endblock%} 
 {% block content%}
 
-<div id="myModal" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden ">
-  <div class="bg-white p-6 rounded-xl shadow-lg w-96 text-center">
-    <button id="closeModal" class="float-right text-gray-900 text-4xl hover:text-black cursor-pointer">&times;</button>
-    <h2 class="text-xl font-semibold mb-4 text-black">❤️ Support SquashVote!</h2>
-    <p class="mb-2 text-gray-800">Enjoying the site? Support us:</p>
-    <div class="space-y-2 mb-4 flex flex-col">
-      <a href="https://your-substack-link" target="_blank" id="substackLink" class="text-blue-600 underline">
-        👉 Subscribe on Substack
-      </a>
-      <!--
-      <a href="/" target="_blank" id="coffeeLink" class="text-blue-600 underline">
-        👉 Buy Me a Coffee ☕️
-      </a>
-    -->
-    </div>
-    <div class="border-t border-gray-300 pt-4">
-      <p class="text-gray-800">
-        I highly recommend taking a moment to
-        <a href="/rules" target="_blank" class="text-blue-600 underline">
-          review the squash rules
-        </a>.
-      </p>
-    </div>
-  </div>
-</div>
+
 <h1
   class="font-black text-base-content text-2xl sm:text-3xl md:text-4xl mb-5 lg:text-5xl font-bebas text-nowrap mx-auto mt-5"
 >
@@ -177,6 +153,7 @@
         <li><a class="link link-hover" href="{% url 'video_form' %}">Upload a Video</a></li>
         <li><a class="link link-hover" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
         <li><a href="mailto:illreadit@squashvote.wtf" class="link-hover link">Contact me 💌</a></li>
+        <li><a href="https://ko-fi.com/squashvote" class="btn btn-info">Support me ☕</a></li>
       </ul>
     </nav>
 
@@ -200,7 +177,7 @@
   </aside>
   </div>
   </footer>
-
+  
 {% endblock %} 
 {% block scripts %}
 

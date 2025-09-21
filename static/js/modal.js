@@ -8,7 +8,7 @@ if (modal && closeBtn) {
   const lastShown = Number(localStorage.getItem("modalLastShown")) || 0;
   const hasSupported = localStorage.getItem("hasSupported") === "true";
   const hasShownThisSession = sessionStorage.getItem("supportModalShown");
-  const oneWeek = 7 * 24 * 60 * 60 * 1000;
+  const oneWeek = 4 * 24 * 60 * 60 * 1000;
 
   if (!hasShownThisSession && (now - lastShown > oneWeek)) {
     modal.classList.remove("hidden");
