@@ -1,12 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap');
 
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
 @plugin "daisyui";
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;   /* IE/old Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+
+/* 2) Add the WebKit rule as plain CSS next to it */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;              /* Chrome/Safari/Opera */
+}
+
 
 @plugin "daisyui/theme" {
   name: "customblack";

@@ -8,38 +8,47 @@
 <div class="w-full flex flex-col items-center space-y-6 px-4">
 
   <!-- Header with Back Button and Title -->
-  <div class="text-start items-center w-full max-w-4xl mt-4 flex flex-row">
+  <!-- <div class="text-start items-center w-full max-w-4xl mt-4 flex flex-row">
     <a href="{% url 'index' %}" class="btn border-none bg-base-100 shadow-none font-black text-2xl md:text-2xl">
       &#8592;
     </a>
     <h1 class="text-2xl font-semibold text-base-content font-videotitle break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0 tracking-wide">
       {{ video.video_title }}
     </h1>
-  </div>
+  </div> -->
 
   <!-- Video Player Section -->
   <div class="w-full max-w-4xl">
-    <div class="plyr__video-embed" id="player" data-start="{{ video.start }}">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?origin={{ request.scheme }}://{{ request.get_host }}&iv_load_policy=3&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&autoplay=1&mute=1"
-        allowfullscreen
-        playsinline
-        webkit-playsinline
-        allow="autoplay; encrypted-media; picture-in-picture"
-        referrerpolicy="strict-origin-when-cross-origin"
-      ></iframe>
+      <a href="{% url 'index' %}" class="btn border-none bg-base-100 shadow-none font-body underline text-xs md:text-sm">
+          &#8592; Back
+      </a>
+      <div class="plyr__video-embed" id="player" data-start="{{ video.start }}">
+          <iframe
+              src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?origin={{ request.scheme }}://{{ request.get_host }}&iv_load_policy=3&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&autoplay=1&mute=1"
+              allowfullscreen
+              playsinline
+              webkit-playsinline
+              allow="autoplay; encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin"
+              ></iframe>
       </div>
       <div class="text-xs font-semibold text-center">Double tap to enter/exit fullscreen</div>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
-    
-    <button id="replayButton" class="btn btn-wide rounded-lg bg-secondary text-secondary-content font-semibold font-body text-lg">
-      🔁 Replay Clip
-    </button>
-    <a href="{{ video.go_to_youtube }}" target="_blank" class="link rounded-full text-primary font-medium">
-      🔗 Watch on YouTube ➤
-    </a>
+
+          <button id="replayButton" 
+              class="bg-secondary text-secondary-content font-bold px-6 py-3 rounded-full shadow-md 
+              hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center cursor-pointer">
+              Replay Clip
+              <svg class="w-6 h-6" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M282 163.929C257.059 139.31 232.006 127 206.841 127C169.094 127 118 142.696 118 208.577C118 274.458 154.633 297 187.935 297C221.238 297 256.762 280.943 269.738 269.224" 
+                  stroke="currentColor" stroke-opacity="0.9" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M268.846 104C271.71 110.52 274.079 118.126 275.952 126.819C277.825 135.511 279.841 148.251 282 165.039C267.526 169.043 257.342 172.315 251.448 174.853C245.554 177.391 238.738 181.44 231 187" 
+                  stroke="currentColor" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+          </button>
+
+      </div>
   </div>
-</div>
 
   
 

@@ -22,12 +22,12 @@ class Video(models.Model):
     needs_review = models.BooleanField(default=True)
     category = models.CharField(max_length=10, choices=Category.choices, null=True, blank=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["video_id", "timestamp"], name="unique_video_id_timestamp"
-            ),
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(
+    #             # fields=["video_id", "timestamp"], name="unique_video_id_timestamp"
+    #         ),
+    #     ]
 
     def convert_timestamp_to_seconds(timestamp):
         parts = timestamp.split(":")
