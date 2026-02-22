@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&&family=Chewy&family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap');
 
 @import "tailwindcss";
 @plugin "daisyui";
@@ -79,6 +79,7 @@
   --font-bebas: "Bebas Neue", sans-serif;
   --font-videotitle: "Montserrat", sans-serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --font-fun: 'Chewy', cursive;
 }
 
 html, body { font-family: var(--font-body); }

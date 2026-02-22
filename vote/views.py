@@ -90,12 +90,14 @@ def video_result(request, pk, slug=None):
                 elif vote == "nolet":
                     video.result.no_let += 1
                 video.result.save()
+                video.result.refresh_from_db()
 
             response = render(
                 request,
                 "vote/partials/already_voted.html",
                 context={"vote": vote, "video": video},
             )
+            print(f"DEBUG: Rendering with {video.result.total_votes} votes")
             return response
     else:
         form = VoteForm()
@@ -239,7 +241,7 @@ def post_comment(request, pk):
         form = CommentForm()
     comments = Comment.objects.filter(video=video).order_by("-created_at")
     return render(
-        request, "vote/video_result.html", {"form": form, "comments": comments}
+        request, "vote/video_result.html", {"form": form, "comments": comments, "video": video}
     )
 
 

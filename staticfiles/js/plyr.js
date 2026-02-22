@@ -1,7 +1,10 @@
 
 const player = document.getElementById('player');
-const start = Number(player.dataset.start) || 0;
 
+
+if (player){
+const start = Number(player.dataset.start) || 0;
+const end = start + 20;
 const plyr = new Plyr(player, {
   autoplay: true,
   muted: true,
@@ -23,11 +26,20 @@ const plyr = new Plyr(player, {
     modestbranding: 1
   }
 });
+const snapToStart = () => { if (plyr.currentTime < start) plyr.currentTime = start; };
 plyr.on('ready', () => {
-  plyr.once('play', () => {
-    plyr.currentTime = start;
-  });
+  snapToStart();
+  plyr.once('play', snapToStart);
 });
+plyr.on('seeking', () => {
+    if (plyr.currentTime < start) plyr.currentTime = start;
+    if (plyr.currentTime > end)   plyr.currentTime = end;
+  });
+ plyr.on('timeupdate', () => {
+    if (plyr.currentTime >= end) {
+      plyr.currentTime = start; plyr.play();
+    }
+  });
 plyr.on('click', () => {
     if (plyr.muted) plyr.muted = false;
 });
@@ -40,3 +52,4 @@ replayButton.addEventListener('click', () => {
 window.plyr = plyr;
 
 
+}

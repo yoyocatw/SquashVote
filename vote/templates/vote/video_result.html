@@ -1,7 +1,7 @@
 {% extends "vote/base.html" %}
 
 {% block title %}
-  Decision Result for {{ video.video_title }}
+Decision Result for {{ video.video_title }}
 {% endblock %}
 
 {% block content %}
@@ -18,84 +18,94 @@
   </div> -->
 
   <!-- Video Player Section -->
-  <div class="w-full max-w-4xl">
-      <a href="{% url 'index' %}" class="btn border-none bg-base-100 shadow-none font-body underline text-xs md:text-sm">
-          &#8592; Back
-      </a>
-      <div class="plyr__video-embed" id="player" data-start="{{ video.start }}">
-          <iframe
-              src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?origin={{ request.scheme }}://{{ request.get_host }}&iv_load_policy=3&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&autoplay=1&mute=1"
-              allowfullscreen
-              playsinline
-              webkit-playsinline
-              allow="autoplay; encrypted-media; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin"
-              ></iframe>
-      </div>
-      <div class="text-xs font-semibold text-center">Double tap to enter/exit fullscreen</div>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+  <div class="w-full max-w-5xl">
+    <a href="{% url 'index' %}" class="btn border-none bg-base-100 rotate-180 shadow-none font-body text-xl">
+      &#10140;
+    </a>
+    <div class="plyr__video-embed" id="player" data-start="{{ video.start }}">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?start={{ video.start }}&origin={{ request.scheme }}://{{ request.get_host }}&iv_load_policy=3&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&autoplay=1&mute=1"
+        allowfullscreen playsinline webkit-playsinline allow="autoplay; encrypted-media; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+    <div class="text-xs font-semibold text-center">Double tap to enter/exit fullscreen</div>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
 
-          <button id="replayButton" 
-              class="bg-secondary text-secondary-content font-bold px-6 py-3 rounded-full shadow-md 
+      <button id="replayButton" class="bg-secondary text-secondary-content font-bold px-6 py-3 rounded-md shadow-sm  shadow-secondary
               hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center cursor-pointer">
-              Replay Clip
-              <svg class="w-6 h-6" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M282 163.929C257.059 139.31 232.006 127 206.841 127C169.094 127 118 142.696 118 208.577C118 274.458 154.633 297 187.935 297C221.238 297 256.762 280.943 269.738 269.224" 
-                  stroke="currentColor" stroke-opacity="0.9" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M268.846 104C271.71 110.52 274.079 118.126 275.952 126.819C277.825 135.511 279.841 148.251 282 165.039C267.526 169.043 257.342 172.315 251.448 174.853C245.554 177.391 238.738 181.44 231 187" 
-                  stroke="currentColor" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-          </button>
+        Replay Clip
+        <svg class="w-6 h-6" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M282 163.929C257.059 139.31 232.006 127 206.841 127C169.094 127 118 142.696 118 208.577C118 274.458 154.633 297 187.935 297C221.238 297 256.762 280.943 269.738 269.224"
+            stroke="currentColor" stroke-opacity="0.9" stroke-width="30" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path
+            d="M268.846 104C271.71 110.52 274.079 118.126 275.952 126.819C277.825 135.511 279.841 148.251 282 165.039C267.526 169.043 257.342 172.315 251.448 174.853C245.554 177.391 238.738 181.44 231 187"
+            stroke="currentColor" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
 
-      </div>
+    </div>
   </div>
 
-  
+
 
   <!-- Voting Section -->
   <div class="w-full max-w-4xl text-start space-y-1">
     <div class="bg-transparent text-base-content rounded-lg  p-4 space-y-4">
-      
+
 
       <div id="vote-section">
         {% if already_voted %}
-          {% include "vote/partials/already_voted.html" %}
+        {% include "vote/partials/already_voted.html" %}
         {% else %}
-          <form
-            id="vote-form"
-            x-data="{ vote: '' }"
-            hx-target="#vote-section"
-            hx-post="{%url 'video_result' pk=video.id slug=video.video_title|slugify %}"
-            hx-swap="outerHTML"
-            class="border rounded-lg p-4"
-          >
-            {% csrf_token %}
-            <div class="space-y-4 mb-4">
-              <div class="flex space-x-2 checked:bg-primary focus-within:bg-base-200 rounded-2xl">
-                <input type="radio" name="vote" value="stroke" class="radio" x-model="vote" />
-                <span class="text-base-content font-semibold">✊ Stroke</span>
-              </div>
-              <div class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl">
-                <input type="radio" name="vote" value="let" class="radio" x-model="vote" />
-                <span class="text-base-content font-semibold">👆️ Let</span>
-              </div>
-              <div class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl">
-                <input type="radio" name="vote" value="nolet" class="radio" x-model="vote" />
-                <span class="text-base-content font-semibold">🫳 No Let</span>
-              </div>
-            </div>
-            <button @click="voteConfetti()" id="vote-button" type="submit" class="btn rounded-4xl bg-primary text-primary-content text-md" :disabled="!vote">
-              Vote
-            </button>
-          </form>
+
+        <form id="vote-form" x-data="{ vote: '' }" hx-target="#vote-section"
+          hx-post="{%url 'video_result' pk=video.id slug=video.video_title|slugify %}" hx-swap="outerHTML"
+          class="border rounded-lg p-4">
+          <div class="text-sm text-base-content mb-5 flex justify-between">
+            <span>{{ video.result.total_votes|default:"0" }} votes</span>
+          </div>
+          {% csrf_token %}
+          <div class="space-y-4 mb-4">
+            <label
+              class="flex space-x-2 checked:bg-primary focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#EC6B56]">
+              <input type="radio" name="vote" value="stroke" class="radio" x-model="vote" />
+              <span class="text-base-content font-semibold">✊ Stroke</span>
+            </label>
+            <label
+              class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#FFC154]">
+              <input type="radio" name="vote" value="let" class="radio" x-model="vote" />
+              <span class="text-base-content font-semibold">👆️ Let</span>
+            </label>
+            <label
+              class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#6CA0DC]">
+              <input type="radio" name="vote" value="nolet" class="radio" x-model="vote" />
+              <span class="text-base-content font-semibold">🫳 No Let</span>
+            </label>
+          </div>
+          {% if video.result.total_votes == 66 %}
+          <button @click="sixseven()" id="vote-button" type="submit"
+            class="btn rounded-xl bg-primary text-primary-content text-md font-sans" :disabled="!vote">
+            Vote
+          </button>
+          {% else %}
+          <button @click="voteConfetti()" id="vote-button" type="submit"
+            class="btn rounded-xl bg-primary text-primary-content text-md font-sans" :disabled="!vote">
+            Vote
+          </button>
+          {% endif %}
+        </form>
         {% endif %}
       </div>
     </div>
   </div>
-  
+
 
   <!-- Chart Section -->
-  <div id="chart-container" class="max-w-4xl p-4 border w-full h-[60vh] rounded-lg {% if not already_voted %}hidden{% endif %}">
+  <div id="chart-container"
+    class="max-w-4xl p-4 border w-full h-[60vh] rounded-lg {% if not already_voted %}hidden{% endif %}">
     <p class="text-xs text-center">Tap a bar to see vote count.</p>
     <canvas id="chart" class="w-full h-[400px]" video-id="{{ video.id }}"></canvas>
   </div>
@@ -103,32 +113,24 @@
   <!--Comment Section-->
   <div id="comment-section" class="w-full max-w-4xl p-4 items-center {% if not already_voted %} hidden {% endif %}">
     <div class="flex items-center space-x-2 mb-4">
-      <h2 class="text-xl font-semibold">Comments...</h2>
+        <h2 class="text-xl font-semibold font-body">{{ comments.count }} Comments</h2>
       <div class="tooltip tooltip-secondary" data-tip="All comments are anonymous, please be respectful.">
         <button type="button" class="btn btn-xs bg-transparent btn-ghost rounded-full text-white">&#8505;</button>
       </div>
     </div>
-    
-    
+
+
     <!-- Comment Form -->
-    <form
-      hx-post="{% url 'post_comment' pk=video.pk %}"
-      hx-swap="innerHTML"
-      hx-target="#comments"
-      hx-on::after-request="this.reset()"
-      class="mb-6"
-    >
+    <form hx-post="{% url 'post_comment' pk=video.pk %}" hx-swap="innerHTML" hx-target="#comments"
+      hx-on::after-request="this.reset()" class="mb-6">
       {% csrf_token %}
-      
-      <textarea
-        name="comment"
-        rows="3"
+
+      <textarea name="comment" rows="3"
         class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500 resize-none"
-        placeholder="Your take on the decision?"
-        required
-      ></textarea>
+        placeholder="You made the call, what's your reason?" required></textarea>
       <div class="mt-2 flex justify-end">
-        <button type="submit" class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        <button type="submit"
+          class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
           Post
         </button>
       </div>
@@ -138,39 +140,18 @@
     <div class="flex  flex-row items-center space-x-2 w-full ">
       <span class="text-xs font-medium whitespace-nowrap">Sort by:</span>
       <div class="flex gap-2 justify-center">
-        <input
-          type="radio"
-          name="metaframeworks"
-          aria-label="New"
-          class="btn w-auto p-4  btn-outline rounded-full"
-          hx-get="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}?sort=newest"
-          hx-target="#comments"
-          hx-swap="innerHTML"
-          {% if sort_by == "newest" %}checked{% endif %}
-        />
-        <input
-          type="radio"
-          name="metaframeworks"
-          aria-label="Top"
-          class="btn w-auto btn-outline rounded-full"
+        <input type="radio" name="metaframeworks" aria-label="New" class="btn w-auto p-4  btn-outline rounded-full"
+          hx-get="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}?sort=newest" hx-target="#comments"
+          hx-swap="innerHTML" {% if sort_by == "newest" %}checked{% endif %} />
+        <input type="radio" name="metaframeworks" aria-label="Top" class="btn w-auto btn-outline rounded-full"
           hx-get="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}?sort=upvotes"
-          hx-target="#comments"
-          hx-swap="innerHTML"
-          {% if sort_by == "upvotes" %}checked{% endif %}
-        />
-        <input
-          type="radio"
-          name="metaframeworks"
-          aria-label="Old"
-          class="btn w-auto btn-outline rounded-full"
-          hx-get="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}?sort=oldest"
-          hx-target="#comments"
-          hx-swap="innerHTML"
-          {% if sort_by == "oldest" %}checked{% endif %}
-        />
+          hx-target="#comments" hx-swap="innerHTML" {% if sort_by == "upvotes" %}checked{% endif %} />
+        <input type="radio" name="metaframeworks" aria-label="Old" class="btn w-auto btn-outline rounded-full"
+          hx-get="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}?sort=oldest" hx-target="#comments"
+          hx-swap="innerHTML" {% if sort_by == "oldest" %}checked{% endif %} />
       </div>
     </div>
-    
+
     <!-- Comment List -->
     <div id="comments" class="flex flex-col gap-4 mb-32">
       {% include "vote/partials/comment_section.html" with comment=comment list_upvote=list_upvote %}
@@ -183,11 +164,11 @@
 <script>
 
   document.body.addEventListener('htmx:afterSwap', (e) => {
-  // Run Alpine.initTree on all children that might contain x-data
-  requestAnimationFrame(() => {
-    Alpine.initTree(e.detail.target);
+    // Run Alpine.initTree on all children that might contain x-data
+    requestAnimationFrame(() => {
+      Alpine.initTree(e.detail.target);
+    });
   });
-});
 
 </script>
 {% endblock %}

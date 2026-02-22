@@ -23,3 +23,50 @@ function voteConfetti() {
     }
   })();
 }
+
+function sixseven() {
+  var scalar = 4; 
+  var textShape = confetti.shapeFromText({ text: '🫲6️⃣7️⃣🫱', scalar });
+
+  var defaults = {
+    spread: 150,           
+    ticks: 1000,          
+    gravity: 1.5,        
+    decay: 0.95,
+    startVelocity: 15,   
+    shapes: [textShape],
+    scalar,
+    flat: true           
+  };
+
+  function frame() {
+    confetti({
+      ...defaults,
+      particleCount: 50,
+      origin: { x: 0.45, y: -0.1 },
+      angle: 90
+    });
+    confetti({
+      ...defaults,
+      particleCount: 50,
+      origin: { x: 0.25, y: -0.1 },
+      angle: 90
+    });
+
+    confetti({
+      ...defaults,
+      particleCount: 50,
+      origin: { x: 0.65, y: -0.1 },
+      angle: 90
+    });
+
+    confetti({
+      ...defaults,
+      particleCount: 50,
+      origin: { x: 0.9, y: -0.1 },
+      angle: 90
+    });
+  }
+
+  frame();
+}
