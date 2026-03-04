@@ -1,17 +1,31 @@
-<div class="border rounded-lg p-4 mb-4">
-    <div class="text-sm text-base-content border-b pb-2 flex justify-between">
-        <span>{{ video.result.total_votes|default:"0" }} votes</span>
-    </div>
-    <p class="text-lg my-2 leading-tight font-semibold">Referee Decision: <span
-            class="font-semibold text-md text-primary-content">{{ video.org_decision }}</span></p>
-    <p class="text-lg my-2 leading-tight font-semibold"> You Voted: <span
-            class="font-bold capitalize text-md text-primary">{{vote}}</span> </h1>
-</div>
-<div class="flex justify-center">
-    <div class="join join-vertical">
-        <a class="btn btn-primary btn-wide rounded-t-lg join-item border-b-2" href="{% url 'index' %}">Watch more →</a>
-        <a class="btn bg-info btn-wide rounded-b-lg join-item text-gray-800" href="{% url 'video_form'%}">Upload your
-            own video →</a>
-    </div>
+{% load static %}
+<div class="card bg-base-100 shadow-md border border-base-200 mb-6">
+    <div class="card-body p-5 md:p-6">
+       
+            <div class="font-medium border-b-2 ">{{ video.result.total_votes|default:"0" }} Votes</div>
 
+        <div class="stats stats-vertical sm:stats-horizontal shadow-sm w-full mb-2">
+            <div class="stat place-items-center">
+                <div class="stat-title text-sm">Official Decision</div>
+                <div class="stat-value text-primary font-body text-2xl md:text-3xl mt-1">{{ video.org_decision }}</div>
+            </div>
+
+            <div class="stat place-items-center">
+                <div class="stat-title text-sm">You Voted</div>
+                <div class="stat-value capitalize text-2xl md:text-3xl mt-1 text-secondary">
+                    {{ vote }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="flex flex-col sm:flex-row justify-center gap-3">
+    <a class="btn btn-base-200 sm:btn-wide shadow-sm" href="{% url 'index' %}">
+        Watch Next Clip ->
+    </a>
+    <a class="btn bg-white text-black btn-outline border-base-300 sm:btn-wide" href="{% url 'video_form' %}">
+        <img src="{% static 'images/upload.svg' %}" class="w-3 h-3 ml-2 ">
+        Upload Video
+    </a>
 </div>

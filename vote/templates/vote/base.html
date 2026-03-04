@@ -2,157 +2,193 @@
 
 <!DOCTYPE html>
 <html lang="en" data-theme="customblack">
+
 <head>
   <!--- Meta Tags --->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="SquashVote lets squash fans vote on controversial PSA referee decisions. Participate, see live results, and decide if it's a stroke, let, or no let!">
-    <meta name="keywords" content="Squash, PSA, SquashVote, referee decisions, let or no let, stroke or let, PSA squash, squash community, controversial decision">
-    <meta name="author" content="SquashVote">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="SquashVote - So you think you can ref?">
-    <meta property="og:description" content="Think the ref got it wrong? Vote on controversial squash calls in PSA matches and see what the community thinks.">
-    <meta property="og:url" content="https://squashvote.wtf">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="SquashVote">
-    {% if "fly.dev" in request.get_host %}
-      <meta name="robots" content="noindex, nofollow">
-    {% endif %}
-    <link rel="canonical" href="https://squashvote.wtf">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="SquashVote lets squash fans vote on controversial PSA referee decisions. Participate, see live results, and decide if it's a stroke, let, or no let!">
+  <meta name="keywords"
+    content="Squash, PSA, SquashVote, referee decisions, let or no let, stroke or let, PSA squash, squash community, controversial decision">
+  <meta name="author" content="SquashVote">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="SquashVote - So you think you can ref?">
+  <meta property="og:description"
+    content="Think the ref got it wrong? Vote on controversial squash calls in PSA matches and see what the community thinks.">
+  <meta property="og:url" content="https://squashvote.wtf">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SquashVote">
+  {% if "fly.dev" in request.get_host %}
+  <meta name="robots" content="noindex, nofollow">
+  {% endif %}
+  <link rel="canonical" href="https://squashvote.wtf">
 
-    <!--Third party cdn-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" integrity="sha384-b0GXujLkk9eYYSmcSfoyZbfyElGAQnDyY0skCHSG6w3JgTMFnz11ggrTAr7seu9f" crossorigin="anonymous" defer></script>
-    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js" integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb" crossorigin="anonymous" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" integrity="sha384-Rv68Y7adOjMMJc1/xFMcdNvXre/HF51to4GZjBALmXr7ABnVl5V4UajJwBu7zbhN" crossorigin="anonymous"></script>
-    <script defer data-domain="squashvote.wtf" src="https://plausible.io/js/script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js" integrity="sha384-9l0HtvnB08o05/gpJ0/s/MH6b4qnQsdwaxyvtOJY/j8yiQWS1kAmsRQVMgKxcREb" crossorigin="anonymous"></script>
-    <script src="https://cdn.plyr.io/3.8.3/plyr.polyfilled.js" integrity="sha384-iAy9VO7sNMH8mOr6bGRA6MdB22EHvw2c74F3tPAvAaAatZ0PADU/RhsjULVd+9lC" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" integrity="sha384-mWgx5KwsVShLoiXSRO82DWIn+f6hsOnRC3VbXlik2HTBIcBMYI+jAA0PJ7A7EfRL" crossorigin="anonymous">
-    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
-    <!--Own js files-->
-    <!-- <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script> -->
-    <title>{% block title%}{% endblock%}</title>
-    <link rel="preload" href="{% static 'css/output.css' %}" as="style">
-    <link rel="stylesheet" href="{% static 'css/output.css' %}">
-    <script type="text/javascript" src="{% static 'js/chart.js' %}" defer></script>
-    <!-- <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}"> -->
-    <!-- <script src="{% static 'js/lite-yt-embed.js' %}" defer></script> -->
-    <script src="{% static 'js/confetti.js' %}" defer></script>
-    <script src="{% static 'js/modal.js' %}" defer></script>
-    <script src="{% static 'js/plyr.js' %}" defer></script>
-    <script src="{% static 'js/easter.js' %}" defer></script>
-    
-    <!--Favicons-->
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_io/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon_io/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'favicon_io/site.webmanifest' %}">
+  <!--Third party cdn-->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"
+    integrity="sha384-b0GXujLkk9eYYSmcSfoyZbfyElGAQnDyY0skCHSG6w3JgTMFnz11ggrTAr7seu9f" crossorigin="anonymous"
+    defer></script>
+  <script src="https://unpkg.com/htmx.org@2.0.4"
+    integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"
+    defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"
+    integrity="sha384-X9kJyAubVxnP0hcA+AMMs21U445qsnqhnUF8EBlEpP3a42Kh/JwWjlv2ZcvGfphb" crossorigin="anonymous"
+    defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"
+    integrity="sha384-Rv68Y7adOjMMJc1/xFMcdNvXre/HF51to4GZjBALmXr7ABnVl5V4UajJwBu7zbhN"
+    crossorigin="anonymous"></script>
+  <script defer data-domain="squashvote.wtf" src="https://plausible.io/js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/theme-change@2.0.2/index.js"
+    integrity="sha384-9l0HtvnB08o05/gpJ0/s/MH6b4qnQsdwaxyvtOJY/j8yiQWS1kAmsRQVMgKxcREb"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.plyr.io/3.8.3/plyr.polyfilled.js"
+    integrity="sha384-iAy9VO7sNMH8mOr6bGRA6MdB22EHvw2c74F3tPAvAaAatZ0PADU/RhsjULVd+9lC"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css"
+    integrity="sha384-mWgx5KwsVShLoiXSRO82DWIn+f6hsOnRC3VbXlik2HTBIcBMYI+jAA0PJ7A7EfRL" crossorigin="anonymous">
+  <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+  <!--Own js files-->
+  <!-- <script type="text/javascript" src="{% static 'js/iframe.js' %}" defer></script> -->
+  <title>{% block title%}{% endblock%}</title>
+  <link rel="preload" href="{% static 'css/output.css' %}" as="style">
+  <link rel="stylesheet" href="{% static 'css/output.css' %}">
+  <script type="text/javascript" src="{% static 'js/chart.js' %}" defer></script>
+  <!-- <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}"> -->
+  <!-- <script src="{% static 'js/lite-yt-embed.js' %}" defer></script> -->
+  <script src="{% static 'js/confetti.js' %}" defer></script>
+  <script src="{% static 'js/modal.js' %}" defer></script>
+  <script src="{% static 'js/plyr.js' %}" defer></script>
+  <script src="{% static 'js/easter.js' %}" defer></script>
 
-    <script>
-      try {
-        const saved = localStorage.getItem('theme');
-        document.documentElement.setAttribute('data-theme', saved || 'customblack');
-      } catch {}
-    </script>
+  <!--Favicons-->
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_io/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon_io/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'favicon_io/site.webmanifest' %}">
 
-    <style>
-      html[data-theme="customblack"]{
-        /* minimal fallbacks for first paint */
-        --color-base-100:#0f0f0f;
-        --color-base-content:#e5e5e5;
-        background-color: var(--color-base-100);
-        color: var(--color-base-content);
-      }
-    </style>
+  <script>
+    try {
+      const saved = localStorage.getItem('theme');
+      document.documentElement.setAttribute('data-theme', saved || 'customblack');
+    } catch { }
+  </script>
+
+  <style>
+    html[data-theme="customblack"] {
+      /* minimal fallbacks for first paint */
+      --color-base-100: #0f0f0f;
+      --color-base-content: #e5e5e5;
+      background-color: var(--color-base-100);
+      color: var(--color-base-content);
+    }
+  </style>
 </head>
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'  class="bg-base-100 min-h-screen m-0 flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar">
-    <div class="flex flex-col flex-grow ">
 
-      <div class="w-full px-2 md:px-8 pb-4 md:pb-8 py-8">
-        <nav class="navbar bg-base-300 shadow-sm shadow-white rounded-2xl mx-auto">
-          <div class="navbar-start">
-            <a href="/" class="btn btn-ghost text-3xl font-bold font-bebas tracking-wide rounded-2xl text-primary">
-                <span>
-                    SquashVote<span class="text-base-content tracking-normal">.wtf</span>
-                </span>
-            </a>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+  class="bg-base-100 min-h-screen m-0 flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar">
+  <div class="flex flex-col flex-grow ">
 
-          </div>
-          <div class="navbar-end md:hidden dropdown dropdown-bottom dropdown-center">
-            <label tabindex="0" class="btn btn-ghost p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+    <div class="w-full px-2 md:px-8 pb-4 md:pb-8 py-8">
+      <nav class="navbar bg-base-300 shadow-sm shadow-white rounded-2xl mx-auto">
+        <div class="navbar-start">
+          <a href="/" class="btn btn-ghost text-3xl font-bold font-fun tracking-wide rounded-2xl text-primary">
+            <span>
+              SquashVote<span class="text-base-content tracking-normal">.wtf</span>
+            </span>
+          </a>
+
+        </div>
+        <div class="navbar-end md:hidden dropdown dropdown-bottom dropdown-end rounded-2xl">
+          <label tabindex="0" class="btn btn-ghost p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </label>
+          <ul tabindex="-1" class="menu dropdown-content bg-base-300 rounded-box w-96 p-2 shadow">
+            <li class="flex items-end pr-2"><button onclick="document.activeElement.blur()" class="btn btn-ghost btn-circle btn-md text-3xl ml-auto">✕</button></li>
+            <li><a href="{% url 'video_form' %}" class="font-semibold font-fun text-2xl py-5 pl-2">Upload Video &#10139;</a>
+            </li>
+            <li><a class="font-semibold font-fun text-2xl py-5 pl-5" target="_blank"
+                href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide &#10139;</a></li>
+
+            <li><a href="{% url 'about' %}" class="font-semibold font-fun text-2xl py-5 pl-5">About &#10139;</a></li>
+            <li><a href="{% url 'rules' %}" class="font-semibold font-fun text-2xl py-5 pl-5">Squash Rules &#10139;</a></li>
+          </ul>
+          <div class="btn btn-circle btn-ghost mr-2">
+            <label class="swap swap-rotate">
+              <input type="checkbox" class="theme-controller" data-toggle-theme="customlight,customblack"
+                data-act-class="!checked" />
+              <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
+              </svg>
+              <svg class="swap-off h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
               </svg>
             </label>
-            <ul
-                tabindex="0"
-                class="menu dropdown-content bg-base-300 rounded-box w-52 p-2 shadow"
-                >
-                <li><a href="{% url 'video_form' %}" class="underline">&#x2601; Upload a video</a></li>
-                <li><a class="underline" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
-
-                <li><a href="{% url 'about' %}" class="underline">&#x270C; About SquashVote</a></li>
-                <li><a href="{% url 'rules' %}" class="underline">&#x1F4DA; Learn Squash Rules</a></li>
-            </ul>
-            <div class="btn btn-circle btn-ghost mr-2">
-              <label class="swap swap-rotate">
-                <input type="checkbox" class="theme-controller" data-toggle-theme="customlight,customblack" data-act-class="!checked"/>
-                <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
-                <svg class="swap-off h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
-              </label>
-            </div>
-          </div>
-          <div class="navbar-center hidden md:flex">
-            
-            <ul class="menu menu-horizontal px-1 text-base-content font-body text-md">
-              <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload a video</a></li>
-              <li><a class="rounded-2xl" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide</a></li>
-              <li><a class="rounded-2xl" href="{% url 'about' %}">About SquashVote</a></li>
-              <li><a class="rounded-2xl" href="{% url 'rules' %}">Learn Squash Rules</a></li>
-    
-            </ul>
-          </div>
-          <div class="navbar-end hidden md:flex">
-            <div class="btn btn-circle btn-ghost mr-2">
-              <label class="swap swap-rotate">
-                <input type="checkbox" class="theme-controller" data-toggle-theme="customlight,customblack" data-act-class="!checked"/>
-                <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/></svg>
-                <svg class="swap-off h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z"/></svg>
-                
-              </label>
-            </div>
-          </div>
-        </nav>
-      </div>
-
-    
-      <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden">
-        <div class="bg-white p-6 rounded-xl shadow-lg w-96 text-center">
-          <button id="closeModal" class="float-right text-gray-900 text-4xl hover:text-black cursor-pointer">&times;</button>
-          <h2 class="text-xl font-semibold mb-4 text-black">❤️ Support SquashVote!</h2>
-          <p class="mb-2 text-gray-800">Enjoying the site? Support us:</p>
-          <div class="space-y-2 mb-4 flex flex-col">
-            <a href="https://squashvote.substack.com/" target="_blank" class="btn bg-[#FF7731] w-full rounded-2xl shadow-none border-none">
-              👉 Subscribe on Substack
-            </a>
-          </div>
-          <div class="border-t border-gray-300 pt-4">
-            <p class="text-gray-800">
-              I highly recommend taking a moment to
-              <a href="/rules" class="btn btn-info btn-sm rounded-md text-gray-700 shadow-none border-none m-2 ">
-                Review the squash rules
-              </a>
-            </p>
           </div>
         </div>
+        <div class="navbar-center hidden md:flex">
+
+          <ul class="menu menu-horizontal px-1 text-base-content font-body text-md">
+            <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload Video</a></li>
+            <li><a class="rounded-2xl" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">UploadGuide</a></li>
+            <li><a class="rounded-2xl" href="{% url 'about' %}">About</a></li>
+            <li><a class="rounded-2xl" href="{% url 'rules' %}">Squash Rules</a></li>
+
+          </ul>
+        </div>
+        <div class="navbar-end hidden md:flex">
+          <div class="btn btn-circle btn-ghost mr-2">
+            <label class="swap swap-rotate">
+              <input type="checkbox" class="theme-controller" data-toggle-theme="customlight,customblack"
+                data-act-class="!checked" />
+              <svg class="swap-on h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
+              </svg>
+              <svg class="swap-off h-6 w-6 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+              </svg>
+
+            </label>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+
+    <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden">
+      <div class="bg-white p-6 rounded-xl shadow-lg w-96 text-center">
+        <button id="closeModal"
+          class="float-right text-gray-900 text-4xl hover:text-black cursor-pointer">&times;</button>
+        <h2 class="text-xl font-semibold mb-4 text-black">❤️ Support SquashVote!</h2>
+        <p class="mb-2 text-gray-800">Enjoying the site? Support us:</p>
+        <div class="space-y-2 mb-4 flex flex-col">
+          <a href="https://squashvote.substack.com/" target="_blank"
+            class="btn bg-[#FF7731] w-full rounded-2xl shadow-none border-none">
+            👉 Subscribe on Substack
+          </a>
+        </div>
+        <div class="border-t border-gray-300 pt-4">
+          <p class="text-gray-800">
+            I highly recommend taking a moment to
+            <a href="/rules" class="btn btn-info btn-sm rounded-md text-gray-700 shadow-none border-none m-2 ">
+              Review the squash rules
+            </a>
+          </p>
+        </div>
       </div>
+    </div>
     {% block content %}{% endblock %}
-    {% block scripts %} 
+    {% block scripts %}
     {% endblock %}
   </div>
 
-<!-- <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+  <!-- <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
 <script>
   kofiWidgetOverlay.draw('squashvote', {
     'type': 'floating-chat',
