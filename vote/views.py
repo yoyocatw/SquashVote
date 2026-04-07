@@ -2,11 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import VideoForm, VoteForm, CommentForm
 from .models import Video, VoteUser, Comment, CommentReport, CommentLike
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
-from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.paginator import Paginator
-from django.http import JsonResponse
 from .utils.youtube_title import get_youtube_title
 
 # Create your views here.
@@ -169,7 +167,8 @@ def video_form(request):
             video.video_id = form.cleaned_data["video_id"]
             url = form.cleaned_data["youtube_url"]
             video.video_title = get_youtube_title(url)
-            video.is_active = False
+            video.is_active = True # Set to True for now (bypass review) when more people use site change to False to have review back
+            video.needs_review = False # Set to False for now (bypass review) when more people use site change to True to have review back
             video.save()
             return redirect("confirm")
     else:
@@ -325,3 +324,21 @@ def report_comment(request, comment_id):
         )
 
     return HttpResponseNotAllowed(["POST"])
+
+
+def check_duplicate(request):
+    video_id = request.GET.get("video_id")
+    videos = Video.objects.filter(video_id=video_id)
+    return JsonResponse({
+        "exists": videos.exists(),
+        "videos": [
+            {
+                "id": v.pk,
+                "title": v.video_title,
+                "timestamp": v.timestamp,
+                "decision": v.org_decision,
+                "category": v.category,
+            }
+            for v in videos
+        ]
+    })

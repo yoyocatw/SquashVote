@@ -53,6 +53,7 @@
   <link rel="preload" href="{% static 'css/output.css' %}" as="style">
   <link rel="stylesheet" href="{% static 'css/output.css' %}">
   <script type="text/javascript" src="{% static 'js/chart.js' %}" defer></script>
+  <script src="{% static 'js/april_fools.js' %}"></script>
   <!-- <link rel="stylesheet" href="{% static 'css/lite-yt-embed.css' %}"> -->
   <!-- <script src="{% static 'js/lite-yt-embed.js' %}" defer></script> -->
   <script src="{% static 'js/confetti.js' %}" defer></script>
@@ -91,9 +92,9 @@
     <div class="w-full px-2 md:px-8 pb-4 md:pb-8 py-8">
       <nav class="navbar bg-base-300 shadow-sm shadow-white rounded-2xl mx-auto">
         <div class="navbar-start">
-          <a href="/" class="btn btn-ghost text-3xl font-bold font-fun tracking-wide rounded-2xl text-primary">
+          <a href="/" class="april-fools btn btn-ghost text-3xl font-bold font-fun tracking-wide rounded-2xl text-primary">
             <span>
-              SquashVote<span class="text-base-content tracking-normal">.wtf</span>
+              SquashVote<span class=" text-base-content tracking-normal">.wtf</span>
             </span>
           </a>
 
@@ -161,16 +162,16 @@
     </div>
 
 
-    <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 hidden">
+    <!-- <div id="myModal" class="fixed inset-0 flex hidden items-center justify-center bg-black/50 z-50">
       <div class="bg-white p-6 rounded-xl shadow-lg w-96 text-center">
         <button id="closeModal"
           class="float-right text-gray-900 text-4xl hover:text-black cursor-pointer">&times;</button>
-        <h2 class="text-xl font-semibold mb-4 text-black">❤️ Support SquashVote!</h2>
-        <p class="mb-2 text-gray-800">Enjoying the site? Support us:</p>
+        <h2 class="text-xl font-semibold mb-4 text-black">Upload Your Own Video!</h2>
+        <p class="mb-2 text-gray-800">You can now upload your own decisions to SquashVote</p>
         <div class="space-y-2 mb-4 flex flex-col">
-          <a href="https://squashvote.substack.com/" target="_blank"
-            class="btn bg-[#FF7731] w-full rounded-2xl shadow-none border-none">
-            👉 Subscribe on Substack
+          <a href="{% url 'video_form' %}" target="_blank"
+            class="btn btn-primary btn-lg rounded-md text-white shadow-none border-none m-2">
+            👉 Upload Video
           </a>
         </div>
         <div class="border-t border-gray-300 pt-4">
@@ -182,13 +183,12 @@
           </p>
         </div>
       </div>
-    </div>
+    </div> -->
     {% block content %}{% endblock %}
     {% block scripts %}
     {% endblock %}
-  </div>
-
-  <!-- <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    </div>
+    <!-- <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
 <script>
   kofiWidgetOverlay.draw('squashvote', {
     'type': 'floating-chat',

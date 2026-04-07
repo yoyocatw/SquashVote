@@ -31,7 +31,7 @@ Decision Result for {{ video.video_title }}
     <div class="text-xs font-semibold text-center">Double tap to enter/exit fullscreen</div>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
 
-      <button id="replayButton" class="bg-secondary text-secondary-content font-bold px-6 py-3 rounded-md shadow-sm  shadow-secondary
+      <button id="replayButton" class="april-fools bg-secondary text-secondary-content font-bold px-6 py-3 rounded-md shadow-sm  shadow-secondary
               hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center cursor-pointer">
         Replay Clip
         <svg class="w-6 h-6" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,29 +70,29 @@ Decision Result for {{ video.video_title }}
           {% csrf_token %}
           <div class="space-y-4 mb-4">
             <label
-              class="flex space-x-2 checked:bg-primary focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#EC6B56]">
+              class="voting-button flex space-x-2 checked:bg-primary focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#EC6B56]">
               <input type="radio" name="vote" value="stroke" class="radio" x-model="vote" />
               <span class="text-base-content font-semibold">✊ Stroke</span>
             </label>
             <label
-              class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#FFC154]">
+              class="voting-button flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#FFC154]">
               <input type="radio" name="vote" value="let" class="radio" x-model="vote" />
               <span class="text-base-content font-semibold">👆️ Let</span>
             </label>
             <label
-              class="flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#6CA0DC]">
+              class="voting-button flex space-x-2 checked:bg-base-200 focus-within:bg-base-200 rounded-2xl cursor-pointer has-[:checked]:text-[#6CA0DC]">
               <input type="radio" name="vote" value="nolet" class="radio" x-model="vote" />
               <span class="text-base-content font-semibold">🫳 No Let</span>
             </label>
           </div>
           {% if video.result.total_votes == 66 %}
           <button @click="sixseven()" id="vote-button" type="submit"
-            class="btn rounded-xl bg-primary text-primary-content text-md font-sans" :disabled="!vote">
+            class="april-fools btn rounded-xl bg-primary text-primary-content text-md font-sans" :disabled="!vote">
             Vote
           </button>
           {% else %}
           <button @click="voteConfetti()" id="vote-button" type="submit"
-            class="btn rounded-xl bg-primary text-primary-content text-md font-sans" :disabled="!vote">
+            class="april-fools btn rounded-xl bg-primary text-primary-content text-md font-sans" :disabled="!vote">
             Vote
           </button>
           {% endif %}
@@ -130,7 +130,7 @@ Decision Result for {{ video.video_title }}
         placeholder="You made the call, what's your reason?" required></textarea>
       <div class="mt-2 flex justify-end">
         <button type="submit"
-          class="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+          class="april-fools cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
           Post
         </button>
       </div>

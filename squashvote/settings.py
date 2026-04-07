@@ -41,7 +41,7 @@ SECRET_KEY = env.str("SECRET_KEY", default=get_random_secret_key())
 ALLOWED_HOSTS = [
     "squashvote.wtf",
     "www.squashvote.wtf",
-    "squashvote.fly.dev",
+    "squashvote.fly.dev"
 ]
 CSRF_TRUSTED_ORIGINS = ["https://squashvote.wtf", "https://www.squashvote.wtf"]
 URL = "https://squashvote.wtf"

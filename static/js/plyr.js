@@ -4,8 +4,8 @@ if (player) {
   const start = Number(player.dataset.start || 0);
 
   const plyr = new Plyr(player, {
-    autoplay: true,
-    muted: true,
+    autoplay: false,
+    muted: false,
     controls: ['play-large', 'play', 'progress', 'mute', 'fullscreen'],
     storage: { enabled: false },
     youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
