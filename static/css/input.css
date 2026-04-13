@@ -1,35 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&&family=Chewy&family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* ── Utilities ── */
+
 @utility no-scrollbar {
-  -ms-overflow-style: none;   /* IE/old Edge */
-  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* 2) Add the WebKit rule as plain CSS next to it */
 .no-scrollbar::-webkit-scrollbar {
-  display: none;              /* Chrome/Safari/Opera */
+  display: none;
 }
 
+/* ── Dark theme (default) ── */
 
 @plugin "daisyui/theme" {
   name: "customblack";
   default: true;
   color-scheme: "dark";
-  
-  --color-primary: #FF2800;
-  --color-primary-content: #FFFFFF;
-  --color-secondary: #fcf000;
-  --color-secondary-content: #111111;
+
+  --color-primary: #e5e5e5;
+  --color-primary-content: #0A0A0A;
+  --color-secondary: #999999;
+  --color-secondary-content: #0A0A0A;
   --color-accent: #37cdbe;
   --color-accent-content: #E5E4E2;
   --color-neutral: #3d4451;
   --color-neutral-content: #ffffff;
-  --color-base-100: #0f0f0f;
-  --color-base-200: #272727;
-  --color-base-300: #18181b;
+  --color-base-100: #0A0A0A;
+  --color-base-200: #1a1a1a;
+  --color-base-300: #141414;
   --color-base-content: #e5e5e5;
   --color-info: #73d1fa;
   --color-success: #36d399;
@@ -37,6 +39,7 @@
   --color-error: #f87272;
 }
 
+/* ── Light theme ── */
 
 @plugin "daisyui/theme" {
   name: "customlight";
@@ -47,8 +50,8 @@
   --color-base-200: oklch(98% 0 0);
   --color-base-300: oklch(95% 0 0);
   --color-base-content: oklch(21% 0.006 285.885);
-  --color-primary: oklch(0.6484 0.1902 24.11);
-  --color-primary-content: oklch(14% 0.005 285.823);
+  --color-primary: oklch(21% 0.006 285.885);
+  --color-primary-content: oklch(100% 0 0);
   --color-secondary: oklch(0.9351 0.1979 104.66);
   --color-secondary-content: oklch(14% 0.005 285.823);
   --color-accent: oklch(77% 0.152 181.912);
@@ -73,14 +76,20 @@
   --noise: 0;
 }
 
-
+/* ── Font tokens ── */
 
 @theme {
   --font-bebas: "Bebas Neue", sans-serif;
-  --font-videotitle: "Montserrat", sans-serif;
+  --font-heading: "Space Grotesk", "Inter", sans-serif;
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
-  --font-fun: 'Chewy', cursive;
+
+  --color-vote-stroke: #EC6B56;
+  --color-vote-let: #FFC154;
+  --color-vote-nolet: #6CA0DC;
 }
 
 html, body { font-family: var(--font-body); }
-h1, h2, .sv-title { letter-spacing: 0.01em; }
+h1, h2, h3, .sv-title {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}

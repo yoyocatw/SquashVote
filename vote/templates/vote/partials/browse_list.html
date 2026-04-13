@@ -1,0 +1,72 @@
+<div class="max-w-[640px] mx-auto px-5 divide-y divide-white/10">
+  {% for video in page_obj %}
+  <a href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
+     class="flex items-center gap-3 py-3.5 group">
+
+    <!-- Thumbnail -->
+    <div class="w-[100px] h-16 flex-shrink-0 rounded-lg overflow-hidden relative bg-white/5">
+      <img src="https://img.youtube.com/vi/{{ video.video_id }}/default.jpg"
+           alt="" class="w-full h-full object-cover" loading="lazy">
+      <div class="absolute inset-0 flex items-center justify-center">
+        <svg class="w-6 h-6 text-white/70" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="8,5 20,12 8,19" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="flex-1 min-w-0">
+      <h3 class="text-[15px] font-medium text-white leading-snug line-clamp-2">{{ video.video_title }}</h3>
+      <div class="flex items-center gap-2 mt-1 flex-wrap">
+        <span class="text-xs text-white/40">{{ video.result.total_votes|default:"0" }} votes</span>
+        <span class="text-[10px] font-medium text-white/30 border border-white/15 px-1.5 py-0.5 rounded">
+          {{ video.category }}
+        </span>
+        {% if video.id in voted_video_ids %}
+        <span class="text-[10px] font-semibold text-green-400/70">Voted</span>
+        {% endif %}
+        {% if video.date >= new_cutoff %}
+        <span class="text-[10px] font-bold text-white bg-white/15 px-1.5 py-0.5 rounded">NEW</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Chevron -->
+    <svg class="w-4 h-4 text-white/20 flex-shrink-0 group-hover:text-white/40 transition-colors"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </a>
+  {% empty %}
+  <div class="py-12 text-center text-white/40 text-sm">
+    No decisions found.
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="max-w-[640px] mx-auto px-5 py-8 flex justify-center items-center gap-3">
+  {% if page_obj.has_previous %}
+  <button
+    hx-get="{% url 'browse' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+    hx-target="#browse-list"
+    hx-swap="innerHTML"
+    class="px-4 py-2 text-sm text-white/60 border border-white/20 rounded-lg hover:text-white hover:border-white/40 transition-colors">
+    Prev
+  </button>
+  {% endif %}
+  <span class="text-sm text-white/30">
+    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+  </span>
+  {% if page_obj.has_next %}
+  <button
+    hx-get="{% url 'browse' %}?page={{ page_obj.next_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+    hx-target="#browse-list"
+    hx-swap="innerHTML"
+    class="px-4 py-2 text-sm text-white/60 border border-white/20 rounded-lg hover:text-white hover:border-white/40 transition-colors">
+    Next
+  </button>
+  {% endif %}
+</div>
+{% endif %}

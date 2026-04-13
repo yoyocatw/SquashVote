@@ -5,24 +5,86 @@ from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.core.paginator import Paginator
+from django.utils import timezone
+from datetime import timedelta
 from .utils.youtube_title import get_youtube_title
 
-# Create your views here.
+
 def get_session_id(request):
     if not request.session.session_key:
         request.session.create()
     return request.session.session_key
 
 
-def index(request):
-    videos = Video.objects.filter(is_active=True, needs_review=False).select_related(
-        "result"
+def get_next_decision(request, current_video):
+    """Return the newest unvoted clip for this session, excluding current."""
+    session_id = get_session_id(request)
+    voted_ids = VoteUser.objects.filter(
+        session_id=session_id
+    ).values_list("video_id", flat=True)
+
+    return (
+        Video.objects.filter(is_active=True, needs_review=False)
+        .exclude(id__in=voted_ids)
+        .exclude(id=current_video.id)
+        .select_related("result")
+        .order_by("-date")
+        .first()
     )
-    # Category videos
+
+
+def index(request):
+    one_week_ago = timezone.now() - timedelta(days=7)
+
+    new_this_week = (
+        Video.objects.filter(
+            is_active=True, needs_review=False, date__gte=one_week_ago
+        )
+        .select_related("result")
+        .order_by("-date")[:8]
+    )
+
+    # Fallback if fewer than 3 new clips this week
+    if new_this_week.count() < 3:
+        new_this_week = (
+            Video.objects.filter(is_active=True, needs_review=False)
+            .select_related("result")
+            .order_by("-date")[:8]
+        )
+        section_title = "Latest decisions"
+    else:
+        section_title = "New this week"
+
+    total_decisions = Video.objects.filter(
+        is_active=True, needs_review=False
+    ).count()
+
+    context = {
+        "new_this_week": new_this_week,
+        "section_title": section_title,
+        "total_decisions": total_decisions,
+    }
+    return render(request, "vote/index.html", context=context)
+
+
+def browse(request):
+    session_id = get_session_id(request)
+
+    videos = Video.objects.filter(
+        is_active=True, needs_review=False
+    ).select_related("result")
+
     category = request.GET.get("category", "all")
-    if category != "all":
-        videos = videos.filter(category__iexact=category)
-    # Sorting Videos
+    if category == "psa":
+        videos = videos.filter(category__iexact="PSA")
+    elif category == "amateur":
+        videos = videos.filter(category__iexact="Amateur")
+    elif category == "unvoted":
+        voted_video_ids = VoteUser.objects.filter(
+            session_id=session_id
+        ).values_list("video_id", flat=True)
+        videos = videos.exclude(id__in=voted_video_ids)
+
     sorted_by = request.GET.get("sort", "newest")
     if sorted_by == "most_votes":
         videos = videos.order_by("-result__total_votes")
@@ -31,25 +93,46 @@ def index(request):
     else:
         videos = videos.order_by("-date")
 
-    paginator = Paginator(videos, 6)
+    paginator = Paginator(videos, 15)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
+    total_decisions = Video.objects.filter(
+        is_active=True, needs_review=False
+    ).count()
+    voted_count = VoteUser.objects.filter(session_id=session_id).count()
+
+    voted_video_ids_set = set(
+        VoteUser.objects.filter(
+            session_id=session_id
+        ).values_list("video_id", flat=True)
+    )
+
+    new_cutoff = timezone.now() - timedelta(days=7)
+
+    filter_tabs = [
+        ("all", "All"),
+        ("psa", "PSA"),
+        ("amateur", "Amateur"),
+        ("unvoted", "Unvoted"),
+    ]
+
     context = {
-        "videos": videos,
-        "sorted_by": sorted_by,
-        "category": category,
         "page_obj": page_obj,
+        "category": category,
+        "sorted_by": sorted_by,
+        "total_decisions": total_decisions,
+        "voted_count": voted_count,
+        "voted_video_ids": voted_video_ids_set,
+        "new_cutoff": new_cutoff,
+        "filter_tabs": filter_tabs,
+        "show_back": True,
     }
-    #HTMX reload
+
     if request.headers.get("HX-Request"):
-        return render(
-            request,
-            "vote/partials/video_grid.html",
-            context,
-        )
-    # Full page reload
-    return render(request, "vote/index.html", context=context)
+        return render(request, "vote/partials/browse_list.html", context)
+
+    return render(request, "vote/browse.html", context=context)
 
 
 def user_already_voted(request, video):
@@ -90,13 +173,45 @@ def video_result(request, pk, slug=None):
                 video.result.save()
                 video.result.refresh_from_db()
 
-            response = render(
+            total = video.result.total_votes or 1
+            stroke_pct = round(video.result.stroke / total * 100)
+            let_pct = round(video.result.let / total * 100)
+            nolet_pct = round(video.result.no_let / total * 100)
+
+            vote_display_map = {"stroke": "Stroke", "let": "Let", "nolet": "No Let"}
+            vote_display = vote_display_map.get(vote, "")
+
+            next_video = get_next_decision(request, video)
+
+            # Fetch comments for the post-vote reveal
+            post_comments = Comment.objects.filter(video=video, parent=None).annotate(
+                num_likes=Count("likes")
+            ).order_by("-num_likes")
+
+            liked_comments = CommentLike.objects.filter(
+                session_id=session_id, comment__video__video_id=video.video_id
+            ).values_list("comment_id", flat=True)
+            reported = CommentReport.objects.filter(
+                session_id=session_id, comment__video__video_id=video.video_id
+            ).values_list("comment_id", flat=True)
+
+            return render(
                 request,
-                "vote/partials/already_voted.html",
-                context={"vote": vote, "video": video},
+                "vote/partials/post_vote.html",
+                context={
+                    "vote": vote,
+                    "vote_display": vote_display,
+                    "video": video,
+                    "stroke_pct": stroke_pct,
+                    "let_pct": let_pct,
+                    "nolet_pct": nolet_pct,
+                    "next_video": next_video,
+                    "comments": post_comments,
+                    "liked_comments": list(liked_comments),
+                    "reported": list(reported),
+                    "sort_by": "upvotes",
+                },
             )
-            print(f"DEBUG: Rendering with {video.result.total_votes} votes")
-            return response
     else:
         form = VoteForm()
     # Sorting comments
@@ -145,16 +260,33 @@ def video_result(request, pk, slug=None):
                 "reported": list(reported),
             },
         )
+    # Percentage calculations for CSS bars
+    total = video.result.total_votes or 1
+    stroke_pct = round(video.result.stroke / total * 100)
+    let_pct = round(video.result.let / total * 100)
+    nolet_pct = round(video.result.no_let / total * 100)
+
+    vote_display_map = {"stroke": "Stroke", "let": "Let", "nolet": "No Let"}
+    vote_display = vote_display_map.get(vote, "")
+
+    next_video = get_next_decision(request, video)
+
     # Full page reload
     context = {
         "video": video,
         "already_voted": already_voted,
         "vote": vote,
+        "vote_display": vote_display,
         "start": start,
         "comments": comments,
         "liked_comments": list(liked_comments),
         "reported": list(reported),
         "sort_by": sort_by,
+        "stroke_pct": stroke_pct,
+        "let_pct": let_pct,
+        "nolet_pct": nolet_pct,
+        "next_video": next_video,
+        "show_back": True,
         "suggested_videos": suggested_videos,
     }
     return render(request, "vote/video_result.html", context=context)

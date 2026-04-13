@@ -20,12 +20,12 @@ Polymarket's clarity and information density, crossed with the communal energy o
 
 ### Typefaces
 
-| Role | Current | Direction |
-|------|---------|-----------|
-| Logo | Bebas Neue | Keep or evaluate — should feel sharp, not sporty |
-| Headings | Montserrat 700/800 | Consider Space Grotesk or Inter — tighter, more utilitarian |
-| Body | Inter 400/600 | Keep. Excellent readability at small sizes. |
-| UI labels | Inter | Keep |
+| Role | Font | Weight | Notes |
+|------|------|--------|-------|
+| Logo | Bebas Neue | 400 | Sharp, not sporty. Used only for "SquashVote" wordmark. |
+| Headings | Space Grotesk | 600-700 | Tighter, more utilitarian than Montserrat. |
+| Body | Inter | 400/600 | Excellent readability at small sizes. |
+| UI labels | Inter | 500-600 | Metadata, badges, navigation. |
 
 ### Scale
 
@@ -82,12 +82,12 @@ These are the ONLY place where color carries meaning:
 | Let | #888 (light) / #888 (dark) | Middle ground |
 | No Let | #ccc (light) / #444 (dark) | Lowest contrast |
 
-Or, if we want to keep the current vote colors for chart distinctiveness:
+We keep the distinctive vote colors for immediate visual differentiation:
 - Stroke: #EC6B56 (warm red)
 - Let: #FFC154 (amber)
 - No Let: #6CA0DC (steel blue)
 
-This is an open decision — monochrome bars (Polymarket-style) vs. colored bars (current). Both are valid.
+These appear in CSS horizontal bar charts (pure HTML/CSS, no Chart.js). The bars are the primary place color carries meaning in the UI.
 
 ### Color rules
 - No colored buttons. Black/white only. Context makes the action clear.
@@ -153,11 +153,12 @@ This is an open decision — monochrome bars (Polymarket-style) vs. colored bars
 - Selected state: subtle fill or stronger border, not a color change
 
 ### Bar chart (vote results)
-- Horizontal bars
+- Pure CSS/HTML horizontal bars (no Chart.js)
 - Label on left (fixed width), bar on right
 - Percentage inside the bar
 - Background track: #f0f0f0 (light) / #1a1a1a (dark)
-- No Chart.js canvas — consider pure CSS/HTML bars for consistency and simplicity
+- Bar colors: Stroke #EC6B56, Let #FFC154, No Let #6CA0DC
+- Percentages computed server-side, rendered as `style="width: {{ pct }}%"`
 
 ### Comments
 - Light container: 1px border, 10px radius
@@ -203,6 +204,20 @@ This is an open decision — monochrome bars (Polymarket-style) vs. colored bars
 | Desktop | > 1024px | Centered content (max-width 640-720px), generous margins |
 
 Content should never stretch wider than ~720px on desktop. This is a focused, reading-oriented experience — not a dashboard.
+
+---
+
+## Full-bleed background pattern
+
+All three core screens use a full-bleed background image with a dark gradient overlay:
+
+- **Homepage:** Static image (El Sherbini match), stored in `static/images/hero-home.jpg`
+- **Browse:** Static image (Elias vs Asal), stored in `static/images/hero-browse.jpg`
+- **Clip:** Dynamic from YouTube thumbnail (`maxresdefault.jpg`), CSS blur + scale
+
+**Overlay gradient:** `linear-gradient(to bottom, rgba(10,10,10,0.3-0.5) top, rgba(10,10,10,0.9-0.95) bottom)`. Lighter at top to show the image, darker at bottom for text readability. Exact values vary per screen.
+
+**Implementation:** Background image in an absolutely-positioned container behind content. Content uses `relative z-10` to sit on top. No CSS `background-image` on the page itself — use an `<img>` with `object-cover` for better loading behavior, or an oversized `<div>` with `background-image` positioned via `left`/`top` offsets for precise cropping.
 
 ---
 
