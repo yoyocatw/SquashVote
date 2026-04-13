@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     video_form,
     index,
+    browse,
     video_result,
     chart,
     about,
@@ -21,6 +22,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("", index, name="index"),
+    path("browse/", browse, name="browse"),
     path(
         "video/<int:video_id>/accept/", accept_video, name="accept_video"
     ),  # Has to be before video_result or it will match wrong.

@@ -36,11 +36,12 @@ python manage.py runserver
 - **Backend:** Django 5.1.5, Python 3.13
 - **Frontend:** HTMX 2.0.4, Alpine.js 3.14.8, Tailwind CSS 4.1.11, DaisyUI 5.0.0-beta.2
 - **Video:** Plyr 3.8.3 wrapping YouTube embeds (20s clip window)
-- **Charts:** Chart.js 4.4.9
+- **Vote results:** Pure CSS/HTML horizontal bars (Chart.js removed in redesign)
 - **Database:** PostgreSQL (prod), SQLite (dev)
 - **Deployment:** Fly.io (Docker, gunicorn, SJC region)
 - **Static files:** WhiteNoise
 - **Analytics:** Plausible
+- **Fonts:** Space Grotesk (headings), Inter (body), Bebas Neue (logo)
 
 ## Project structure
 
@@ -183,10 +184,72 @@ GOOGLE_API           # YouTube Data API key
 
 ## Design direction (current redesign)
 
-This branch (`Anvith-Reddy-N/uiux-redesign`) is a full UI/UX reimagination. Key docs:
+This branch (`uiux-redesign`) is a full UI/UX reimagination. Key docs:
 
 - `docs/PRODUCT.md` — Who it's for, what it's NOT, how it should feel
 - `docs/BRAND.md` — Voice, tone, visual identity guidelines
 - `docs/DESIGN_SYSTEM.md` — Typography, color, spacing, component specs
 
 **Core principles:** Opinionated. Informed. Sharp. Polymarket clarity, subreddit energy. No decoration for decoration's sake. The clip is evidence; the verdict is the point.
+
+### Three finalized screens
+
+Designs finalized in Paper (paper.design). The user flow is: Homepage → Browse → Clip.
+
+**1. Homepage (Hero Landing)**
+- Full-bleed hero image (static, stored in `static/images/`) + dark gradient overlay
+- Hero text: "The crowd's verdict on controversial calls."
+- Subtext: "Watch the clip. Make your call. See where you stand."
+- CTA: "Start Voting →" links to `/browse/`
+- "New this week" section: horizontal scrolling clip cards (date < 7 days)
+- Photo credit attribution at bottom of hero
+- Dark background (#0A0A0A)
+
+**2. Library / Browse (NEW page at `/browse/`)**
+- Full-bleed background image (Elias vs Asal, static) + dark gradient overlay
+- "All Decisions" heading + "You've voted on X of Y decisions" counter
+- Filter tabs: All | PSA | Amateur | Unvoted (HTMX-powered)
+- Compact list rows: thumbnail + play icon | title + vote count + badges | chevron
+- Badges: category (PSA/Amateur), "Voted" (session check), "NEW" (< 7 days)
+- Pagination: 15 per page
+- Absorbs the old homepage's filter/sort/pagination logic
+
+**3. Clip (Vote + Results)**
+- Full-bleed background from YouTube thumbnail (`maxresdefault.jpg` + blur + overlay)
+- Plyr video player at top (keep existing 20s clip setup)
+- Title + metadata (votes, category badge)
+- Vote form: Stroke / Let / No Let radio options (no emoji, custom styled)
+- Post-vote reveal: "YOU VOTED" / "REF SAID" verdict cards
+- CSS horizontal bar chart (replace Chart.js): server-computed percentages
+- Comments section (gated behind vote, keep HTMX patterns)
+- "Next Decision →" CTA at bottom (links to newest unvoted clip)
+
+### Implementation decisions
+
+| Area | Decision |
+|------|----------|
+| Background images | Static files for homepage/browse; dynamic YouTube thumbs for clips |
+| Vote results | Pure CSS/HTML bars — drop Chart.js entirely |
+| Navigation | Minimal header: back arrow / "SquashVote.wtf" / hamburger menu |
+| Fonts | Add Space Grotesk for headings; keep Bebas Neue (logo), Inter (body) |
+| "Unvoted" filter | Exclude videos where session has a VoteUser record |
+| "Next Decision" | `get_next_decision()`: newest unvoted clip, simple query |
+| DaisyUI | Keep theme system for CSS vars; custom styling on redesigned screens |
+
+### Contribution workflow
+
+- **Upstream:** `origin` → `https://github.com/yoyocatw/SquashVote` (main repo)
+- **Fork:** `fork` → `https://github.com/SpunkyMartian/SquashVote`
+- **Branch:** `uiux-redesign` (push to fork, PR against origin/main)
+- **CI/CD:** Push to `main` on origin auto-deploys to Fly.io via GitHub Actions
+
+### Do NOT
+
+- Add new Python dependencies without discussion
+- Change model fields (no migrations in this redesign)
+- Remove any existing URL routes (backward compat)
+- Use class-based views
+- Add loading spinners or skeleton screens
+- Use emoji in UI copy
+- Add rounded corners > 12px
+- Add shadows on cards/buttons
