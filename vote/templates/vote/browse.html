@@ -3,42 +3,44 @@
 {% block title %}All Decisions — SquashVote{% endblock %}
 {% block content %}
 
-<!-- Full-bleed background -->
-<div class="fixed inset-0 -z-10">
-  <img src="https://img.youtube.com/vi/AYlKicTjq7A/maxresdefault.jpg"
-       alt="" class="w-full h-full object-cover object-[60%_30%]" loading="eager">
-  <div class="absolute inset-0"
-       style="background: linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.6) 15%, rgba(10,10,10,0.85) 35%, rgba(10,10,10,0.95) 55%, #0A0A0A 70%);"></div>
+<!-- Full-bleed background wrapper -->
+<div class="absolute inset-0 overflow-hidden" style="z-index: 0;">
+  <!-- Elias vs Asal: oversized for position control -->
+  <div class="absolute -top-[30px] left-0 w-[580px] h-[770px] bg-cover bg-center"
+       style="background-image: url('{% static 'images/hero-browse.jpeg' %}');"></div>
+  <div class="absolute top-0 left-0 w-full h-full"
+       style="background-image: linear-gradient(in oklab 180deg, oklab(0% 0 0 / 30%) 0%, oklab(0% 0 0 / 55%) 20%, oklab(0% 0 0 / 78%) 45%, oklab(0% 0 0 / 92%) 70%, oklab(0% 0 0 / 95%) 100%);"></div>
 </div>
 
 <!-- Page header -->
-<div class="pt-20 pb-4 px-5 max-w-[640px] mx-auto w-full">
-  <h1 class="text-2xl font-heading font-bold text-white">All Decisions</h1>
-  <p class="text-sm text-white/50 mt-1">
+<div class="flex flex-col w-full pt-16 gap-1 relative px-4" style="z-index: 1;">
+  <h1 class="[letter-spacing:-0.5px] text-white font-heading font-bold text-2xl/7.5">
+    All Decisions
+  </h1>
+  <p class="text-[#FFFFFF59] font-body text-[13px]/4">
     You've voted on {{ voted_count }} of {{ total_decisions }} decisions
   </p>
 </div>
 
 <!-- Filter tabs -->
-<div class="sticky top-[56px] z-20 border-b border-white/10"
-     style="background: rgba(10,10,10,0.85); backdrop-filter: blur(12px);">
-  <div class="max-w-[640px] mx-auto px-5 flex gap-2 py-3 overflow-x-auto no-scrollbar">
-    {% for value, label in filter_tabs %}
-    <button
-      hx-get="{% url 'browse' %}?category={{ value }}&sort={{ sorted_by }}"
-      hx-target="#browse-list"
-      hx-swap="innerHTML"
-      hx-push-url="true"
-      class="px-4 py-1.5 text-sm font-medium rounded-md whitespace-nowrap transition-colors
-             {% if category == value %}bg-white text-black{% else %}text-white/50 hover:text-white/80 border border-white/15{% endif %}">
+<div class="flex w-full pt-4 gap-2 relative px-4" style="z-index: 1;">
+  {% for value, label in filter_tabs %}
+  <button
+    hx-get="{% url 'browse' %}?category={{ value }}&sort={{ sorted_by }}"
+    hx-target="#browse-list"
+    hx-swap="innerHTML"
+    hx-push-url="true"
+    class="flex items-center justify-center rounded-md py-1.5 px-4 border border-solid whitespace-nowrap transition-colors
+           {% if category == value %}bg-[#FFFFFF1A] border-[#FFFFFF33]{% else %}border-[#FFFFFF14]{% endif %}">
+    <span class="{% if category == value %}text-white font-body font-semibold text-xs/4{% else %}text-[#FFFFFF66] font-body font-medium text-xs/4{% endif %}">
       {{ label }}
-    </button>
-    {% endfor %}
-  </div>
+    </span>
+  </button>
+  {% endfor %}
 </div>
 
 <!-- Decision list -->
-<div id="browse-list" class="min-h-screen pb-20">
+<div id="browse-list" class="relative pt-4" style="z-index: 1;">
   {% include "vote/partials/browse_list.html" %}
 </div>
 
