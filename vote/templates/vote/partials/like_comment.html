@@ -1,4 +1,4 @@
 <span id="vote-count-{{ comment.id }}"
-      class="{% if voted or comment.id in liked_comments %} text-primary {% endif %}">
-  {{ comment.likes.count|default:0}}
+      class="{% if voted or comment.id in liked_comments %}text-white{% else %}text-[#FFFFFF4D]{% endif %}">
+  {{ comment.likes.count|default:0 }}
 </span>
