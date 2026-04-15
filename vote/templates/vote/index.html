@@ -3,96 +3,108 @@
 {% block title %}SquashVote — The crowd's verdict on controversial calls{% endblock %}
 {% block content %}
 
-<!-- Hero section -->
-<section class="relative min-h-[85vh] flex items-end">
-  <!-- Background image -->
-  <div class="absolute inset-0">
-    <img src="https://img.youtube.com/vi/y_S9VMHKN0E/maxresdefault.jpg"
-         alt="" class="w-full h-full object-cover object-[50%_40%]" loading="eager">
-    <div class="absolute inset-0"
-         style="background: linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.5) 40%, rgba(10,10,10,0.85) 70%, #0A0A0A 90%);"></div>
-  </div>
+<!-- Hero section — image goes behind transparent base header -->
+<section class="relative w-full h-110 overflow-clip">
+  <!-- Background image: Aboelkheir solo, oversized for position control -->
+  <div class="absolute w-[512px] h-[640px] -left-[61px] -top-[50px] bg-cover bg-center"
+       style="background-image: url('{% static 'images/hero-home.jpeg' %}');"></div>
+  <!-- Overlay gradient -->
+  <div class="absolute top-0 left-0 w-full h-110"
+       style="background-image: linear-gradient(in oklab 180deg, oklab(0% 0 0 / 35%) 0%, oklab(0% 0 0 / 70%) 100%);"></div>
 
-  <!-- Hero content -->
-  <div class="relative z-10 w-full px-5 pb-10 max-w-[640px] mx-auto">
-    <h1 class="font-heading text-[32px] sm:text-4xl font-bold text-white leading-[1.15] tracking-tight">
+  <!-- Hero text — positioned from bottom -->
+  <div class="absolute bottom-25 left-0 flex flex-col w-full px-5 gap-2">
+    <h1 class="text-[30px] [letter-spacing:-1px] leading-[round(up,115%,1px)] text-white font-heading font-bold">
       The crowd's verdict on controversial calls.
     </h1>
-    <p class="mt-3 text-base text-white/60 font-body leading-relaxed">
+    <p class="text-[14px] leading-[round(up,150%,1px)] text-[#FFFFFFB3] font-body">
       Watch the clip. Make your call. See where you stand.
     </p>
+  </div>
+
+  <!-- Hero CTA -->
+  <div class="absolute bottom-8 left-0 flex w-full px-5">
     <a href="{% url 'browse' %}"
-       class="mt-6 inline-flex items-center gap-2 bg-white text-black font-semibold
-              px-6 py-3.5 rounded-lg text-base hover:bg-white/90 transition-colors">
-      Start Voting
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-        <polyline points="12 5 19 12 12 19"></polyline>
-      </svg>
+       class="flex items-center justify-center w-full h-12 rounded-lg bg-white hover:bg-white/90 transition-colors">
+      <span class="text-[#111111] font-body font-semibold text-[15px]/4.5">
+        Make Your Call &rarr;
+      </span>
     </a>
-    <p class="mt-4 text-xs text-white/30">Photo: @robshootssquash</p>
+  </div>
+
+  <!-- Photo credit -->
+  <div class="absolute bottom-1.5 right-3">
+    <span class="text-[#FFFFFF66] font-body text-[10px]/3">
+      Photo: @robshootssquash
+    </span>
   </div>
 </section>
 
-<!-- New this week / Latest decisions -->
-<section class="bg-[#0A0A0A] px-5 py-10 max-w-[640px] mx-auto w-full">
-  <div class="flex justify-between items-baseline mb-5">
-    <h2 class="font-heading text-lg font-bold text-white">{{ section_title }}</h2>
-    <a href="{% url 'browse' %}" class="text-sm text-white/40 hover:text-white/70 transition-colors">
-      View all
-    </a>
-  </div>
+<!-- New this week / Latest decisions header -->
+<div class="flex items-center justify-between w-full pt-6 pb-3 px-4">
+  <h2 class="[letter-spacing:-0.3px] text-[#FFFFFFE6] font-heading font-bold text-base/5">
+    {{ section_title }}
+  </h2>
+  <a href="{% url 'browse' %}"
+     class="text-[#FFFFFF59] font-body font-medium text-[13px]/4 hover:text-[#FFFFFF99] transition-colors">
+    View all
+  </a>
+</div>
 
-  <!-- Horizontal scroll cards -->
-  <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2 -mx-5 px-5 snap-x snap-mandatory">
-    {% for video in new_this_week %}
-    <a href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
-       class="flex-shrink-0 w-[280px] snap-start group">
-      <!-- Thumbnail -->
-      <div class="aspect-video rounded-lg overflow-hidden mb-2.5 relative bg-white/5">
-        <img src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg"
-             alt="{{ video.video_title }}" class="w-full h-full object-cover" loading="lazy">
-        <!-- Play overlay -->
-        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <div class="w-10 h-10 rounded-full bg-black/50 flex items-center justify-center">
-            <svg class="w-5 h-5 text-white ml-0.5" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="8,5 20,12 8,19" />
-            </svg>
-          </div>
+<!-- Clip cards — vertical stack -->
+{% for video in new_this_week %}
+<div class="flex flex-col w-full {% if forloop.first %}px-4{% else %}pt-2 px-4{% endif %}">
+  <a href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
+     class="flex flex-col rounded-[10px] overflow-clip bg-[#FFFFFF0D] border border-solid border-[#FFFFFF1F] group">
+    <!-- Thumbnail -->
+    <div class="flex items-center justify-center w-full h-30 bg-[#00000066] shrink-0 relative">
+      <img src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg"
+           alt="{{ video.video_title }}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+           class="relative z-10 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <polygon points="9,6 18,12 9,18" fill="#FFFFFFB3" />
+      </svg>
+    </div>
+    <!-- Card info -->
+    <div class="flex flex-col py-3 px-3.5 gap-1.5">
+      <div class="text-[14px] leading-[round(up,130%,1px)] text-white font-body font-semibold line-clamp-2">
+        {{ video.video_title }}
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[#FFFFFF66] font-body font-medium text-xs/4">
+          {{ video.result.total_votes|default:"0" }} votes
+        </span>
+        <div class="flex items-center justify-center rounded-sm py-0.5 px-2 bg-[#FFFFFF14]">
+          <span class="text-[#FFFFFF80] font-body font-medium text-[11px]/3.5">
+            {{ video.category }}
+          </span>
         </div>
       </div>
-      <h3 class="text-sm font-medium text-white leading-snug line-clamp-2">{{ video.video_title }}</h3>
-      <div class="flex items-center gap-2 mt-1">
-        <span class="text-xs text-white/40">{{ video.result.total_votes|default:"0" }} votes</span>
-        <span class="text-[10px] font-medium text-white/30 border border-white/15 px-1.5 py-0.5 rounded">
-          {{ video.category }}
-        </span>
-      </div>
-    </a>
-    {% endfor %}
-  </div>
-</section>
+    </div>
+  </a>
+</div>
+{% endfor %}
 
-<!-- Minimal footer -->
-<footer class="bg-[#0A0A0A] border-t border-white/10 py-8 px-5">
-  <div class="max-w-[640px] mx-auto flex flex-col sm:flex-row justify-between gap-6">
-    <div class="flex flex-col gap-2">
-      <a href="{% url 'browse' %}" class="text-sm text-white/40 hover:text-white/70 transition-colors">Browse Decisions</a>
-      <a href="{% url 'video_form' %}" class="text-sm text-white/40 hover:text-white/70 transition-colors">Submit a Decision</a>
-      <a href="{% url 'about' %}" class="text-sm text-white/40 hover:text-white/70 transition-colors">About</a>
-      <a href="{% url 'rules' %}" class="text-sm text-white/40 hover:text-white/70 transition-colors">Squash Rules</a>
+<!-- Footer -->
+<footer class="w-full pt-8 px-4 pb-5">
+  <div class="flex flex-col gap-6">
+    <div class="h-px bg-[#FFFFFF14]"></div>
+    <div class="flex gap-12">
+      <!-- Left column -->
+      <div class="flex flex-col gap-3">
+        <a href="{% url 'browse' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Browse Decisions</a>
+        <a href="{% url 'video_form' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Submit a Decision</a>
+        <a href="{% url 'about' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">About</a>
+        <a href="{% url 'rules' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Squash Rules</a>
+      </div>
+      <!-- Right column -->
+      <div class="flex flex-col gap-3">
+        <a href="https://squashvote.substack.com" target="_blank" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Newsletter</a>
+        <a href="mailto:illreadit@squashvote.wtf" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Contact</a>
+      </div>
     </div>
-    <div class="flex flex-col gap-2">
-      <a href="https://squashvote.substack.com" target="_blank" rel="noopener"
-         class="text-sm text-white/40 hover:text-white/70 transition-colors">Newsletter</a>
-      <a href="mailto:illreadit@squashvote.wtf"
-         class="text-sm text-white/40 hover:text-white/70 transition-colors">Contact</a>
-    </div>
+    <span class="font-body text-[11px]/3.5 text-[#FFFFFF26] mt-2">&copy; 2026 SquashVote. All rights reserved.</span>
   </div>
-  <p class="max-w-[640px] mx-auto mt-6 text-xs text-white/20">
-    &copy; 2026 SquashVote. All rights reserved.
-  </p>
 </footer>
 
 {% endblock %}
