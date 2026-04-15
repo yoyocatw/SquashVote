@@ -1,58 +1,44 @@
 {% extends 'vote/base.html' %}
 {% load static %}
-{% block title %}SquashVote | Squash Rules{% endblock %}
+{% block title %}Squash Rules — SquashVote{% endblock %}
 
 {% block content %}
-<div class="hero p-4 py-32 md:py-40 bg-base-100">
-  <div class="hero-content text-center">
-    <div class="max-w-lg">
-        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black font-videotitle whitespace-nowrap">Learn <span class="underline decoration-wavy decoration-2 decoration-primary">Squash Rules</span></h1>
-      <p class="py-6 text-base">
-            Whether you are a seasoned player or a newbie, understanding the rules of squash is essential to fully enjoy the game and the site. Here are some key resources to get you started.
-      </p>
-      <p class="text-5xl">&#x2193;</p>
-    </div>
+<div class="w-full px-4 pt-20 pb-12">
+
+  <h1 class="text-2xl font-heading font-bold text-white [letter-spacing:-0.5px] mb-2">Squash Rules</h1>
+  <p class="text-sm font-body text-[#FFFFFF80] mb-8">
+    Whether you're a seasoned player or a newbie, understanding the rules of squash is essential to fully enjoy the game and the site.
+  </p>
+
+  <!-- Video -->
+  <div class="w-full rounded-lg overflow-hidden border border-[#FFFFFF1A] mb-8">
+    <iframe
+      class="w-full aspect-video"
+      src="https://www.youtube.com/embed/Km5TMstbE34"
+      title="How To Play Squash: A Beginners Guide"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>
   </div>
+
+  <!-- Deeper -->
+  <div class="flex flex-col gap-4 pb-8">
+    <h2 class="text-lg font-heading font-bold text-white [letter-spacing:-0.3px]">Want to dive deeper?</h2>
+    <p class="text-sm font-body text-[#FFFFFF99] leading-relaxed">
+      Check out the official squash rules. It will really help you enjoy the site even more.
+    </p>
+    <a href="https://worldsquashofficiating.com/home/rules-of-squash/"
+       target="_blank"
+       class="flex items-center justify-center w-full h-11 rounded-lg bg-white hover:bg-white/90 transition-colors">
+      <span class="text-[#111111] font-body font-semibold text-[15px]/4.5">Official Rules &rarr;</span>
+    </a>
+  </div>
+
+  <a href="{% url 'browse' %}"
+     class="flex items-center justify-center w-full h-11 rounded-lg border border-[#FFFFFF33] hover:bg-[#FFFFFF0D] transition-colors">
+    <span class="text-white font-body font-medium text-sm">Try what you learned &rarr;</span>
+  </a>
+
 </div>
-
-
-
-<section class="bg-base-100 py-32 md:py-40 w-screen">
-    <div class="mx-auto h-full flex max-w-6xl flex-col px-4 md:px-8 gap-8 md:flex-row md:gap-16">
-        <iframe 
-        class="rounded-2xl w-full h-full object-contain md:w-1/2 aspect-video"
-        src="https://www.youtube.com/embed/Km5TMstbE34"
-        title="How To Play Squash: A Beginners Guide – Equipment, Rules and Tactics!"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-      </iframe>
-        <div class="max-w-lg space-y-6 md:space-y-8">
-            <h2 class="text-3xl font-black leading-tight tracking-tight md:text-4xl md:leading-tight lg:text-5xl text-primary-content">Check out this quick video</h2>
-            <p class="leading-relaxed text-body"> 
-                
-            </p>
-            <a class="btn-primary btn-block btn shadow-lg md:btn-wide rounded-xl" href="{% url 'index'%}">Try what you learned &#x279C;</a>
-        </div>
-    </div>
-</section>
-<section class="bg-base-100 py-32 md:py-40 w-screen">
-  <div class="mx-auto h-full flex items-center justify-center max-w-6xl flex-col px-4 md:px-8 gap-8 md:flex-row md:gap-16">
-    <div class="max-w-md space-y-6">
-      <h2 class="text-3xl font-black leading-tight tracking-tight md:text-4xl text-primary-content">
-        Want to dive deeper?
-      </h2>
-      <p class="leading-relaxed text-pretty text-base">
-        I highly recommend checking out the official squash rules. It will really help you enjoy the site even more.
-      </p>
-      <a href="https://worldsquashofficiating.com/home/rules-of-squash/" 
-         target="_blank" 
-         class="btn btn-primary btn-wide rounded-xl shadow-lg">
-        Explore the Official Rules 📖
-      </a>
-    </div>
-  </div>
-</section>
-
-
 {% endblock %}
