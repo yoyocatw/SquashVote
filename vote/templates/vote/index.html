@@ -59,6 +59,8 @@
     <!-- Thumbnail -->
     <div class="flex items-center justify-center w-full h-30 md:h-[180px] bg-[#00000066] shrink-0 relative">
       <img src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg"
+           srcset="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg 480w, https://img.youtube.com/vi/{{ video.video_id }}/maxresdefault.jpg 1280w"
+           sizes="(min-width: 768px) 33vw, 100vw"
            alt="{{ video.video_title }}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
            class="relative z-10 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity md:w-9 md:h-9">
