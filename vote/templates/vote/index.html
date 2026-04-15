@@ -4,36 +4,36 @@
 {% block content %}
 
 <!-- Hero section — image goes behind transparent base header -->
-<section class="relative w-full h-110 overflow-clip">
+<section class="relative w-full h-110 md:h-[560px] overflow-clip">
   <!-- Background image: Aboelkheir solo, oversized for position control -->
-  <div class="absolute w-[512px] h-[640px] -left-[61px] -top-[50px] bg-cover bg-center"
+  <div class="absolute w-[512px] h-[640px] -left-[61px] -top-[50px] md:w-[1800px] md:h-[900px] md:-left-[100px] md:-top-[100px] bg-cover bg-center md:bg-[center_40%]"
        style="background-image: url('{% static 'images/hero-home.jpeg' %}');"></div>
   <!-- Overlay gradient -->
-  <div class="absolute top-0 left-0 w-full h-110"
-       style="background-image: linear-gradient(in oklab 180deg, oklab(0% 0 0 / 35%) 0%, oklab(0% 0 0 / 70%) 100%);"></div>
+  <div class="absolute inset-0"
+       style="background-image: linear-gradient(in oklab 180deg, oklab(0% 0 0 / 25%) 0%, oklab(0% 0 0 / 65%) 100%);"></div>
 
   <!-- Hero text — positioned from bottom -->
-  <div class="absolute bottom-25 left-0 flex flex-col w-full px-5 gap-2">
-    <h1 class="text-[30px] [letter-spacing:-1px] leading-[round(up,115%,1px)] text-white font-heading font-bold">
+  <div class="absolute bottom-25 md:bottom-36 left-0 flex flex-col w-full px-5 md:px-12 gap-2 md:gap-3">
+    <h1 class="text-[30px] md:text-5xl [letter-spacing:-1px] md:[letter-spacing:-2px] leading-[round(up,115%,1px)] md:leading-[54px] text-white font-heading font-bold max-w-[600px]">
       The crowd's verdict on controversial calls.
     </h1>
-    <p class="text-[14px] leading-[round(up,150%,1px)] text-[#FFFFFFB3] font-body">
+    <p class="text-[14px] md:text-base leading-[round(up,150%,1px)] md:leading-6 text-[#FFFFFFB3] font-body max-w-[500px]">
       Watch the clip. Make your call. See where you stand.
     </p>
   </div>
 
   <!-- Hero CTA -->
-  <div class="absolute bottom-8 left-0 flex w-full px-5">
+  <div class="absolute bottom-8 md:bottom-14 left-0 flex w-full px-5 md:px-12">
     <a href="{% url 'browse' %}"
-       class="flex items-center justify-center w-full h-12 rounded-lg bg-white hover:bg-white/90 transition-colors">
-      <span class="text-[#111111] font-body font-semibold text-[15px]/4.5">
+       class="flex items-center justify-center w-full md:w-60 h-12 md:h-[52px] rounded-lg md:rounded-[10px] bg-white hover:bg-white/90 transition-colors">
+      <span class="text-[#111111] font-body font-semibold text-[15px]/4.5 md:text-base/5">
         Make Your Call &rarr;
       </span>
     </a>
   </div>
 
   <!-- Photo credit -->
-  <div class="absolute bottom-1.5 right-3">
+  <div class="absolute bottom-1.5 right-3 md:right-5 md:bottom-2">
     <span class="text-[#FFFFFF66] font-body text-[10px]/3">
       Photo: @robshootssquash
     </span>
@@ -41,33 +41,33 @@
 </section>
 
 <!-- New this week / Latest decisions header -->
-<div class="flex items-center justify-between w-full pt-6 pb-3 px-4">
-  <h2 class="[letter-spacing:-0.3px] text-[#FFFFFFE6] font-heading font-bold text-base/5">
+<div class="flex items-center justify-between w-full pt-6 md:pt-8 pb-3 md:pb-4 px-4 md:px-12">
+  <h2 class="[letter-spacing:-0.3px] md:[letter-spacing:-0.5px] text-[#FFFFFFE6] font-heading font-bold text-base/5 md:text-xl/6">
     {{ section_title }}
   </h2>
   <a href="{% url 'browse' %}"
-     class="text-[#FFFFFF59] font-body font-medium text-[13px]/4 hover:text-[#FFFFFF99] transition-colors">
+     class="text-[#FFFFFF59] font-body font-medium text-[13px]/4 md:text-sm/4.5 hover:text-[#FFFFFF99] transition-colors">
     View all
   </a>
 </div>
 
-<!-- Clip cards — vertical stack -->
-{% for video in new_this_week %}
-<div class="flex flex-col w-full {% if forloop.first %}px-4{% else %}pt-2 px-4{% endif %}">
+<!-- Clip cards — vertical stack on mobile, 3-col grid on desktop -->
+<div class="flex flex-col gap-2 px-4 md:grid md:grid-cols-3 md:gap-4 md:px-12">
+  {% for video in new_this_week %}
   <a href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
      class="flex flex-col rounded-[10px] overflow-clip bg-[#FFFFFF0D] border border-solid border-[#FFFFFF1F] group">
     <!-- Thumbnail -->
-    <div class="flex items-center justify-center w-full h-30 bg-[#00000066] shrink-0 relative">
+    <div class="flex items-center justify-center w-full h-30 md:h-[180px] bg-[#00000066] shrink-0 relative">
       <img src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg"
            alt="{{ video.video_title }}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-           class="relative z-10 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+           class="relative z-10 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity md:w-9 md:h-9">
         <polygon points="9,6 18,12 9,18" fill="#FFFFFFB3" />
       </svg>
     </div>
     <!-- Card info -->
-    <div class="flex flex-col py-3 px-3.5 gap-1.5">
-      <div class="text-[14px] leading-[round(up,130%,1px)] text-white font-body font-semibold line-clamp-2">
+    <div class="flex flex-col py-3 px-3.5 md:py-3.5 md:px-4 gap-1.5">
+      <div class="text-[14px] md:text-[15px] leading-[round(up,130%,1px)] md:leading-5 text-white font-body font-semibold line-clamp-2">
         {{ video.video_title }}
       </div>
       <div class="flex items-center gap-2">
@@ -82,11 +82,11 @@
       </div>
     </div>
   </a>
+  {% endfor %}
 </div>
-{% endfor %}
 
 <!-- Footer -->
-<footer class="w-full pt-8 px-4 pb-5">
+<footer class="w-full pt-8 px-4 md:px-12 pb-5">
   <div class="flex flex-col gap-6">
     <div class="h-px bg-[#FFFFFF14]"></div>
     <div class="flex gap-12">

@@ -3,7 +3,7 @@
 {% block title %}Uploaded — SquashVote{% endblock %}
 
 {% block content %}
-<div class="flex flex-col items-center justify-center px-4 pt-32 pb-12 text-center gap-4">
+<div class="flex flex-col items-center justify-center max-w-[720px] mx-auto px-4 md:px-0 pt-32 md:pt-40 pb-12 text-center gap-4">
   <h1 class="text-2xl font-heading font-bold text-white [letter-spacing:-0.5px]">Decision submitted</h1>
   <p class="text-sm font-body text-[#FFFFFF99]">Your video has been successfully uploaded and is now live.</p>
   <a href="{% url 'browse' %}" class="flex items-center justify-center w-full max-w-xs h-11 rounded-lg bg-white hover:bg-white/90 transition-colors mt-4">
