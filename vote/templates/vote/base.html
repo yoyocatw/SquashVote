@@ -70,37 +70,33 @@
   x-data="{ menuOpen: false }">
 
   <!-- Minimal header -->
-  <header class="fixed top-0 left-0 right-0 z-50 px-5 py-4 flex items-center justify-between"
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 py-4 flex items-center justify-between"
     style="background: linear-gradient(to bottom, rgba(10,10,10,0.8) 0%, transparent 100%);">
 
-    <!-- Left: back arrow (shown on inner pages) -->
-    <div class="w-10">
+    <!-- Left: back arrow + logo (inner pages) or just logo (homepage) -->
+    <div class="flex items-center gap-2">
       {% if show_back %}
-      <a href="{% url 'index' %}" class="text-white/80 hover:text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      <a href="{{ back_url|default:'/' }}" class="text-white/80 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
       </a>
       {% endif %}
+      <a href="{% url 'index' %}" class="text-lg [letter-spacing:-0.5px] font-heading font-bold text-white leading-[22px]">
+        SquashVote<span class="text-[#FFFFFF99]">.wtf</span>
+      </a>
     </div>
-
-    <!-- Center: logo -->
-    <a href="{% url 'index' %}" class="text-xl font-bebas tracking-wide text-white">
-      SquashVote<span class="text-white/60">.wtf</span>
-    </a>
 
     <!-- Right: hamburger -->
-    <div class="w-10 flex justify-end">
-      <button @click="menuOpen = true" class="text-white/80 hover:text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-    </div>
+    <button @click="menuOpen = true" class="text-white/80 hover:text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
   </header>
 
   <!-- Slide-out menu -->
@@ -116,25 +112,33 @@
     x-transition:leave="transition ease-in duration-150"
     x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
     @click.outside="menuOpen = false"
-    class="fixed top-0 right-0 bottom-0 w-72 bg-[#141414] z-50 flex flex-col p-6" x-cloak>
-    <button @click="menuOpen = false" class="self-end text-white/60 hover:text-white mb-8">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-    </button>
-    <div class="flex flex-col gap-1">
-      <a href="{% url 'index' %}" @click="menuOpen = false"
-        class="py-3 text-lg font-heading font-semibold text-white/80 hover:text-white">Home</a>
-      <a href="{% url 'browse' %}" @click="menuOpen = false"
-        class="py-3 text-lg font-heading font-semibold text-white/80 hover:text-white">Browse Decisions</a>
-      <a href="{% url 'video_form' %}" @click="menuOpen = false"
-        class="py-3 text-lg font-heading font-semibold text-white/80 hover:text-white">Submit a Decision</a>
-      <a href="{% url 'about' %}" @click="menuOpen = false"
-        class="py-3 text-lg font-heading font-semibold text-white/80 hover:text-white">About</a>
-      <a href="{% url 'rules' %}" @click="menuOpen = false"
-        class="py-3 text-lg font-heading font-semibold text-white/80 hover:text-white">Squash Rules</a>
+    class="fixed top-0 right-0 bottom-0 w-[280px] bg-[#141414] z-50 flex flex-col justify-between p-6" x-cloak>
+    <div>
+      <button @click="menuOpen = false" class="self-end block ml-auto text-[#FFFFFF66] hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="flex flex-col mt-8">
+        <a href="{% url 'index' %}" @click="menuOpen = false"
+          class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-[#FFFFFFCC] hover:text-white transition-colors leading-[22px]">Home</a>
+        <a href="{% url 'browse' %}" @click="menuOpen = false"
+          class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-white hover:text-white transition-colors leading-[22px]">Browse Decisions</a>
+        <a href="{% url 'video_form' %}" @click="menuOpen = false"
+          class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-[#FFFFFFCC] hover:text-white transition-colors leading-[22px]">Submit a Decision</a>
+        <a href="{% url 'about' %}" @click="menuOpen = false"
+          class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-[#FFFFFFCC] hover:text-white transition-colors leading-[22px]">About</a>
+        <a href="{% url 'rules' %}" @click="menuOpen = false"
+          class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-[#FFFFFFCC] hover:text-white transition-colors leading-[22px]">Squash Rules</a>
+      </div>
+    </div>
+    <div class="flex flex-col gap-3">
+      <div class="h-px bg-[#FFFFFF14]"></div>
+      <a href="https://squashvote.substack.com" target="_blank" class="font-body text-[13px]/4 text-[#FFFFFF4D] hover:text-[#FFFFFF99] transition-colors">Newsletter</a>
+      <a href="mailto:illreadit@squashvote.wtf" class="font-body text-[13px]/4 text-[#FFFFFF4D] hover:text-[#FFFFFF99] transition-colors">Contact</a>
+      <span class="font-body text-[11px]/3.5 text-[#FFFFFF26] mt-3">&copy; 2026 SquashVote</span>
     </div>
   </nav>
 
