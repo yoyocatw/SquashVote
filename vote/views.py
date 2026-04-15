@@ -17,7 +17,7 @@ def get_session_id(request):
 
 
 def get_next_decision(request, current_video):
-    """Return the newest unvoted clip and remaining count for this session."""
+    """Return the newest unvoted clip and fresh unvoted count (last 30 days)."""
     session_id = get_session_id(request)
     voted_ids = VoteUser.objects.filter(
         session_id=session_id
@@ -31,7 +31,10 @@ def get_next_decision(request, current_video):
         .order_by("-date")
     )
 
-    return unvoted.first(), unvoted.count()
+    one_month_ago = timezone.now() - timedelta(days=30)
+    fresh_count = unvoted.filter(date__gte=one_month_ago).count()
+
+    return unvoted.first(), fresh_count
 
 
 def index(request):
