@@ -116,7 +116,10 @@
 
 <!-- Next Decision CTA -->
 {% if next_video %}
-<div class="flex w-full pt-4 pb-5">
+<div class="flex flex-col items-center w-full pt-5 pb-5 gap-2">
+  <span class="text-[#FFFFFF66] font-body text-xs/4">
+    {{ remaining_count }} more iffy call{{ remaining_count|pluralize }} to vote on
+  </span>
   <a href="{% url 'video_result' pk=next_video.id slug=next_video.video_title|slugify %}"
      class="flex items-center justify-center w-full h-11.5 rounded-lg bg-white hover:bg-white/90 transition-colors">
     <span class="text-[#111111] font-body font-semibold text-[15px]/4.5">

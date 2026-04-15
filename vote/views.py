@@ -17,20 +17,21 @@ def get_session_id(request):
 
 
 def get_next_decision(request, current_video):
-    """Return the newest unvoted clip for this session, excluding current."""
+    """Return the newest unvoted clip and remaining count for this session."""
     session_id = get_session_id(request)
     voted_ids = VoteUser.objects.filter(
         session_id=session_id
     ).values_list("video_id", flat=True)
 
-    return (
+    unvoted = (
         Video.objects.filter(is_active=True, needs_review=False)
         .exclude(id__in=voted_ids)
         .exclude(id=current_video.id)
         .select_related("result")
         .order_by("-date")
-        .first()
     )
+
+    return unvoted.first(), unvoted.count()
 
 
 def index(request):
@@ -182,7 +183,7 @@ def video_result(request, pk, slug=None):
             vote_display_map = {"stroke": "Stroke", "let": "Let", "nolet": "No Let"}
             vote_display = vote_display_map.get(vote, "")
 
-            next_video = get_next_decision(request, video)
+            next_video, remaining_count = get_next_decision(request, video)
 
             # Fetch comments for the post-vote reveal
             post_comments = Comment.objects.filter(video=video, parent=None).annotate(
@@ -207,6 +208,7 @@ def video_result(request, pk, slug=None):
                     "let_pct": let_pct,
                     "nolet_pct": nolet_pct,
                     "next_video": next_video,
+                    "remaining_count": remaining_count,
                     "comments": post_comments,
                     "liked_comments": list(liked_comments),
                     "reported": list(reported),
@@ -258,7 +260,7 @@ def video_result(request, pk, slug=None):
     vote_display_map = {"stroke": "Stroke", "let": "Let", "nolet": "No Let"}
     vote_display = vote_display_map.get(vote, "")
 
-    next_video = get_next_decision(request, video)
+    next_video, remaining_count = get_next_decision(request, video)
 
     # Full page reload
     context = {
@@ -275,6 +277,7 @@ def video_result(request, pk, slug=None):
         "let_pct": let_pct,
         "nolet_pct": nolet_pct,
         "next_video": next_video,
+        "remaining_count": remaining_count,
         "show_back": True,
         "back_url": "/browse/",
     }
