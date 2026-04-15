@@ -127,6 +127,7 @@ def browse(request):
         "new_cutoff": new_cutoff,
         "filter_tabs": filter_tabs,
         "show_back": True,
+        "back_url": "/",
     }
 
     if request.headers.get("HX-Request"):
@@ -287,6 +288,7 @@ def video_result(request, pk, slug=None):
         "nolet_pct": nolet_pct,
         "next_video": next_video,
         "show_back": True,
+        "back_url": "/browse/",
         "suggested_videos": suggested_videos,
     }
     return render(request, "vote/video_result.html", context=context)
@@ -319,7 +321,7 @@ def video_form(request):
     else:
         form = VideoForm()
 
-    return render(request, "vote/video_form.html", {"form": form})
+    return render(request, "vote/video_form.html", {"form": form, "show_back": True, "back_url": "/"})
 
 
 def confirm(request):
@@ -355,11 +357,11 @@ def reject_video(request, video_id):
 
 
 def about(request):
-    return render(request, "vote/about.html")
+    return render(request, "vote/about.html", {"show_back": True, "back_url": "/"})
 
 
 def rules(request):
-    return render(request, "vote/squashrules.html")
+    return render(request, "vote/squashrules.html", {"show_back": True, "back_url": "/"})
 
 
 def post_comment(request, pk):
