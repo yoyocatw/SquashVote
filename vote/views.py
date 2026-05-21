@@ -119,7 +119,19 @@ def video_result(request, pk, slug=None):
     reported = CommentReport.objects.filter(
         session_id=session_id, comment__video__video_id=video.video_id
     ).values_list("comment_id", flat=True)
+    
+    voted_video_ids = VoteUser.objects.filter(
+        user=request.user if request.user.is_authenticated else None,
+        session_id=session_id,
+    ).values_list("video_id", flat=True)
 
+    suggested_videos = (
+        Video.objects.filter(is_active=True, needs_review=False)
+        .exclude(id=video.id)
+        .exclude(id__in=voted_video_ids)
+        .select_related("result")
+        .order_by("-result__total_votes")[:6]
+    )
     # HTMX paritals return
     if request.method == "GET" and "sort" in request.GET:
         return render(
@@ -143,6 +155,7 @@ def video_result(request, pk, slug=None):
         "liked_comments": list(liked_comments),
         "reported": list(reported),
         "sort_by": sort_by,
+        "suggested_videos": suggested_videos,
     }
     return render(request, "vote/video_result.html", context=context)
 
@@ -342,3 +355,6 @@ def check_duplicate(request):
             for v in videos
         ]
     })
+
+def guide(request):
+    return render(request, 'vote/guide.html')

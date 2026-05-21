@@ -15,6 +15,7 @@ from .views import (
     accept_video,
     reject_video,
     check_duplicate,
+    guide
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
@@ -39,4 +40,5 @@ urlpatterns = [
     path("confirm/", confirm, name="confirm"),
     path("review/", review, name="review"),
     path("check-duplicate/", check_duplicate, name="check_duplicate"),
+    path("guide/", guide, name="guide")
 ]

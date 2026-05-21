@@ -110,8 +110,7 @@
             <li class="flex items-end pr-2"><button onclick="document.activeElement.blur()" class="btn btn-ghost btn-circle btn-md text-3xl ml-auto">✕</button></li>
             <li><a href="{% url 'video_form' %}" class="font-semibold font-fun text-2xl py-5 pl-2">Upload Video &#10139;</a>
             </li>
-            <li><a class="font-semibold font-fun text-2xl py-5 pl-5" target="_blank"
-                href="https://friends-itch-5gv.craft.me/squashvote.wtf">Upload Guide &#10139;</a></li>
+            <li><a class="font-semibold font-fun text-2xl py-5 pl-5"  href="{% url 'guide'%}">Upload Guide &#10139;</a></li> <!--https://friends-itch-5gv.craft.me/squashvote.wtf-->
 
             <li><a href="{% url 'about' %}" class="font-semibold font-fun text-2xl py-5 pl-5">About &#10139;</a></li>
             <li><a href="{% url 'rules' %}" class="font-semibold font-fun text-2xl py-5 pl-5">Squash Rules &#10139;</a></li>
@@ -135,7 +134,7 @@
 
           <ul class="menu menu-horizontal px-1 text-base-content font-body text-md">
             <li><a class="rounded-2xl" href="{% url 'video_form' %}">Upload Video</a></li>
-            <li><a class="rounded-2xl" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">UploadGuide</a></li>
+            <li><a class="rounded-2xl" href="{% url 'guide'%}">Upload Guide</a></li> <!--https://friends-itch-5gv.craft.me/squashvote.wtf-->
             <li><a class="rounded-2xl" href="{% url 'about' %}">About</a></li>
             <li><a class="rounded-2xl" href="{% url 'rules' %}">Squash Rules</a></li>
 

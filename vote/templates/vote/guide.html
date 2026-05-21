@@ -1,0 +1,31 @@
+{% extends "vote/base.html" %}
+{% load static %}
+
+{% block title %}Upload Your Decisions | SquashVote.wtf{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-base-100 selection:bg-primary selection:text-white">
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-base-200 border-b border-primary/10 py-12 md:py-20 px-4">
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-block px-3 py-1 rounded-sm bg-primary text-white text-xs font-bold mb-6 font-videotitle uppercase tracking-[0.2em]">
+                Community Submission
+            </div>
+            <h1 class="text-6xl md:text-9xl font-bebas italic leading-none mb-4">
+                UPLOAD YOUR <span class="text-primary">DECISIONS</span>
+            </h1>
+            <p class="font-fun text-2xl md:text-4xl text-secondary -rotate-1 tracking-wide">
+                Help the community settle the score!
+            </p>
+        </div>
+        
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] select-none pointer-events-none">
+            <h1 class="text-[25rem] font-bebas">SQUASH</h1>
+        </div>
+    </section>
+    <main>
+        
+    </main>
+</div>
+{% endblock %}

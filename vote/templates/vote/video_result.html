@@ -153,10 +153,15 @@ Decision Result for {{ video.video_title }}
     </div>
 
     <!-- Comment List -->
-    <div id="comments" class="flex flex-col gap-4 mb-32">
+    <div id="comments" class="flex flex-col gap-4">
       {% include "vote/partials/comment_section.html" with comment=comment list_upvote=list_upvote %}
     </div>
   </div>
+
+  <div id="videos" class="pb-20 pt-2 md:py-16 bg-base-100">
+      {% include "vote/partials/video_grid.html" with page_obj=suggested_videos %} {% comment %} {% if videos|length == 0 %} <p class="text-center text-gray-500">No videos available.</p> {% endif %} {% endcomment %}
+  </div>
+
 </div>
 {% endblock %}
 
