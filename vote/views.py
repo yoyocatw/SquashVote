@@ -497,4 +497,4 @@ def check_duplicate(request):
     })
 
 def guide(request):
-    return render(request, 'vote/guide.html')
+    return render(request, "vote/guide.html", {"show_back": True, "back_url": "/"})

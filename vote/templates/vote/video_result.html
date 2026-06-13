@@ -165,6 +165,57 @@
     {% endif %}
   </div>
 
+  <!-- More decisions to vote on (shown after voting) -->
+  {% if already_voted and suggested_videos %}
+  <div id="videos" class="w-full pt-8 md:pt-10">
+    <h2 class="text-white font-heading font-bold text-base/5 md:text-lg/6 mb-4 [letter-spacing:-0.3px]">
+      More decisions
+    </h2>
+    <div class="flex flex-col gap-3">
+      {% for v in suggested_videos %}
+      {% if not forloop.first %}
+      <div class="w-full h-px bg-[#FFFFFF0F] shrink-0"></div>
+      {% endif %}
+      <a href="{% url 'video_result' pk=v.id slug=v.video_title|slugify %}"
+         class="flex gap-3 md:gap-4 group py-0 md:py-1">
+        <!-- Thumbnail -->
+        <div class="flex items-center justify-center w-25 h-16 md:w-[130px] md:h-[72px] relative rounded-md bg-[#FFFFFF0F] border border-solid border-[#FFFFFF14] shrink-0 overflow-hidden">
+          <img src="https://img.youtube.com/vi/{{ v.video_id }}/default.jpg"
+               alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+               class="relative z-10 shrink-0">
+            <polygon points="9,6 18,12 9,18" fill="#FFFFFF66" />
+          </svg>
+        </div>
+        <!-- Info -->
+        <div class="flex flex-col grow shrink basis-[0%] justify-center gap-1 md:gap-1.5 min-w-0">
+          <div class="text-white font-body font-semibold text-sm/4.5 md:text-[15px]/5 line-clamp-2">
+            {{ v.video_title }}
+          </div>
+          <div class="flex items-center gap-1.5 md:gap-2">
+            <span class="text-[#FFFFFF59] font-body text-[11px]/3.5 md:text-xs/4">
+              {{ v.result.total_votes|default:"0" }} votes
+            </span>
+            <div class="rounded-[3px] py-px px-1.5 bg-[#FFFFFF0F]">
+              <span class="text-[#FFFFFF66] font-body font-medium text-[10px]/3 md:text-[11px]/3.5">
+                {{ v.category }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Chevron -->
+        <div class="flex items-center shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF33" stroke-width="2"
+               xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+            <polyline points="9,18 15,12 9,6" />
+          </svg>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
 </div>
 
 {% endblock %}

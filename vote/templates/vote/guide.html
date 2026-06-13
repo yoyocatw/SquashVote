@@ -1,31 +1,62 @@
-{% extends "vote/base.html" %}
+{% extends 'vote/base.html' %}
 {% load static %}
-
-{% block title %}Upload Your Decisions | SquashVote.wtf{% endblock %}
+{% block title %}Upload Guide — SquashVote{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-base-100 selection:bg-primary selection:text-white">
+<div class="w-full max-w-[720px] mx-auto px-4 md:px-0 pt-20 md:pt-24 pb-12">
 
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-base-200 border-b border-primary/10 py-12 md:py-20 px-4">
-        <div class="max-w-5xl mx-auto text-center relative z-10">
-            <div class="inline-block px-3 py-1 rounded-sm bg-primary text-white text-xs font-bold mb-6 font-videotitle uppercase tracking-[0.2em]">
-                Community Submission
-            </div>
-            <h1 class="text-6xl md:text-9xl font-bebas italic leading-none mb-4">
-                UPLOAD YOUR <span class="text-primary">DECISIONS</span>
-            </h1>
-            <p class="font-fun text-2xl md:text-4xl text-secondary -rotate-1 tracking-wide">
-                Help the community settle the score!
-            </p>
-        </div>
-        
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] select-none pointer-events-none">
-            <h1 class="text-[25rem] font-bebas">SQUASH</h1>
-        </div>
-    </section>
-    <main>
-        
-    </main>
+  <h1 class="text-2xl font-heading font-bold text-white [letter-spacing:-0.5px] mb-2">Upload Guide</h1>
+  <p class="text-sm font-body text-[#FFFFFF80] mb-8">
+    Found a call worth arguing about? Here's how to get it on the board in under a minute.
+  </p>
+
+  <!-- Steps -->
+  <div class="flex flex-col gap-6 pb-10">
+    <div class="flex gap-4">
+      <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full border border-[#FFFFFF33] text-white font-heading font-bold text-sm">1</span>
+      <div class="flex flex-col gap-1">
+        <h2 class="text-base font-heading font-bold text-white [letter-spacing:-0.3px]">Find the clip on YouTube</h2>
+        <p class="text-sm font-body text-[#FFFFFF99] leading-relaxed">
+          Track down the match on YouTube and play it up to the disputed moment. PSA, amateur, league &mdash; if the call is contested, it belongs here.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full border border-[#FFFFFF33] text-white font-heading font-bold text-sm">2</span>
+      <div class="flex flex-col gap-1">
+        <h2 class="text-base font-heading font-bold text-white [letter-spacing:-0.3px]">Copy the video URL</h2>
+        <p class="text-sm font-body text-[#FFFFFF99] leading-relaxed">
+          Grab the full link, e.g. <span class="font-mono text-[#FFFFFFCC]">youtube.com/watch?v=&hellip;</span>. Paste it into the submit form.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full border border-[#FFFFFF33] text-white font-heading font-bold text-sm">3</span>
+      <div class="flex flex-col gap-1">
+        <h2 class="text-base font-heading font-bold text-white [letter-spacing:-0.3px]">Note the timestamp</h2>
+        <p class="text-sm font-body text-[#FFFFFF99] leading-relaxed">
+          Mark when the call happens &mdash; <span class="font-mono text-[#FFFFFFCC]">4:20</span> or <span class="font-mono text-[#FFFFFFCC]">1:06:09</span>. We play a 20-second window from there so voters see exactly what you saw.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <span class="shrink-0 flex items-center justify-center w-7 h-7 rounded-full border border-[#FFFFFF33] text-white font-heading font-bold text-sm">4</span>
+      <div class="flex flex-col gap-1">
+        <h2 class="text-base font-heading font-bold text-white [letter-spacing:-0.3px]">Submit it</h2>
+        <p class="text-sm font-body text-[#FFFFFF99] leading-relaxed">
+          Drop in the URL and timestamp. Email is optional &mdash; leave it if you want a heads-up when your clip goes live.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <a href="{% url 'video_form' %}"
+     class="flex items-center justify-center w-full h-11 rounded-lg bg-white hover:bg-white/90 transition-colors">
+    <span class="text-[#111111] font-body font-semibold text-[15px]/4.5">Submit a Decision &rarr;</span>
+  </a>
+
 </div>
 {% endblock %}
