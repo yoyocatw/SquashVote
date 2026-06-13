@@ -1,6 +1,8 @@
 from django.db import models
 from datetime import date
 from django.utils.timezone import now
+from django.utils.text import slugify
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 
@@ -48,6 +50,15 @@ class Video(models.Model):
     @property
     def start(self):
         return Video.convert_timestamp_to_seconds(self.timestamp)
+
+    @property
+    def slug(self):
+        # YouTube titles can be all-symbol/non-Latin, which slugify to ""; the
+        # <slug:slug> URL converter rejects empty strings, so fall back to "clip".
+        return slugify(self.video_title) or "clip"
+
+    def get_absolute_url(self):
+        return reverse("video_result", kwargs={"pk": self.pk, "slug": self.slug})
 
 
     def __str__(self):

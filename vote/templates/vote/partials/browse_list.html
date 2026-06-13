@@ -1,0 +1,46 @@
+{% load static %}
+<div class="flex flex-col w-full px-4 md:px-0 gap-3">
+  {% for video in page_obj %}
+  {% if not forloop.first %}
+  <div class="w-full h-px bg-[#FFFFFF0F] shrink-0"></div>
+  {% endif %}
+  {% include "vote/partials/_clip_row.html" %}
+  {% empty %}
+  <div class="py-12 text-center">
+    {% if category == "unvoted" %}
+    <p class="text-[#FFFFFF80] font-body text-sm mb-3">You've called every decision here. Nice work.</p>
+    <a href="{% url 'browse' %}"
+       class="text-white font-body font-medium text-sm underline underline-offset-4 hover:text-[#FFFFFFCC]">Browse all decisions &rarr;</a>
+    {% else %}
+    <p class="text-[#FFFFFF80] font-body text-sm">No decisions found.</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="w-full px-4 md:px-0 py-8 flex justify-center items-center gap-3">
+  {% if page_obj.has_previous %}
+  <button
+    hx-get="{% url 'browse' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+    hx-target="#browse-list"
+    hx-swap="innerHTML"
+    class="px-4 py-2 text-sm text-[#FFFFFF80] font-body font-medium border border-[#FFFFFF33] rounded-lg hover:text-white hover:border-[#FFFFFF4D] transition-colors">
+    Prev
+  </button>
+  {% endif %}
+  <span class="text-sm text-[#FFFFFF80] font-body">
+    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+  </span>
+  {% if page_obj.has_next %}
+  <button
+    hx-get="{% url 'browse' %}?page={{ page_obj.next_page_number }}&category={{ category }}&sort={{ sorted_by }}"
+    hx-target="#browse-list"
+    hx-swap="innerHTML"
+    class="px-4 py-2 text-sm text-[#FFFFFF80] font-body font-medium border border-[#FFFFFF33] rounded-lg hover:text-white hover:border-[#FFFFFF4D] transition-colors">
+    Next
+  </button>
+  {% endif %}
+</div>
+{% endif %}

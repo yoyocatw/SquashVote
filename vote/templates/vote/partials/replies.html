@@ -1,14 +1,14 @@
-{% load timestamp %} 
-<div class="border-b border-gray-600 py-4">
-    <div class="text-base text-pretty font-body">
-        <p>{{ reply.comment }}</p>
+{% load timestamp %}
+<div class="py-2 {% if not forloop.last %}border-b border-[#FFFFFF0F]{% endif %}">
+    <div class="text-sm text-white font-body leading-relaxed">
+        {{ reply.comment }}
     </div>
-    <div class="flex items-center gap-2 text-xs text-gray-500">
-        <span class="text-sm">{{ reply.user.username|default:"Anonymous" }}</span>
-        <span>· {{ reply.created_at|comment_time }}</span>
+    <div class="flex items-center gap-2 mt-1 text-[11px] text-[#FFFFFF80] font-body">
+        <span class="text-[#FFFFFF99]">{{ reply.user.username|default:"Anonymous" }}</span>
+        <span>&middot; {{ reply.created_at|comment_time }}</span>
         <div id="report-reply-{{ reply.id }}">
             {% if reply.id in reported %}
-              <button class="cursor-pointer text-red-600 text-xs" disabled>
+              <button class="cursor-pointer text-[#F87272] text-[11px]" disabled aria-label="Reply reported">
                 &#9873;
               </button>
             {% else %}
@@ -18,11 +18,12 @@
                 hx-swap="outerHTML"
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                 hx-confirm="Are you sure you want to report this comment?"
-                class="cursor-pointer text-xs"
+                class="cursor-pointer text-[11px] text-[#FFFFFF80] hover:text-[#F87272] transition-colors"
+                aria-label="Report reply"
               >
                 &#9873;
               </button>
             {% endif %}
-          </div>
+        </div>
     </div>
 </div>
