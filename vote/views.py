@@ -279,6 +279,7 @@ def video_result(request, pk, slug=None):
         "vote": vote,
         "vote_display": vote_display,
         "start": start,
+        "end": video.end,
         "comments": comments,
         "liked_comments": list(liked_comments),
         "reported": list(reported),

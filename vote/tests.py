@@ -17,8 +17,16 @@ from django.utils import timezone
 from django.utils.text import slugify
 from datetime import timedelta
 
-from .models import Video, Result, VoteUser, Comment, CommentLike, CommentReport
-from .forms import VoteForm, extract_video_id
+from .models import (
+    Video,
+    Result,
+    VoteUser,
+    Comment,
+    CommentLike,
+    CommentReport,
+    DEFAULT_CLIP_SECONDS,
+)
+from .forms import VoteForm, VideoForm, extract_video_id
 
 
 def make_video(**kwargs):
@@ -38,6 +46,18 @@ def make_video(**kwargs):
 
 def clip_url(video):
     return reverse("video_result", args=[video.id, slugify(video.video_title)])
+
+
+def video_form_data(**kwargs):
+    """Valid VideoForm POST data (youtube_url/timestamp/org_decision are required)."""
+    data = dict(
+        youtube_url="https://www.youtube.com/watch?v=WE0fSTz7LB0",
+        timestamp="1:30",
+        org_decision="Stroke",
+        category="PSA",
+    )
+    data.update(kwargs)
+    return data
 
 
 def make_comment(video, **kwargs):
@@ -69,6 +89,22 @@ class ModelTests(TestCase):
     def test_start_property(self):
         self.assertEqual(make_video(timestamp="2:00").start, 120)
 
+    def test_end_defaults_to_fixed_window_when_blank(self):
+        v = make_video(timestamp="1:30")  # 90s
+        self.assertEqual(v.end, 90 + DEFAULT_CLIP_SECONDS)
+
+    def test_end_uses_uploader_value_when_valid(self):
+        v = make_video(timestamp="1:30", end_timestamp="1:45")  # 90 -> 105
+        self.assertEqual(v.end, 105)
+
+    def test_end_falls_back_when_not_after_start(self):
+        v = make_video(timestamp="1:30", end_timestamp="1:20")  # 80 <= 90
+        self.assertEqual(v.end, 90 + DEFAULT_CLIP_SECONDS)
+
+    def test_end_falls_back_when_malformed(self):
+        v = make_video(timestamp="1:30", end_timestamp="1:ab")
+        self.assertEqual(v.end, 90 + DEFAULT_CLIP_SECONDS)
+
     def test_duplicate_vote_constraint_at_db_level(self):
         video = make_video()
         VoteUser.objects.create(video=video, session_id="sess-1", vote="stroke")
@@ -96,6 +132,32 @@ class FormTests(TestCase):
     def test_vote_form_rejects_unknown_choice(self):
         self.assertFalse(VoteForm({"vote": "maybe"}).is_valid())
         self.assertTrue(VoteForm({"vote": "stroke"}).is_valid())
+
+    def test_video_form_valid_without_end(self):
+        self.assertTrue(VideoForm(video_form_data()).is_valid())
+
+    def test_video_form_valid_with_good_end(self):
+        self.assertTrue(VideoForm(video_form_data(end_timestamp="1:45")).is_valid())
+
+    def test_video_form_end_before_start_rejected(self):
+        form = VideoForm(video_form_data(end_timestamp="1:20"))
+        self.assertFalse(form.is_valid())
+        self.assertIn("end_timestamp", form.errors)
+
+    def test_video_form_end_too_long_rejected(self):
+        form = VideoForm(video_form_data(end_timestamp="3:30"))  # 120s window
+        self.assertFalse(form.is_valid())
+        self.assertIn("end_timestamp", form.errors)
+
+    def test_video_form_end_too_short_rejected(self):
+        form = VideoForm(video_form_data(end_timestamp="1:31"))  # 1s window
+        self.assertFalse(form.is_valid())
+        self.assertIn("end_timestamp", form.errors)
+
+    def test_video_form_malformed_end_rejected(self):
+        form = VideoForm(video_form_data(end_timestamp="1:ab"))
+        self.assertFalse(form.is_valid())
+        self.assertIn("end_timestamp", form.errors)
 
 
 # --------------------------------------------------------------------------- #
@@ -359,6 +421,23 @@ class CommentStateTests(TestCase):
         # A's like span keeps its liked (white) styling after posting another comment
         self.assertContains(r, f'id="vote-count-{a.id}"')
         self.assertContains(r, "text-white")
+
+
+class ClipWindowTests(TestCase):
+    def test_player_receives_start_and_end(self):
+        v = make_video(timestamp="1:30", end_timestamp="1:45")
+        r = self.client.get(clip_url(v))
+        self.assertEqual(r.context["start"], 90)
+        self.assertEqual(r.context["end"], 105)
+        self.assertContains(r, 'data-start="90"')
+        self.assertContains(r, 'data-end="105"')
+        self.assertContains(r, 'id="replayButton"')
+
+    def test_player_end_defaults_when_no_end_timestamp(self):
+        v = make_video(timestamp="1:30")
+        r = self.client.get(clip_url(v))
+        self.assertEqual(r.context["end"], 90 + DEFAULT_CLIP_SECONDS)
+        self.assertContains(r, f'data-end="{90 + DEFAULT_CLIP_SECONDS}"')
 
 
 class SeoTests(TestCase):

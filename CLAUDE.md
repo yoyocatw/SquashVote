@@ -34,7 +34,7 @@ DEBUG=True python manage.py runserver
 
 - **Backend:** Django 5.1.5, Python 3.13
 - **Frontend:** HTMX 2.0.4, Alpine.js 3.14.8, Tailwind CSS 4.1.11, DaisyUI 5.0.0-beta.2
-- **Video:** Plyr 3.8.3 wrapping YouTube embeds (20s clip window)
+- **Video:** Plyr 3.8.3 wrapping YouTube embeds — clip window plays once then offers Replay (default 20s, optional uploader-set end)
 - **Vote results:** Pure CSS/HTML horizontal bars (Chart.js removed in redesign)
 - **Database:** PostgreSQL (prod), SQLite (dev)
 - **Deployment:** Fly.io (Docker, gunicorn, SJC region)
@@ -119,9 +119,14 @@ Every view is a plain function. No class-based views. Keep it that way.
 - Vote results are server-computed CSS bars (Chart.js was removed in the redesign)
 
 ### Plyr video player
-- Clips play a 20-second window from `start` to `start + 20`
-- Auto-loops, snaps to start on seek
-- Starts muted (autoplay policy), unmutes on first click
+- Clips play the window `[Video.start, Video.end]` **once**, then pause, rewind to
+  start, and reveal a **Replay** overlay button (no auto-loop). Logic lives in
+  `static/js/plyr.js`, driven by `data-start` / `data-end` on `#player`.
+- `Video.end` = the uploader's optional `end_timestamp` when it parses and falls
+  after start, else `start + DEFAULT_CLIP_SECONDS` (20s). The `end_timestamp`
+  upload field is optional; `VideoForm` validates it (after start, 2–90s window).
+- Scrubbing is clamped to `[start, end]`; starts muted (autoplay policy), unmutes
+  on first click.
 
 ## Data model
 
@@ -129,7 +134,8 @@ Every view is a plain function. No class-based views. Keep it that way.
 Video (the clip/decision)
 ├── video_id (YouTube ID)
 ├── video_title (fetched from YouTube API)
-├── timestamp → converted to start seconds
+├── timestamp → converted to start seconds (Video.start)
+├── end_timestamp → optional clip end; blank ⇒ start + 20s (Video.end property)
 ├── org_decision (Stroke | Let | No Let)
 ├── category (PSA | Amateur)
 ├── is_active, needs_review (moderation flags)
@@ -223,7 +229,7 @@ Designs finalized in Paper (paper.design). The user flow is: Homepage → Browse
 
 **3. Clip (Vote + Results)**
 - Full-bleed background from YouTube thumbnail (`maxresdefault.jpg` + blur + overlay)
-- Plyr video player at top (keep existing 20s clip setup)
+- Plyr video player at top (plays the clip window once, then a Replay overlay)
 - Title + metadata (votes, category badge)
 - Vote form: Stroke / Let / No Let radio options (no emoji, custom styled)
 - Post-vote reveal: "YOUR CALL" / "THE REF SAID" verdict cards
@@ -263,7 +269,9 @@ depend on each other) — only docs separates cleanly; don't try to split #3 fur
 ### Do NOT
 
 - Add new Python dependencies without discussion
-- Change model fields (no migrations in this redesign)
+- Change model fields casually. (The clip-window feature is a deliberate exception:
+  it added the optional `Video.end_timestamp` field + migration `0006`. Anything
+  beyond that still needs discussion.)
 - Remove any existing URL routes (backward compat)
 - Use class-based views
 - Add loading spinners or skeleton screens

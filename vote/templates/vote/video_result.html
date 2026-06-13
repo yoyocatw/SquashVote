@@ -20,8 +20,8 @@
 
   <!-- Video Player -->
   <div class="flex items-center justify-center w-full">
-    <div class="w-full rounded-lg md:rounded-[10px] overflow-hidden border border-solid border-[#FFFFFF1A]">
-      <div class="plyr__video-embed" id="player" data-start="{{ start }}">
+    <div class="relative w-full rounded-lg md:rounded-[10px] overflow-hidden border border-solid border-[#FFFFFF1A]">
+      <div class="plyr__video-embed" id="player" data-start="{{ start }}" data-end="{{ end }}">
         <iframe
           src="https://www.youtube-nocookie.com/embed/{{ video.video_id }}?start={{ start }}&origin={{ request.scheme }}://{{ request.get_host }}&iv_load_policy=3&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&autoplay=1&mute=1"
           allowfullscreen playsinline webkit-playsinline
@@ -29,6 +29,18 @@
           referrerpolicy="strict-origin-when-cross-origin">
         </iframe>
       </div>
+      <!-- Replay overlay: hidden until the clip plays through its window once -->
+      <button id="replayButton" type="button" aria-label="Replay clip"
+              class="hidden absolute inset-0 z-20 flex flex-col items-center justify-center gap-2 bg-[#0A0A0A]/40 cursor-pointer">
+        <span class="flex items-center justify-center bg-[#0A0A0A]/70 rounded-full p-3.5">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </span>
+        <span class="text-white font-body font-medium text-sm">Replay</span>
+      </button>
     </div>
   </div>
 

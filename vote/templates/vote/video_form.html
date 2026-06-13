@@ -17,26 +17,50 @@
   <form method="post" class="flex flex-col gap-5">
     {% csrf_token %}
 
+    {% if form.non_field_errors %}
+    <div class="rounded-lg border border-[#F8717140] bg-[#F871711a] p-3">
+      {% for error in form.non_field_errors %}
+      <p class="text-sm font-body text-[#F87171]">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <div>
       <label for="id_email" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Email</label>
-      <input id="id_email" placeholder="example@email.com" type="email" name="email"
+      <input id="id_email" placeholder="example@email.com" type="email" name="email" value="{{ form.email.value|default:'' }}"
              class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
       <span class="text-[11px] font-body text-[#FFFFFF80] mt-1 block">Your email stays hidden. You stay anonymous.</span>
     </div>
 
     <div>
       <label for="id_youtube_url" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">YouTube URL</label>
-      <input id="id_youtube_url" placeholder="e.g. https://www.youtube.com/watch?v=WE0fSTz7LB0" type="text" name="youtube_url"
+      <input id="id_youtube_url" placeholder="e.g. https://www.youtube.com/watch?v=WE0fSTz7LB0" type="text" name="youtube_url" value="{{ form.youtube_url.value|default:'' }}"
              class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+      {% for error in form.youtube_url.errors %}
+      <span class="text-[11px] font-body text-[#F87171] mt-1 block">{{ error }}</span>
+      {% endfor %}
       <div id="duplicate-warning" class="mt-2"></div>
     </div>
 
-    <div>
-      <label for="id_timestamp" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Timestamp</label>
-      <input id="id_timestamp" placeholder="e.g. 4:20, 0:67, 1:06:09" type="text" name="timestamp"
-             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
-      <span class="text-[11px] font-body text-[#FFFFFF80] mt-1 block">Use the timestamp format from YouTube</span>
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label for="id_timestamp" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Start timestamp</label>
+        <input id="id_timestamp" placeholder="e.g. 4:20, 1:06:09" type="text" name="timestamp" value="{{ form.timestamp.value|default:'' }}"
+               class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+        {% for error in form.timestamp.errors %}
+        <span class="text-[11px] font-body text-[#F87171] mt-1 block">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div>
+        <label for="id_end_timestamp" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">End timestamp <span class="text-[#FFFFFF66] font-normal">(optional)</span></label>
+        <input id="id_end_timestamp" placeholder="e.g. 4:38" type="text" name="end_timestamp" value="{{ form.end_timestamp.value|default:'' }}"
+               class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+        {% for error in form.end_timestamp.errors %}
+        <span class="text-[11px] font-body text-[#F87171] mt-1 block">{{ error }}</span>
+        {% endfor %}
+      </div>
     </div>
+    <span class="text-[11px] font-body text-[#FFFFFF80] -mt-3 block">Start a few seconds before the call. Leave the end blank for a default 20-second clip.</span>
 
     <div class="grid grid-cols-2 gap-3">
       <div>
@@ -44,9 +68,9 @@
         <select id="id_org_decision" name="org_decision"
                 class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] cursor-pointer">
           <option value="">---------</option>
-          <option value="Stroke">Stroke</option>
-          <option value="Let">Let</option>
-          <option value="No Let">No Let</option>
+          <option value="Stroke" {% if form.org_decision.value == "Stroke" %}selected{% endif %}>Stroke</option>
+          <option value="Let" {% if form.org_decision.value == "Let" %}selected{% endif %}>Let</option>
+          <option value="No Let" {% if form.org_decision.value == "No Let" %}selected{% endif %}>No Let</option>
         </select>
       </div>
 
@@ -55,8 +79,8 @@
         <select id="id_category" name="category"
                 class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] cursor-pointer">
           <option value="">---------</option>
-          <option value="PSA">PSA</option>
-          <option value="Amateur">Amateur</option>
+          <option value="PSA" {% if form.category.value == "PSA" %}selected{% endif %}>PSA</option>
+          <option value="Amateur" {% if form.category.value == "Amateur" %}selected{% endif %}>Amateur</option>
         </select>
       </div>
     </div>

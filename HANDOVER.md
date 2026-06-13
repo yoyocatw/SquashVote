@@ -1,8 +1,9 @@
-# HANDOVER - 2026-06-13 12:55 UTC
+# HANDOVER - 2026-06-13 15:51 UTC
 
-> Single continuous workstream this session: the UI/UX redesign plus three
-> follow-on fixes, all shipped as PRs against `yoyocatw/SquashVote`. Sections
-> are timestamped; the header time is the most recent update.
+> The UI/UX redesign plus follow-on fixes (Workstreams A–C, shipped as PRs
+> against `yoyocatw/SquashVote`), then a new **clip replay-window feature**
+> (Workstream D, 2026-06-13 15:51 UTC — uncommitted on `uiux-redesign`).
+> Sections are timestamped; the header time is the most recent update.
 
 ## TL;DR
 
@@ -17,10 +18,18 @@ the way were fixed as their own small PRs.
 | [#3](https://github.com/yoyocatw/SquashVote/pull/3) | `redesign/app` | The redesign + 42 tests + review fixes (3 commits) | OPEN · MERGEABLE |
 | [#4](https://github.com/yoyocatw/SquashVote/pull/4) | `fix/comment-user-default` | `default="Anonymous"` FK bug + migration | OPEN · MERGEABLE |
 | [#5](https://github.com/yoyocatw/SquashVote/pull/5) | `fix/moderation-auth` | Security: gate accept/reject video actions | OPEN · MERGEABLE |
+| [#6](https://github.com/yoyocatw/SquashVote/pull/6) | `feature/clip-replay-window` | Clip replay window + optional end timestamp (Workstream D) | OPEN · stacked on #3 |
 | ~~#1~~ | — | Old combined PR | CLOSED (superseded by #2/#3) |
 
 `origin` = `github.com/yoyocatw/SquashVote` (upstream, the live site). `fork` =
 `github.com/SpunkyMartian/SquashVote` (PR branches live here).
+
+**New since last handover:** Workstream D — clips now play their window **once
+then offer a Replay button** (was: play endlessly), with an **optional uploader
+end timestamp**. Committed as `a1bed19` on branch `feature/clip-replay-window`
+(off `uiux-redesign`); opened as **[PR #6](https://github.com/yoyocatw/SquashVote/pull/6)
+against `origin/main`, stacked on #3** (its diff carries the whole redesign until
+#3 merges, then auto-collapses to the ~12 feature files). 54 tests green (was 42).
 
 ---
 
@@ -100,6 +109,62 @@ Test in `vote/test_moderation.py` (separate file to avoid clashing with PR #3's
 commenting/liking/reporting are anonymous, session-based; no signup route). The
 only login is **admin/moderation** for the site owner: `/superuser/` (Django
 admin) and `/login/` → `/review/` (`@login_required`, superuser-only).
+
+---
+
+## Workstream D — clip replay window (2026-06-13 15:51 UTC)
+
+**Problem.** A clip started at the uploader's timestamp and then played to the
+**end of the whole YouTube video** ("plays endlessly"). The old `plyr.js` had no
+stop/loop logic at all — and a latent bug: its `seeking` handler referenced an
+**undefined `end`** (threw the instant anyone scrubbed) plus a dead `replayButton`
+listener with no button. The CLAUDE.md "20s window, auto-loops" line was
+aspirational; the code never did it.
+
+**Decision (user).** Clip end = an **optional** uploader `end_timestamp`; blank ⇒
+default 20s window. Behaviour = **play once, then a Replay button** (not auto-loop).
+
+**What changed:**
+- `vote/models.py`: new optional `Video.end_timestamp` field; `Video.end` property
+  (uploader value if it parses and is after start, else `start +
+  DEFAULT_CLIP_SECONDS`). New module constants `DEFAULT_CLIP_SECONDS=20`,
+  `MIN_CLIP_SECONDS=2`, `MAX_CLIP_SECONDS=90`. `create_url()` updated to use them.
+- `vote/migrations/0006_video_end_timestamp.py`: **adds the field only.** ⚠️ Django
+  wanted to bundle a `RemoveConstraint(unique_video_id_timestamp)` (the
+  pre-existing drift in "Next steps" #3) — I stripped it so the migration stays
+  scoped. **Numbering caveat:** this is `0006` off `0005`; PR #4 also introduces a
+  `0006_*` off `0005`. When both reach `main` there'll be two leaves →
+  `makemigrations --merge` (or renumber one). Maintainer's merge-time concern.
+- `vote/forms.py`: `end_timestamp` added to `VideoForm`; `clean()` validates it
+  (parses, after start, 2–90s window) via a `parse_timestamp()` helper.
+- `static/js/plyr.js`: rewritten — reads `data-start`/`data-end`, plays the window
+  once, on `timeupdate >= end` pauses + rewinds to start + shows the Replay
+  overlay, clamps scrubbing to `[start,end]`, restarts cleanly on Replay or the
+  native play button. Undefined-`end` bug + dead code gone.
+- `vote/templates/vote/video_result.html`: `data-end` on `#player`, wrapper made
+  `relative`, hidden `#replayButton` overlay (circular replay icon + "Replay").
+  View passes `end = video.end`.
+- `vote/templates/vote/video_form.html`: Start/End-(optional) two-column grid +
+  helper copy; **now renders form errors** (it silently swallowed them before) and
+  preserves submitted values on validation failure.
+- `vote/templates/vote/guide.html`: step 3 rewritten for start + optional end.
+- `vote/tests.py`: +12 tests (end property, form validation, player wiring). 54 total.
+- `static/css/output.css` rebuilt (new error-red `#F87171` + overlay utilities).
+- `.claude/launch.json`: added so the preview tooling can run the dev server
+  (`DEBUG=True … runserver $PORT`). Dev-only helper; remove if unwanted.
+
+**Verified** (Claude Preview, real browser on clip #9, window 30–50):
+player initialised, no console errors, snapped to start; drove playback past the
+end → it paused, rewound to start, revealed Replay; Replay restarted from start;
+upload form shows the End field and rejects `end < start` with the value
+preserved. 54/54 tests green on Python 3.13.
+
+**Status:** committed as `a1bed19`, pushed to `fork/feature/clip-replay-window`,
+opened as **[PR #6](https://github.com/yoyocatw/SquashVote/pull/6)** against
+`origin/main` (stacked on #3 — diff collapses to the feature once #3 merges).
+**Open:** the existing ~20 seeded clips have no `end_timestamp` → all use the 20s
+default until re-edited. `.claude/launch.json` (preview-server config) is left
+**untracked/uncommitted** — gitignore or delete if unwanted.
 
 ---
 

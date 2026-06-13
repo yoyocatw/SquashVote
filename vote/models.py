@@ -5,6 +5,12 @@ from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+# Clip playback window (seconds). Used when an uploader doesn't set an explicit
+# end_timestamp, and as the bounds for validating ones they do set.
+DEFAULT_CLIP_SECONDS = 20
+MIN_CLIP_SECONDS = 2
+MAX_CLIP_SECONDS = 90
+
 
 class Video(models.Model):
     class Decision(models.TextChoices):
@@ -18,6 +24,7 @@ class Video(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     video_title = models.CharField(max_length=500)
     timestamp = models.CharField(max_length=50)
+    end_timestamp = models.CharField(max_length=50, null=True, blank=True) # Optional clip end; blank => DEFAULT_CLIP_SECONDS window
     video_id = models.CharField(max_length=512) # The YouTube video ID NOT THE PK that is autogenerate
     org_decision = models.CharField(max_length=20, choices=Decision.choices)
     is_active = models.BooleanField(default=False)
@@ -40,9 +47,7 @@ class Video(models.Model):
         return 0
 
     def create_url(self):
-        seconds = Video.convert_timestamp_to_seconds(self.timestamp)
-        end_seconds = seconds + 30
-        return f"https://www.youtube-nocookie.com/embed/{self.video_id}?start={seconds}&end={str(end_seconds)}&autoplay=0&modestbranding=1&rel=0&controls=0"
+        return f"https://www.youtube-nocookie.com/embed/{self.video_id}?start={self.start}&end={self.end}&autoplay=0&modestbranding=1&rel=0&controls=0"
     @property
     def go_to_youtube(self):
         seconds = Video.convert_timestamp_to_seconds(self.timestamp)
@@ -50,6 +55,19 @@ class Video(models.Model):
     @property
     def start(self):
         return Video.convert_timestamp_to_seconds(self.timestamp)
+
+    @property
+    def end(self):
+        """Clip end in seconds. Uses the uploader's end_timestamp when it parses
+        and falls after the start; otherwise a fixed default window from start."""
+        if self.end_timestamp:
+            try:
+                end_sec = Video.convert_timestamp_to_seconds(self.end_timestamp)
+            except (ValueError, TypeError):
+                end_sec = 0
+            if end_sec > self.start:
+                return end_sec
+        return self.start + DEFAULT_CLIP_SECONDS
 
     @property
     def slug(self):
