@@ -96,7 +96,7 @@ class Comment(models.Model):
     )
     video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, default="Anonymous"
+        User, on_delete=models.CASCADE, null=True, blank=True
     )
     session_id = models.CharField(max_length=255, null=True, blank=True)
     comment = models.TextField()
@@ -137,7 +137,7 @@ class CommentLike(models.Model):
 
 class CommentReport(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, default="Anonymous"
+        User, on_delete=models.CASCADE, null=True, blank=True
     )
     session_id = models.CharField(max_length=100, null=True, blank=True)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
