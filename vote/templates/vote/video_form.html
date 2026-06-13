@@ -1,73 +1,71 @@
 {% extends "vote/base.html" %}
 
-{% block title %}Upload Video{% endblock %}
+{% block title %}Submit a Decision — SquashVote{% endblock %}
 
 {% block content %}
 
-<div class="min-h-screen flex items-center justify-center px-4 py-12 bg-base-100">
+<div class="w-full max-w-[720px] mx-auto px-4 md:px-0 pt-20 md:pt-24 pb-12">
 
-  <div class="w-full max-w-4xl bg-white rounded-xl shadow-sm border border-gray-200 p-8 md:p-10">
-    
-    <a href="{% url 'index' %}" class="text-gray-500 hover:text-black font-medium transition-colors mb-2 inline-block">&#8592; Back</a>
-    
-    <h2 class="text-3xl font-bold text-gray-900 text-center mb-8">Upload Video</h2>
-    
-    <ul class="list-disc list-inside mb-10 text-gray-700 space-y-3 bg-gray-50 p-6 rounded-lg border border-gray-100">
-        <li><a class="underline text-xl font-medium text-blue-600 hover:text-blue-800 transition-colors" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Check out the upload guide</a></li>
-        <li class="text-black text-xl">Your video needs to be on YouTube, can be <strong>unlisted or public</strong></li>
-        <li class="text-black text-xl">Include the timestamp of the video, should be a couple seconds before the actual decision</li>
-        <li class="text-black text-xl">Please double check if your video has already been uploaded</li>
-    </ul>
+  <h1 class="text-2xl font-heading font-bold text-white [letter-spacing:-0.5px] mb-2">Submit a Decision</h1>
+  <p class="text-sm font-body text-[#FFFFFF80] mb-6">Upload a controversial call for the community to vote on.</p>
 
-    <form method="post" class="space-y-8">
-      {% csrf_token %}
-
-      <div>
-        <label class="block text-base font-medium text-gray-900 mb-2">Email</label>
-        <input placeholder="example@email.com" type="email" name="email" class="w-full px-4 py-3 text-lg text-black bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-shadow">
-        <small class="text-gray-500 mt-1 block text-sm">Relax, your email stays hidden and you stay anonymous 👻</small>
-      </div>
-
-      <div>
-        <label class="block text-base font-medium text-gray-900 mb-2">YouTube URL</label>
-        <input placeholder="e.g. https://www.youtube.com/watch?v=WE0fSTz7LB0" type="text" name="youtube_url" class="w-full px-4 py-3 text-lg text-black bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-shadow">
-        <small class="text-gray-500 mt-1 block text-sm">The url of your YouTube video</small>
-        
-        <div id="duplicate-warning" class="mt-3"></div>
-      </div>
-
-      <div>
-        <label class="block text-base font-medium text-gray-900 mb-2">Timestamp</label>
-        <input placeholder="e.g. 4:20, 0:67, 1:06:09" type="text" name="timestamp" class="w-full px-4 py-3 text-lg text-black bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-shadow">
-        <small class="text-gray-500 mt-1 block text-sm">Use the timestamp format from YouTube </small>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <label class="block text-base font-medium text-gray-900 mb-2">Org decision</label>
-          <select name="org_decision" class="w-full px-4 py-3 text-lg text-black bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-shadow cursor-pointer">
-            <option value="">---------</option>
-            <option value="Stroke">Stroke</option>
-            <option value="Let">Let</option>
-            <option value="No Let">No Let</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-base font-medium text-gray-900 mb-2">Category</label>
-          <select name="category" class="w-full px-4 py-3 text-lg text-black bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-shadow cursor-pointer">
-            <option value="">---------</option>
-            <option value="PSA">PSA</option>
-            <option value="Amateur">Amateur</option>
-          </select>
-        </div>
-      </div>
-      
-      <button type="submit" class="w-full mt-4 bg-black text-white text-xl font-bold py-4 rounded-xl hover:bg-gray-800 hover:shadow-md transition-all transform hover:-translate-y-0.5">
-        Submit Video
-      </button>
-    </form>
+  <div class="flex flex-col gap-2 mb-8 rounded-lg border border-[#FFFFFF14] bg-[#FFFFFF0D] p-4">
+    <a class="text-sm font-body font-medium text-white underline hover:text-[#FFFFFFCC] transition-colors" href="{% url 'guide' %}">Check out the upload guide</a>
+    <p class="text-[13px] font-body text-[#FFFFFF80]">Your video needs to be on YouTube (unlisted or public). Include the timestamp a few seconds before the decision.</p>
   </div>
+
+  <form method="post" class="flex flex-col gap-5">
+    {% csrf_token %}
+
+    <div>
+      <label for="id_email" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Email</label>
+      <input id="id_email" placeholder="example@email.com" type="email" name="email"
+             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+      <span class="text-[11px] font-body text-[#FFFFFF80] mt-1 block">Your email stays hidden. You stay anonymous.</span>
+    </div>
+
+    <div>
+      <label for="id_youtube_url" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">YouTube URL</label>
+      <input id="id_youtube_url" placeholder="e.g. https://www.youtube.com/watch?v=WE0fSTz7LB0" type="text" name="youtube_url"
+             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+      <div id="duplicate-warning" class="mt-2"></div>
+    </div>
+
+    <div>
+      <label for="id_timestamp" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Timestamp</label>
+      <input id="id_timestamp" placeholder="e.g. 4:20, 0:67, 1:06:09" type="text" name="timestamp"
+             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+      <span class="text-[11px] font-body text-[#FFFFFF80] mt-1 block">Use the timestamp format from YouTube</span>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label for="id_org_decision" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Ref's decision</label>
+        <select id="id_org_decision" name="org_decision"
+                class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] cursor-pointer">
+          <option value="">---------</option>
+          <option value="Stroke">Stroke</option>
+          <option value="Let">Let</option>
+          <option value="No Let">No Let</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="id_category" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Category</label>
+        <select id="id_category" name="category"
+                class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] cursor-pointer">
+          <option value="">---------</option>
+          <option value="PSA">PSA</option>
+          <option value="Amateur">Amateur</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit"
+            class="flex items-center justify-center w-full h-11.5 rounded-lg bg-white hover:bg-white/90 transition-colors mt-2">
+      <span class="text-[#111111] font-body font-semibold text-[15px]/4.5">Submit Decision &rarr;</span>
+    </button>
+  </form>
 </div>
 
 <script>
@@ -88,48 +86,45 @@ document.querySelector('input[name="youtube_url"]').addEventListener('blur', fun
   const url = this.value;
   const videoId = extractVideoId(url);
   const warningDiv = document.getElementById('duplicate-warning');
-  
+
   if (!videoId) {
     warningDiv.innerHTML = '';
     return;
   }
-  
-  warningDiv.innerHTML = '<p class="text-gray-500 text-sm italic">Checking for duplicates...</p>';
-  
+
+  warningDiv.innerHTML = '<p class="text-[#FFFFFF4D] text-xs font-body">Checking for duplicates...</p>';
+
   fetch('/check-duplicate/?video_id=' + encodeURIComponent(videoId))
     .then(r => r.json())
     .then(data => {
       if (data.exists && data.videos.length > 0) {
-        
         let html = `
-          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-5 mt-2">
-            <p class="text-yellow-800 font-bold text-lg mb-3">Found ${data.videos.length} video(s) with this YouTube ID:</p>
-            <ul class="space-y-3 mb-5">
+          <div class="rounded-lg border border-[#FFFFFF33] bg-[#FFFFFF0D] p-4 mt-2">
+            <p class="text-[#FFFFFFCC] font-body font-semibold text-sm mb-2">Found ${data.videos.length} video(s) with this YouTube ID:</p>
+            <ul class="flex flex-col gap-2 mb-3">
         `;
-        
+
         data.videos.forEach(function(v) {
           const viewUrl = '/video/' + v.id + '/' + encodeURIComponent(v.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')) + '/';
           const catStr = v.category ? ` (${v.category})` : '';
-          
           html += `
-              <li class="text-base text-gray-800  p-2 rounded border border-yellow-100">
-                <span class="font-bold">${v.title}</span> - ${v.timestamp} - ${v.decision}${catStr}
-                <a href="${viewUrl}" target="_blank" class="text-blue-600 hover:underline ml-2 font-medium">[View]</a>
-              </li>
+            <li class="text-sm font-body text-[#FFFFFF99] p-2 rounded border border-[#FFFFFF14]">
+              <span class="font-semibold text-white">${v.title}</span> — ${v.timestamp} — ${v.decision}${catStr}
+              <a href="${viewUrl}" target="_blank" class="text-white underline ml-1">[View]</a>
+            </li>
           `;
         });
-        
+
         html += `
             </ul>
-            <div class="flex flex-col items-start">
-              <small class="text-yellow-700 italic mb-2">The decisions are different and you want to keep uploading.</small>
-              <button type="button" onclick="this.closest('.bg-yellow-50').remove()" class="cursor-pointer text-base font-medium text-black bg-white border border-gray-300 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors">
-                Continue anyway
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-body text-[#FFFFFF66]">Different decision at same timestamp? Continue anyway.</span>
+              <button type="button" onclick="this.closest('.rounded-lg').remove()" class="cursor-pointer text-sm font-body font-medium text-[#111111] bg-white hover:bg-white/90 px-4 py-2 rounded-lg transition-colors mt-1 self-start">
+                Continue
               </button>
             </div>
           </div>
         `;
-        
         warningDiv.innerHTML = html;
       } else {
         warningDiv.innerHTML = '';

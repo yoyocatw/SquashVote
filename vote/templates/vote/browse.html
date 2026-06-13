@@ -1,0 +1,53 @@
+{% extends 'vote/base.html' %}
+{% load static %}
+{% block title %}All Decisions — SquashVote{% endblock %}
+{% block content %}
+
+<!-- Full-bleed background wrapper -->
+<div class="absolute inset-0 overflow-hidden" style="z-index: 0;">
+  <!-- Elias vs Asal: oversized for position control -->
+  <div class="absolute -top-[30px] left-0 w-[580px] h-[770px] md:w-[1800px] md:h-[1100px] md:-top-[60px] bg-cover bg-center"
+       style="background-image: url('{% static 'images/hero-browse.jpeg' %}');"></div>
+  <div class="absolute top-0 left-0 w-full h-full"
+       style="background-image: linear-gradient(in oklab 180deg, oklab(0% 0 0 / 20%) 0%, oklab(0% 0 0 / 45%) 15%, oklab(0% 0 0 / 75%) 40%, oklab(0% 0 0 / 90%) 65%, oklab(0% 0 0 / 95%) 100%);"></div>
+</div>
+
+<!-- Content container — centered on desktop -->
+<div class="w-full md:max-w-[720px] md:mx-auto relative" style="z-index: 1;">
+
+  <!-- Page header -->
+  <div class="flex flex-col w-full pt-16 md:pt-20 gap-1 px-4 md:px-0">
+    <h1 class="[letter-spacing:-0.5px] md:[letter-spacing:-1px] text-white font-heading font-bold text-2xl/7.5 md:text-[32px]/[38px]">
+      All Decisions
+    </h1>
+    <p class="text-[#FFFFFF80] font-body text-[13px]/4 md:text-sm/4.5">
+      You've voted on {{ voted_count }} of {{ total_decisions }} decisions
+    </p>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="flex w-full pt-4 md:pt-5 gap-2 px-4 md:px-0">
+    {% for value, label in filter_tabs %}
+    <button
+      hx-get="{% url 'browse' %}?category={{ value }}&sort={{ sorted_by }}"
+      hx-target="#browse-list"
+      hx-swap="innerHTML"
+      hx-push-url="true"
+      aria-pressed="{% if category == value %}true{% else %}false{% endif %}"
+      class="flex items-center justify-center rounded-md py-1.5 md:py-[7px] px-4 md:px-5 border border-solid whitespace-nowrap transition-colors [&.htmx-request]:opacity-60
+             {% if category == value %}bg-[#FFFFFF1A] border-[#FFFFFF33]{% else %}border-[#FFFFFF14]{% endif %}">
+      <span class="{% if category == value %}text-white font-body font-semibold text-xs/4 md:text-[13px]/4{% else %}text-[#FFFFFF80] font-body font-medium text-xs/4 md:text-[13px]/4{% endif %}">
+        {{ label }}
+      </span>
+    </button>
+    {% endfor %}
+  </div>
+
+  <!-- Decision list -->
+  <div id="browse-list" class="relative pt-4 md:pt-5">
+    {% include "vote/partials/browse_list.html" %}
+  </div>
+
+</div>
+
+{% endblock %}

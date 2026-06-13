@@ -1,0 +1,48 @@
+{% comment %}
+  One compact clip row. Expects `video`. Optional context (rendered when present):
+  `new_cutoff` (datetime) -> NEW badge, `voted_video_ids` (set) -> Voted badge.
+{% endcomment %}
+<a href="{{ video.get_absolute_url }}" class="flex gap-3 md:gap-4 group py-0 md:py-1">
+  <!-- Thumbnail -->
+  <div class="flex items-center justify-center w-25 h-16 md:w-[130px] md:h-[72px] relative rounded-md bg-[#FFFFFF0F] border border-solid border-[#FFFFFF14] shrink-0 overflow-hidden">
+    <img src="https://img.youtube.com/vi/{{ video.video_id }}/default.jpg"
+         alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+         class="relative z-10 shrink-0" aria-hidden="true">
+      <polygon points="9,6 18,12 9,18" fill="#FFFFFF66" />
+    </svg>
+    {% if new_cutoff and video.date >= new_cutoff %}
+    <div class="absolute top-1 left-1 rounded-[3px] py-px px-1.5 bg-white z-10">
+      <span class="text-[#0A0A0A] font-body font-semibold text-[9px]/3">NEW</span>
+    </div>
+    {% endif %}
+  </div>
+  <!-- Info -->
+  <div class="flex flex-col grow shrink basis-[0%] justify-center gap-1 md:gap-1.5 min-w-0">
+    <div class="text-white font-body font-semibold text-sm/4.5 md:text-[15px]/5 line-clamp-2">
+      {{ video.video_title }}
+    </div>
+    <div class="flex items-center gap-1.5 md:gap-2">
+      <span class="text-[#FFFFFF80] font-body text-[11px]/3.5 md:text-xs/4">
+        {{ video.result.total_votes|default:"0" }} votes
+      </span>
+      <div class="rounded-[3px] py-px px-1.5 bg-[#FFFFFF0F]">
+        <span class="text-[#FFFFFF80] font-body font-medium text-[10px]/3 md:text-[11px]/3.5">
+          {{ video.category }}
+        </span>
+      </div>
+      {% if video.id in voted_video_ids %}
+      <div class="rounded-[3px] py-px px-1.5 bg-[#4ADE801F]">
+        <span class="text-[#4ADE80] font-body font-medium text-[10px]/3 md:text-[11px]/3.5">Voted</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  <!-- Chevron -->
+  <div class="flex items-center shrink-0">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF33" stroke-width="2"
+         xmlns="http://www.w3.org/2000/svg" class="shrink-0" aria-hidden="true">
+      <polyline points="9,18 15,12 9,6" />
+    </svg>
+  </div>
+</a>

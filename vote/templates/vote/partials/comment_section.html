@@ -1,27 +1,29 @@
-{% load timestamp %} 
+{% load timestamp %}
+{% if update_count %}<span hx-swap-oob="innerHTML:#sv-comment-count">{{ comments.count }} Comments</span>{% endif %}
 {% for comment in comments %}
 <div
-  class="flex flex-col flex-1 border-b border-gray-600 py-4"
+  class="flex flex-col py-3 {% if not forloop.last %}border-b border-[#FFFFFF14]{% endif %}"
   id="comment-{{ comment.id }}"
 >
   <p hx-swap-oob="delete:#no-comment"></p>
   <div x-data="{ collapsed: false, reply: false, showReplies: false }">
     <!-- Comment Header -->
-    <div class="flex items-center gap-2 text-xs text-gray-500">
+    <div class="flex items-center gap-2 text-[11px] text-[#FFFFFF80] font-body">
       <button
         @click="collapsed = !collapsed"
-        class="text-blue-500 hover:underline"
+        class="text-[#FFFFFF80] hover:text-white transition-colors"
+        :aria-label="collapsed ? 'Expand comment' : 'Collapse comment'"
       >
         <span
           x-text="collapsed ? '&#8853;' : '&#8854;'"
-          class="text-base cursor-pointer"
+          class="text-sm cursor-pointer"
         ></span>
       </button>
-      <span>{{ comment.user.username|default:"Anonymous" }}</span>
-      <span>· {{ comment.created_at|comment_time }}</span>
+      <span class="text-[#FFFFFF99]">{{ comment.user.username|default:"Anonymous" }}</span>
+      <span>&middot; {{ comment.created_at|comment_time }}</span>
       <div id="report-{{ comment.id }}">
         {% if comment.id in reported %}
-          <button class="cursor-pointer text-red-600 text-xs" disabled>
+          <button class="cursor-pointer text-[#F87272] text-[11px]" disabled aria-label="Comment reported">
             &#9873;
           </button>
         {% else %}
@@ -31,60 +33,53 @@
             hx-swap="outerHTML"
             hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
             hx-confirm="Are you sure you want to report this comment?"
-            class="cursor-pointer text-xs"
+            class="cursor-pointer text-[11px] text-[#FFFFFF80] hover:text-[#F87272] transition-colors"
+            aria-label="Report comment"
           >
             &#9873;
           </button>
         {% endif %}
       </div>
-      
-      
     </div>
-
 
     <!-- Comment Body -->
     <div
       x-show="!collapsed"
       x-transition
-      class="mt-2 whitespace-normal text-base text-pretty font-body font-semibold"
+      class="mt-1.5 text-sm text-white font-body leading-relaxed"
     >
       {{ comment.comment }}
     </div>
 
     <div x-show="!collapsed">
-      <div class="flex flex-row items-center gap-1 text-sm">
-        
+      <div class="flex items-center gap-3 mt-1.5 text-[11px]">
         <button
           hx-post="{% url 'like_comment' comment.id %}"
           hx-target="#vote-count-{{ comment.id }}"
           hx-swap="outerHTML"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-          class="cursor-pointer text-xs"
-          id="upvote"
+          class="cursor-pointer flex items-center gap-1 text-[#FFFFFF80] hover:text-white transition-colors"
+          aria-label="Like comment"
         >
-
-          👍 <span class="text-xs">{% include "vote/partials/like_comment.html" with num_likes=num_likes %}</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"></polygon>
+          </svg>
+          <span>{% include "vote/partials/like_comment.html" with num_likes=num_likes %}</span>
         </button>
 
         <!-- Show/Hide Replies Button -->
         {% if comment.replies.all|length > 0 %}
         <button
-          class="btn btn-ghost btn-xs"
-          @click="showReplies = !showReplies;
-          if (!showReplies) {
-            reply = false;
-          }"
+          @click="showReplies = !showReplies; if (!showReplies) { reply = false; }"
+          class="text-[#FFFFFF80] hover:text-white transition-colors cursor-pointer"
           aria-label="Show or hide replies"
         >
-          <span x-text="showReplies ? '[–]' : '[+]'" class="cursor-pointer"></span>
+          <span x-text="showReplies ? 'Hide replies' : '{{ comment.replies.all|length }} replies'"></span>
         </button>
         {% endif %}
         <button
-          @click="reply = !reply;
-          if (reply) {
-            showReplies = true;
-          }"
-          class="btn btn-ghost btn-xs"
+          @click="reply = !reply; if (reply) { showReplies = true; }"
+          class="text-[#FFFFFF80] hover:text-white transition-colors cursor-pointer"
           aria-label="Reply to comment"
         >
           Reply
@@ -92,48 +87,45 @@
       </div>
 
       <!-- Reply Form -->
-      <div x-show="reply" class="mt-2">
+      <div x-show="reply" x-transition class="mt-2">
         <form
           hx-post="{% url 'post_reply' comment.id %}"
           hx-target="#replies-{{ comment.id }}"
           hx-swap="beforeend"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
           hx-on::after-request="this.reset(); reply = false; showReplies = true"
+          class="flex gap-2"
         >
           {% csrf_token %}
-          <textarea
+          <input
+            type="text"
             name="reply_content"
+            placeholder="Write a reply..."
+            aria-label="Write a reply"
             required
-            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500 resize-none"
-          ></textarea>
+            class="flex-1 bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg px-3 py-2 text-sm text-white font-body placeholder-[#FFFFFF80] focus:border-[#FFFFFF66]"
+          >
           <button
             type="submit"
-            class="text-white bg-blue-600 px-2 py-1 text-sm mt-1 rounded-lg cursor-pointer"
-            
+            class="px-3 py-2 bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg text-[#FFFFFF80] hover:text-white hover:bg-[#FFFFFF1A] transition-colors text-xs font-body font-medium"
           >
-            Post Reply
+            Reply
           </button>
         </form>
       </div>
 
-      <!-- Replies  -->
-      <div id="replies-{{comment.id}}" x-show="showReplies" class="ml-6" style="display: none;">
+      <!-- Replies -->
+      <div id="replies-{{ comment.id }}" x-show="showReplies" x-transition class="ml-4 mt-2" style="display: none;">
         {% for reply in comment.replies.all %}
-        {% if comment.replies.all|length > 0 %}
-            {% include "vote/partials/replies.html" with reply=reply reported=reported %}
-        {% else %}
-          <p>No replies yet...</p>
-          {% endif %}
+          {% include "vote/partials/replies.html" with reply=reply reported=reported %}
         {% endfor %}
       </div>
     </div>
-      
   </div>
-  
 </div>
 
 {% empty %}
-<p id="no-comment" class="text-gray-500 font-body py-4">
-  No comments yet... Don’t be shy, start one 😆
+<p id="no-comment" class="text-[#FFFFFF80] font-body text-sm py-4">
+  No comments yet. Be the first to share your take.
 </p>
 {% endfor %}
