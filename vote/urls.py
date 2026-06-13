@@ -1,10 +1,10 @@
 from django.urls import path
+from django.contrib.sitemaps.views import sitemap
 from .views import (
     video_form,
     index,
     browse,
     video_result,
-    chart,
     about,
     rules,
     post_comment,
@@ -16,10 +16,14 @@ from .views import (
     accept_video,
     reject_video,
     check_duplicate,
-    guide
+    guide,
+    robots_txt,
 )
+from .sitemaps import VideoSitemap, StaticViewSitemap
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
+
+sitemaps = {"videos": VideoSitemap, "static": StaticViewSitemap}
 
 urlpatterns = [
     path("", index, name="index"),
@@ -30,7 +34,6 @@ urlpatterns = [
     path("video/<int:video_id>/reject/", reject_video, name="reject_video"),
     path("video/<int:pk>/<slug:slug>/", video_result, name="video_result"),
     path("videoform/", video_form, name="video_form"),
-    path("chart/<int:pk>/", chart, name="chart"),
     path("about/", about, name="about"),
     path("rules/", rules, name="rules"),
     path("post_comment/<int:pk>/", post_comment, name="post_comment"),
@@ -42,5 +45,7 @@ urlpatterns = [
     path("confirm/", confirm, name="confirm"),
     path("review/", review, name="review"),
     path("check-duplicate/", check_duplicate, name="check_duplicate"),
-    path("guide/", guide, name="guide")
+    path("guide/", guide, name="guide"),
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path("robots.txt", robots_txt, name="robots_txt"),
 ]

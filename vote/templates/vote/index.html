@@ -46,7 +46,7 @@
     {{ section_title }}
   </h2>
   <a href="{% url 'browse' %}"
-     class="text-[#FFFFFF59] font-body font-medium text-[13px]/4 md:text-sm/4.5 hover:text-[#FFFFFF99] transition-colors">
+     class="text-[#FFFFFF80] font-body font-medium text-[13px]/4 md:text-sm/4.5 hover:text-white transition-colors">
     View all
   </a>
 </div>
@@ -54,7 +54,7 @@
 <!-- Clip cards — vertical stack on mobile, 3-col grid on desktop -->
 <div class="flex flex-col gap-2 px-4 md:grid md:grid-cols-3 md:gap-4 md:px-12">
   {% for video in new_this_week %}
-  <a href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
+  <a href="{{ video.get_absolute_url }}"
      class="flex flex-col rounded-[10px] overflow-clip bg-[#FFFFFF0D] border border-solid border-[#FFFFFF1F] group">
     <!-- Thumbnail -->
     <div class="flex items-center justify-center w-full h-30 md:h-[180px] bg-[#00000066] shrink-0 relative">
@@ -73,7 +73,7 @@
         {{ video.video_title }}
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-[#FFFFFF66] font-body font-medium text-xs/4">
+        <span class="text-[#FFFFFF80] font-body font-medium text-xs/4">
           {{ video.result.total_votes|default:"0" }} votes
         </span>
         <div class="flex items-center justify-center rounded-sm py-0.5 px-2 bg-[#FFFFFF14]">
@@ -84,30 +84,13 @@
       </div>
     </div>
   </a>
+  {% empty %}
+  <div class="md:col-span-3 py-12 text-center">
+    <p class="text-[#FFFFFF80] font-body text-sm mb-3">No decisions yet — be the first to add one.</p>
+    <a href="{% url 'video_form' %}"
+       class="text-white font-body font-medium text-sm underline underline-offset-4 hover:text-[#FFFFFFCC]">Submit a Decision &rarr;</a>
+  </div>
   {% endfor %}
 </div>
-
-<!-- Footer -->
-<footer class="w-full pt-8 px-4 md:px-12 pb-5">
-  <div class="flex flex-col gap-6">
-    <div class="h-px bg-[#FFFFFF14]"></div>
-    <div class="flex gap-12">
-      <!-- Left column -->
-      <div class="flex flex-col gap-3">
-        <a href="{% url 'browse' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Browse Decisions</a>
-        <a href="{% url 'video_form' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Submit a Decision</a>
-        <a href="{% url 'guide' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Upload Guide</a>
-        <a href="{% url 'about' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">About</a>
-        <a href="{% url 'rules' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Squash Rules</a>
-      </div>
-      <!-- Right column -->
-      <div class="flex flex-col gap-3">
-        <a href="https://squashvote.substack.com" target="_blank" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Newsletter</a>
-        <a href="mailto:illreadit@squashvote.wtf" class="font-body font-medium text-[13px]/4 text-[#FFFFFF66] hover:text-[#FFFFFF99] transition-colors">Contact</a>
-      </div>
-    </div>
-    <span class="font-body text-[11px]/3.5 text-[#FFFFFF26] mt-2">&copy; 2026 SquashVote. All rights reserved.</span>
-  </div>
-</footer>
 
 {% endblock %}

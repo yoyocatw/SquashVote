@@ -20,7 +20,7 @@
     <h1 class="[letter-spacing:-0.5px] md:[letter-spacing:-1px] text-white font-heading font-bold text-2xl/7.5 md:text-[32px]/[38px]">
       All Decisions
     </h1>
-    <p class="text-[#FFFFFF59] font-body text-[13px]/4 md:text-sm/4.5">
+    <p class="text-[#FFFFFF80] font-body text-[13px]/4 md:text-sm/4.5">
       You've voted on {{ voted_count }} of {{ total_decisions }} decisions
     </p>
   </div>
@@ -33,9 +33,10 @@
       hx-target="#browse-list"
       hx-swap="innerHTML"
       hx-push-url="true"
-      class="flex items-center justify-center rounded-md py-1.5 md:py-[7px] px-4 md:px-5 border border-solid whitespace-nowrap transition-colors
+      aria-pressed="{% if category == value %}true{% else %}false{% endif %}"
+      class="flex items-center justify-center rounded-md py-1.5 md:py-[7px] px-4 md:px-5 border border-solid whitespace-nowrap transition-colors [&.htmx-request]:opacity-60
              {% if category == value %}bg-[#FFFFFF1A] border-[#FFFFFF33]{% else %}border-[#FFFFFF14]{% endif %}">
-      <span class="{% if category == value %}text-white font-body font-semibold text-xs/4 md:text-[13px]/4{% else %}text-[#FFFFFF66] font-body font-medium text-xs/4 md:text-[13px]/4{% endif %}">
+      <span class="{% if category == value %}text-white font-body font-semibold text-xs/4 md:text-[13px]/4{% else %}text-[#FFFFFF80] font-body font-medium text-xs/4 md:text-[13px]/4{% endif %}">
         {{ label }}
       </span>
     </button>

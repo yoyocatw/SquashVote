@@ -10,7 +10,7 @@
   <p class="text-sm font-body text-[#FFFFFF80] mb-6">Upload a controversial call for the community to vote on.</p>
 
   <div class="flex flex-col gap-2 mb-8 rounded-lg border border-[#FFFFFF14] bg-[#FFFFFF0D] p-4">
-    <a class="text-sm font-body font-medium text-white underline hover:text-[#FFFFFFCC] transition-colors" target="_blank" href="https://friends-itch-5gv.craft.me/squashvote.wtf">Check out the upload guide</a>
+    <a class="text-sm font-body font-medium text-white underline hover:text-[#FFFFFFCC] transition-colors" href="{% url 'guide' %}">Check out the upload guide</a>
     <p class="text-[13px] font-body text-[#FFFFFF80]">Your video needs to be on YouTube (unlisted or public). Include the timestamp a few seconds before the decision.</p>
   </div>
 
@@ -18,31 +18,31 @@
     {% csrf_token %}
 
     <div>
-      <label class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Email</label>
-      <input placeholder="example@email.com" type="email" name="email"
-             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:outline-none focus:border-[#FFFFFF33] placeholder-[#FFFFFF4D]">
-      <span class="text-[11px] font-body text-[#FFFFFF4D] mt-1 block">Your email stays hidden. You stay anonymous.</span>
+      <label for="id_email" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Email</label>
+      <input id="id_email" placeholder="example@email.com" type="email" name="email"
+             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+      <span class="text-[11px] font-body text-[#FFFFFF80] mt-1 block">Your email stays hidden. You stay anonymous.</span>
     </div>
 
     <div>
-      <label class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">YouTube URL</label>
-      <input placeholder="e.g. https://www.youtube.com/watch?v=WE0fSTz7LB0" type="text" name="youtube_url"
-             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:outline-none focus:border-[#FFFFFF33] placeholder-[#FFFFFF4D]">
+      <label for="id_youtube_url" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">YouTube URL</label>
+      <input id="id_youtube_url" placeholder="e.g. https://www.youtube.com/watch?v=WE0fSTz7LB0" type="text" name="youtube_url"
+             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
       <div id="duplicate-warning" class="mt-2"></div>
     </div>
 
     <div>
-      <label class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Timestamp</label>
-      <input placeholder="e.g. 4:20, 0:67, 1:06:09" type="text" name="timestamp"
-             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:outline-none focus:border-[#FFFFFF33] placeholder-[#FFFFFF4D]">
-      <span class="text-[11px] font-body text-[#FFFFFF4D] mt-1 block">Use the timestamp format from YouTube</span>
+      <label for="id_timestamp" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Timestamp</label>
+      <input id="id_timestamp" placeholder="e.g. 4:20, 0:67, 1:06:09" type="text" name="timestamp"
+             class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] placeholder-[#FFFFFF80]">
+      <span class="text-[11px] font-body text-[#FFFFFF80] mt-1 block">Use the timestamp format from YouTube</span>
     </div>
 
     <div class="grid grid-cols-2 gap-3">
       <div>
-        <label class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Ref's decision</label>
-        <select name="org_decision"
-                class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:outline-none focus:border-[#FFFFFF33] cursor-pointer">
+        <label for="id_org_decision" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Ref's decision</label>
+        <select id="id_org_decision" name="org_decision"
+                class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] cursor-pointer">
           <option value="">---------</option>
           <option value="Stroke">Stroke</option>
           <option value="Let">Let</option>
@@ -51,9 +51,9 @@
       </div>
 
       <div>
-        <label class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Category</label>
-        <select name="category"
-                class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:outline-none focus:border-[#FFFFFF33] cursor-pointer">
+        <label for="id_category" class="block text-sm font-body font-medium text-[#FFFFFFCC] mb-1.5">Category</label>
+        <select id="id_category" name="category"
+                class="w-full px-3 py-2.5 text-sm text-white font-body bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-lg focus:border-[#FFFFFF66] cursor-pointer">
           <option value="">---------</option>
           <option value="PSA">PSA</option>
           <option value="Amateur">Amateur</option>

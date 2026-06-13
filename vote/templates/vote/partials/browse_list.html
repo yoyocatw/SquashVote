@@ -4,58 +4,16 @@
   {% if not forloop.first %}
   <div class="w-full h-px bg-[#FFFFFF0F] shrink-0"></div>
   {% endif %}
-  <a href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
-     class="flex gap-3 md:gap-4 group py-0 md:py-1">
-    <!-- Thumbnail -->
-    <div class="flex items-center justify-center w-25 h-16 md:w-[130px] md:h-[72px] relative rounded-md bg-[#FFFFFF0F] border border-solid border-[#FFFFFF14] shrink-0 overflow-hidden">
-      <img src="https://img.youtube.com/vi/{{ video.video_id }}/default.jpg"
-           alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-           class="relative z-10 shrink-0">
-        <polygon points="9,6 18,12 9,18" fill="#FFFFFF66" />
-      </svg>
-      {% if video.date >= new_cutoff %}
-      <div class="absolute top-1 left-1 rounded-[3px] py-px px-1.5 bg-white z-10">
-        <span class="text-[#0A0A0A] font-body font-semibold text-[9px]/3">
-          NEW
-        </span>
-      </div>
-      {% endif %}
-    </div>
-    <!-- Info -->
-    <div class="flex flex-col grow shrink basis-[0%] justify-center gap-1 md:gap-1.5 min-w-0">
-      <div class="text-white font-body font-semibold text-sm/4.5 md:text-[15px]/5 line-clamp-2">
-        {{ video.video_title }}
-      </div>
-      <div class="flex items-center gap-1.5 md:gap-2">
-        <span class="text-[#FFFFFF59] font-body text-[11px]/3.5 md:text-xs/4">
-          {{ video.result.total_votes|default:"0" }} votes
-        </span>
-        <div class="rounded-[3px] py-px px-1.5 bg-[#FFFFFF0F]">
-          <span class="text-[#FFFFFF66] font-body font-medium text-[10px]/3 md:text-[11px]/3.5">
-            {{ video.category }}
-          </span>
-        </div>
-        {% if video.id in voted_video_ids %}
-        <div class="rounded-[3px] py-px px-1.5 bg-[#4ADE801F]">
-          <span class="text-[#4ADE80] font-body font-medium text-[10px]/3 md:text-[11px]/3.5">
-            Voted
-          </span>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-    <!-- Chevron -->
-    <div class="flex items-center shrink-0">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF33" stroke-width="2"
-           xmlns="http://www.w3.org/2000/svg" class="shrink-0">
-        <polyline points="9,18 15,12 9,6" />
-      </svg>
-    </div>
-  </a>
+  {% include "vote/partials/_clip_row.html" %}
   {% empty %}
-  <div class="py-12 text-center text-[#FFFFFF59] font-body text-sm">
-    No decisions found.
+  <div class="py-12 text-center">
+    {% if category == "unvoted" %}
+    <p class="text-[#FFFFFF80] font-body text-sm mb-3">You've called every decision here. Nice work.</p>
+    <a href="{% url 'browse' %}"
+       class="text-white font-body font-medium text-sm underline underline-offset-4 hover:text-[#FFFFFFCC]">Browse all decisions &rarr;</a>
+    {% else %}
+    <p class="text-[#FFFFFF80] font-body text-sm">No decisions found.</p>
+    {% endif %}
   </div>
   {% endfor %}
 </div>
@@ -68,11 +26,11 @@
     hx-get="{% url 'browse' %}?page={{ page_obj.previous_page_number }}&category={{ category }}&sort={{ sorted_by }}"
     hx-target="#browse-list"
     hx-swap="innerHTML"
-    class="px-4 py-2 text-sm text-[#FFFFFF66] font-body font-medium border border-[#FFFFFF33] rounded-lg hover:text-white hover:border-[#FFFFFF4D] transition-colors">
+    class="px-4 py-2 text-sm text-[#FFFFFF80] font-body font-medium border border-[#FFFFFF33] rounded-lg hover:text-white hover:border-[#FFFFFF4D] transition-colors">
     Prev
   </button>
   {% endif %}
-  <span class="text-sm text-[#FFFFFF59] font-body">
+  <span class="text-sm text-[#FFFFFF80] font-body">
     {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
   </span>
   {% if page_obj.has_next %}
@@ -80,7 +38,7 @@
     hx-get="{% url 'browse' %}?page={{ page_obj.next_page_number }}&category={{ category }}&sort={{ sorted_by }}"
     hx-target="#browse-list"
     hx-swap="innerHTML"
-    class="px-4 py-2 text-sm text-[#FFFFFF66] font-body font-medium border border-[#FFFFFF33] rounded-lg hover:text-white hover:border-[#FFFFFF4D] transition-colors">
+    class="px-4 py-2 text-sm text-[#FFFFFF80] font-body font-medium border border-[#FFFFFF33] rounded-lg hover:text-white hover:border-[#FFFFFF4D] transition-colors">
     Next
   </button>
   {% endif %}

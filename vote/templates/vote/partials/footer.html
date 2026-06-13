@@ -1,0 +1,22 @@
+{% comment %} Site footer — shared across all pages via base.html. {% endcomment %}
+<footer class="w-full pt-8 px-4 md:px-12 pb-5">
+  <div class="flex flex-col gap-6">
+    <div class="h-px bg-[#FFFFFF14]"></div>
+    <div class="flex gap-12">
+      <!-- Left column -->
+      <div class="flex flex-col gap-3">
+        <a href="{% url 'browse' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF80] hover:text-white transition-colors">Browse Decisions</a>
+        <a href="{% url 'video_form' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF80] hover:text-white transition-colors">Submit a Decision</a>
+        <a href="{% url 'guide' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF80] hover:text-white transition-colors">Upload Guide</a>
+        <a href="{% url 'about' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF80] hover:text-white transition-colors">About</a>
+        <a href="{% url 'rules' %}" class="font-body font-medium text-[13px]/4 text-[#FFFFFF80] hover:text-white transition-colors">Squash Rules</a>
+      </div>
+      <!-- Right column -->
+      <div class="flex flex-col gap-3">
+        <a href="https://squashvote.substack.com" target="_blank" rel="noopener" class="font-body font-medium text-[13px]/4 text-[#FFFFFF80] hover:text-white transition-colors">Newsletter</a>
+        <a href="mailto:illreadit@squashvote.wtf" class="font-body font-medium text-[13px]/4 text-[#FFFFFF80] hover:text-white transition-colors">Contact</a>
+      </div>
+    </div>
+    <span class="font-body text-[11px]/3.5 text-[#FFFFFF40] mt-2">&copy; 2026 SquashVote. All rights reserved.</span>
+  </div>
+</footer>

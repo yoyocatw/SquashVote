@@ -308,3 +308,80 @@ class SmokeTests(TestCase):
         r = self.client.get(reverse("check_duplicate"), {"video_id": self.video.video_id})
         self.assertEqual(r.status_code, 200)
         self.assertTrue(r.json()["exists"])
+
+
+# --------------------------------------------------------------------------- #
+# Regression tests for the review fixes
+# --------------------------------------------------------------------------- #
+class SlugFallbackTests(TestCase):
+    def test_symbol_only_title_does_not_break_url_or_pages(self):
+        # slugify("!!!") == "" which the <slug:slug> route rejects -> used to 500
+        v = make_video(video_id="sym1", video_title="!!! ???")
+        self.assertTrue(v.slug)  # falls back to "clip"
+        self.assertIn(f"/video/{v.id}/", v.get_absolute_url())
+        # pages that loop over all videos must still render
+        self.assertEqual(self.client.get(reverse("index")).status_code, 200)
+        self.assertEqual(self.client.get(reverse("browse")).status_code, 200)
+        self.assertEqual(self.client.get(v.get_absolute_url()).status_code, 200)
+
+
+class ReportIdempotentTests(TestCase):
+    def test_duplicate_report_does_not_500(self):
+        video = make_video()
+        comment = make_comment(video, comment="x")
+        url = reverse("report", args=[comment.id])
+        self.assertEqual(self.client.post(url).status_code, 200)
+        self.assertEqual(self.client.post(url).status_code, 200)  # repeat must not 500
+        self.assertEqual(CommentReport.objects.filter(comment=comment).count(), 1)
+
+
+class LastClipFallbackTests(TestCase):
+    def test_voting_on_only_clip_shows_browse_all(self):
+        video = make_video()
+        r = self.client.post(clip_url(video), {"vote": "stroke"})
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Browse all decisions")
+        self.assertNotContains(r, "Next One")
+
+
+class CommentStateTests(TestCase):
+    def setUp(self):
+        self.video = make_video()
+
+    def test_posting_comment_updates_count_oob(self):
+        r = self.client.post(reverse("post_comment", args=[self.video.id]), {"comment": "hi"})
+        self.assertContains(r, 'hx-swap-oob="innerHTML:#sv-comment-count"')
+
+    def test_posting_comment_preserves_like_state(self):
+        a = make_comment(self.video, comment="first")
+        self.client.post(reverse("like_comment", args=[a.id]))  # like A (same session)
+        r = self.client.post(reverse("post_comment", args=[self.video.id]), {"comment": "second"})
+        # A's like span keeps its liked (white) styling after posting another comment
+        self.assertContains(r, f'id="vote-count-{a.id}"')
+        self.assertContains(r, "text-white")
+
+
+class SeoTests(TestCase):
+    def setUp(self):
+        self.video = make_video()
+
+    def test_sitemap_lists_clip(self):
+        r = self.client.get("/sitemap.xml")
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, f"/video/{self.video.id}/")
+
+    def test_robots_txt(self):
+        r = self.client.get("/robots.txt")
+        self.assertEqual(r.status_code, 200)
+        self.assertContains(r, "Sitemap:")
+
+    def test_clip_has_canonical_and_jsonld(self):
+        html = self.client.get(clip_url(self.video)).content.decode()
+        self.assertIn(f'rel="canonical" href="https://squashvote.wtf/video/{self.video.id}/', html)
+        self.assertIn('"@type": "VideoObject"', html)
+        self.assertIn("og:image", html)
+
+    def test_chart_route_removed(self):
+        from django.urls import NoReverseMatch
+        with self.assertRaises(NoReverseMatch):
+            reverse("chart", args=[self.video.id])

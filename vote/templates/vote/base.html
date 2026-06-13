@@ -6,21 +6,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description"
-    content="The crowd's verdict on controversial squash referee decisions. Watch the clip, make your call, see where you stand.">
-  <meta name="keywords"
-    content="Squash, PSA, SquashVote, referee decisions, let or no let, stroke or let, squash community">
+    content="{% block meta_description %}The crowd's verdict on controversial squash referee decisions. Watch the clip, make your call, see where you stand.{% endblock %}">
   <meta name="author" content="SquashVote">
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="SquashVote — The crowd's verdict on controversial calls">
-  <meta property="og:description"
-    content="Think the ref got it wrong? Vote on controversial squash calls and see what the community thinks.">
-  <meta property="og:url" content="https://squashvote.wtf">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="SquashVote">
   {% if "fly.dev" in request.get_host %}
   <meta name="robots" content="noindex, nofollow">
   {% endif %}
-  <link rel="canonical" href="https://squashvote.wtf">
+  <link rel="canonical" href="{% block canonical %}https://squashvote.wtf{{ request.path }}{% endblock %}">
+
+  <!-- Open Graph / Twitter (overridable per page) -->
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="SquashVote">
+  <meta property="og:title"
+    content="{% block og_title %}SquashVote — The crowd's verdict on controversial calls{% endblock %}">
+  <meta property="og:description"
+    content="{% block og_description %}Think the ref got it wrong? Vote on controversial squash calls and see what the community thinks.{% endblock %}">
+  <meta property="og:url" content="{% block og_url %}https://squashvote.wtf{{ request.path }}{% endblock %}">
+  <meta property="og:image"
+    content="{% block og_image %}https://squashvote.wtf{% static 'images/hero-home.jpeg' %}{% endblock %}">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"SquashVote","url":"https://squashvote.wtf","description":"The crowd's verdict on controversial squash referee decisions."}
+  </script>
 
   <!-- CDN -->
   <script src="https://unpkg.com/htmx.org@2.0.4"
@@ -67,7 +74,8 @@
 
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
   class="bg-[#0A0A0A] text-[#e5e5e5] min-h-screen m-0 flex flex-col overflow-y-auto overflow-x-hidden no-scrollbar"
-  x-data="{ menuOpen: false }">
+  x-data="{ menuOpen: false }"
+  @keydown.escape.window="menuOpen = false">
 
   <!-- Minimal header -->
   <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-12 py-4 md:py-5 flex items-center justify-between"
@@ -89,9 +97,9 @@
     </div>
 
     <!-- Right: hamburger -->
-    <button @click="menuOpen = true" class="text-white/80 hover:text-white">
+    <button @click="menuOpen = true" class="text-white/80 hover:text-white" aria-label="Open menu" :aria-expanded="menuOpen">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="3" y1="6" x2="21" y2="6"></line>
         <line x1="3" y1="12" x2="21" y2="12"></line>
         <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -114,9 +122,9 @@
     @click.outside="menuOpen = false"
     class="fixed top-0 right-0 bottom-0 w-[280px] bg-[#141414] z-50 flex flex-col justify-between p-6" x-cloak>
     <div>
-      <button @click="menuOpen = false" class="self-end block ml-auto text-[#FFFFFF66] hover:text-white">
+      <button @click="menuOpen = false" class="self-end block ml-auto text-[#FFFFFF66] hover:text-white" aria-label="Close menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -125,7 +133,7 @@
         <a href="{% url 'index' %}" @click="menuOpen = false"
           class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-[#FFFFFFCC] hover:text-white transition-colors leading-[22px]">Home</a>
         <a href="{% url 'browse' %}" @click="menuOpen = false"
-          class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-white hover:text-white transition-colors leading-[22px]">Browse Decisions</a>
+          class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-[#FFFFFFCC] hover:text-white transition-colors leading-[22px]">Browse Decisions</a>
         <a href="{% url 'video_form' %}" @click="menuOpen = false"
           class="py-3.5 text-lg [letter-spacing:-0.3px] font-heading font-semibold text-[#FFFFFFCC] hover:text-white transition-colors leading-[22px]">Submit a Decision</a>
         <a href="{% url 'guide' %}" @click="menuOpen = false"
@@ -148,6 +156,13 @@
   <main class="flex-1 flex flex-col">
     {% block content %}{% endblock %}
   </main>
+
+  <!-- Footer (shared; relative z-[1] keeps it above full-bleed page backgrounds) -->
+  {% block footer %}
+  <div class="relative z-[1]">
+    {% include "vote/partials/footer.html" %}
+  </div>
+  {% endblock %}
 
   {% block scripts %}
   {% endblock %}

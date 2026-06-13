@@ -16,12 +16,27 @@ def get_session_id(request):
     return request.session.session_key
 
 
+def get_voted_video_ids(session_id):
+    """Set of video ids this session has voted on."""
+    return set(
+        VoteUser.objects.filter(session_id=session_id).values_list("video_id", flat=True)
+    )
+
+
+def vote_percentages(result):
+    """Server-computed Stroke/Let/No Let percentages for the CSS bars."""
+    total = result.total_votes or 1
+    return {
+        "stroke_pct": round(result.stroke / total * 100),
+        "let_pct": round(result.let / total * 100),
+        "nolet_pct": round(result.no_let / total * 100),
+    }
+
+
 def get_next_decision(request, current_video):
     """Return the newest unvoted clip and fresh unvoted count (last 30 days)."""
     session_id = get_session_id(request)
-    voted_ids = VoteUser.objects.filter(
-        session_id=session_id
-    ).values_list("video_id", flat=True)
+    voted_ids = get_voted_video_ids(session_id)
 
     unvoted = (
         Video.objects.filter(is_active=True, needs_review=False)
@@ -78,16 +93,15 @@ def browse(request):
         is_active=True, needs_review=False
     ).select_related("result")
 
+    voted_ids = get_voted_video_ids(session_id)
+
     category = request.GET.get("category", "all")
     if category == "psa":
         videos = videos.filter(category__iexact="PSA")
     elif category == "amateur":
         videos = videos.filter(category__iexact="Amateur")
     elif category == "unvoted":
-        voted_video_ids = VoteUser.objects.filter(
-            session_id=session_id
-        ).values_list("video_id", flat=True)
-        videos = videos.exclude(id__in=voted_video_ids)
+        videos = videos.exclude(id__in=voted_ids)
 
     sorted_by = request.GET.get("sort", "newest")
     if sorted_by == "most_votes":
@@ -104,13 +118,7 @@ def browse(request):
     total_decisions = Video.objects.filter(
         is_active=True, needs_review=False
     ).count()
-    voted_count = VoteUser.objects.filter(session_id=session_id).count()
-
-    voted_video_ids_set = set(
-        VoteUser.objects.filter(
-            session_id=session_id
-        ).values_list("video_id", flat=True)
-    )
+    voted_count = len(voted_ids)
 
     new_cutoff = timezone.now() - timedelta(days=7)
 
@@ -127,7 +135,7 @@ def browse(request):
         "sorted_by": sorted_by,
         "total_decisions": total_decisions,
         "voted_count": voted_count,
-        "voted_video_ids": voted_video_ids_set,
+        "voted_video_ids": voted_ids,
         "new_cutoff": new_cutoff,
         "filter_tabs": filter_tabs,
         "show_back": True,
@@ -178,10 +186,7 @@ def video_result(request, pk, slug=None):
                 video.result.save()
                 video.result.refresh_from_db()
 
-            total = video.result.total_votes or 1
-            stroke_pct = round(video.result.stroke / total * 100)
-            let_pct = round(video.result.let / total * 100)
-            nolet_pct = round(video.result.no_let / total * 100)
+            pct = vote_percentages(video.result)
 
             vote_display_map = {"stroke": "Stroke", "let": "Let", "nolet": "No Let"}
             vote_display = vote_display_map.get(vote, "")
@@ -207,9 +212,7 @@ def video_result(request, pk, slug=None):
                     "vote": vote,
                     "vote_display": vote_display,
                     "video": video,
-                    "stroke_pct": stroke_pct,
-                    "let_pct": let_pct,
-                    "nolet_pct": nolet_pct,
+                    **pct,
                     "next_video": next_video,
                     "remaining_count": remaining_count,
                     "comments": post_comments,
@@ -241,15 +244,10 @@ def video_result(request, pk, slug=None):
         session_id=session_id, comment__video__video_id=video.video_id
     ).values_list("comment_id", flat=True)
     
-    voted_video_ids = VoteUser.objects.filter(
-        user=request.user if request.user.is_authenticated else None,
-        session_id=session_id,
-    ).values_list("video_id", flat=True)
-
     suggested_videos = (
         Video.objects.filter(is_active=True, needs_review=False)
         .exclude(id=video.id)
-        .exclude(id__in=voted_video_ids)
+        .exclude(id__in=get_voted_video_ids(session_id))
         .select_related("result")
         .order_by("-result__total_votes")[:6]
     )
@@ -267,10 +265,7 @@ def video_result(request, pk, slug=None):
             },
         )
     # Percentage calculations for CSS bars
-    total = video.result.total_votes or 1
-    stroke_pct = round(video.result.stroke / total * 100)
-    let_pct = round(video.result.let / total * 100)
-    nolet_pct = round(video.result.no_let / total * 100)
+    pct = vote_percentages(video.result)
 
     vote_display_map = {"stroke": "Stroke", "let": "Let", "nolet": "No Let"}
     vote_display = vote_display_map.get(vote, "")
@@ -288,9 +283,7 @@ def video_result(request, pk, slug=None):
         "liked_comments": list(liked_comments),
         "reported": list(reported),
         "sort_by": sort_by,
-        "stroke_pct": stroke_pct,
-        "let_pct": let_pct,
-        "nolet_pct": nolet_pct,
+        **pct,
         "next_video": next_video,
         "remaining_count": remaining_count,
         "show_back": True,
@@ -299,18 +292,6 @@ def video_result(request, pk, slug=None):
     }
     return render(request, "vote/video_result.html", context=context)
 
-
-def chart(request, pk):
-    video = get_object_or_404(Video.objects.select_related("result"), pk=pk)
-    data = {
-        "labels": ["Stroke", "Let", "No Let"],
-        "data": [
-            int(video.result.stroke),
-            int(video.result.let),
-            int(video.result.no_let),
-        ],
-    }
-    return JsonResponse(data)
 
 def video_form(request):
     if request.method == "POST":
@@ -331,7 +312,7 @@ def video_form(request):
 
 
 def confirm(request):
-    return render(request, "vote/confirm.html")
+    return render(request, "vote/confirm.html", {"show_back": True, "back_url": "/"})
 
 
 @login_required
@@ -339,11 +320,9 @@ def review(request):
     videos = Video.objects.filter(needs_review=True).order_by("date")
 
     for video in videos:
-        duplicates = []
-        same_id = Video.objects.filter(video_id=video.video_id).exclude(id=video.id)
-        for dup in same_id:  # 👈 don't use 'video' again here
-            duplicates.append(dup)
-        video.same_id = duplicates
+        video.same_id = list(
+            Video.objects.filter(video_id=video.video_id).exclude(id=video.id)
+        )
 
     return render(request, "vote/review.html", {"videos": videos})
 
@@ -371,29 +350,46 @@ def rules(request):
 
 
 def post_comment(request, pk):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
     video = get_object_or_404(Video, pk=pk)
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = Comment.objects.create(
-                video=video,
-                user=request.user if request.user.is_authenticated else None,
-                comment=form.cleaned_data["comment"],
-                parent=None,
-            )
-            comments = Comment.objects.filter(video=video, parent=None).order_by(
-                "-created_at"
-            )
-            return render(
-                request,
-                "vote/partials/comment_section.html",
-                {"video": video, "comments": comments},
-            )
-    else:
-        form = CommentForm()
-    comments = Comment.objects.filter(video=video).order_by("-created_at")
+    session_id = get_session_id(request)
+
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        Comment.objects.create(
+            video=video,
+            user=request.user if request.user.is_authenticated else None,
+            comment=form.cleaned_data["comment"],
+            parent=None,
+        )
+
+    # Re-render the thread preserving like/report state and the default
+    # (most-liked) order, plus an OOB update of the "N Comments" header.
+    comments = (
+        Comment.objects.filter(video=video, parent=None)
+        .annotate(num_likes=Count("likes"))
+        .order_by("-num_likes")
+    )
+    liked_comments = CommentLike.objects.filter(
+        session_id=session_id, comment__video__video_id=video.video_id
+    ).values_list("comment_id", flat=True)
+    reported = CommentReport.objects.filter(
+        session_id=session_id, comment__video__video_id=video.video_id
+    ).values_list("comment_id", flat=True)
+
     return render(
-        request, "vote/video_result.html", {"form": form, "comments": comments, "video": video}
+        request,
+        "vote/partials/comment_section.html",
+        {
+            "video": video,
+            "comments": comments,
+            "liked_comments": list(liked_comments),
+            "reported": list(reported),
+            "sort_by": "upvotes",
+            "update_count": True,
+        },
     )
 
 
@@ -451,32 +447,25 @@ def post_reply(request, comment_id):
 
 
 def report_comment(request, comment_id):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
     comment = get_object_or_404(Comment, id=comment_id)
-    reported = False
     session_id = get_session_id(request)
 
-    if request.method == "POST":
-        reporttracker = CommentReport.objects.create(
-            comment=comment,
-            user=request.user if request.user.is_authenticated else None,
-            session_id=(
-                request.session.session_key
-                if not request.user.is_authenticated
-                else None
-            ),
-        )
+    # Idempotent: a repeat report (double-click / replay) must not 500 on the
+    # (comment, session_id) unique constraint.
+    CommentReport.objects.get_or_create(
+        comment=comment,
+        session_id=session_id,
+        defaults={"user": request.user if request.user.is_authenticated else None},
+    )
 
-        reported = True
-
-        reporttracker.save()
-
-        return render(
-            request,
-            "vote/partials/report.html",
-            {"comment": comment, "reported": reported},
-        )
-
-    return HttpResponseNotAllowed(["POST"])
+    return render(
+        request,
+        "vote/partials/report.html",
+        {"comment": comment, "reported": True},
+    )
 
 
 def check_duplicate(request):
@@ -498,3 +487,15 @@ def check_duplicate(request):
 
 def guide(request):
     return render(request, "vote/guide.html", {"show_back": True, "back_url": "/"})
+
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Disallow: /superuser/",
+        "Disallow: /login/",
+        "Disallow: /review/",
+        "Disallow: /check-duplicate/",
+        "Sitemap: https://squashvote.wtf/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines) + "\n", content_type="text/plain")

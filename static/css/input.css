@@ -93,3 +93,14 @@ h1, h2, h3, .sv-title {
   font-family: var(--font-heading);
   letter-spacing: -0.02em;
 }
+
+/* Keep Alpine-cloaked elements (slide-out menu, overlay) hidden until Alpine
+   initializes — otherwise they flash visible on first paint. */
+[x-cloak] { display: none !important; }
+
+/* Visible keyboard focus across the app. var(--color-primary) adapts to the
+   active theme (light-on-dark / dark-on-light) so it always reads. */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

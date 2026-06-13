@@ -1,6 +1,11 @@
 {% extends 'vote/base.html' %}
 {% load timestamp %}
 {% block title %}{{ video.video_title }} — SquashVote{% endblock %}
+{% block meta_description %}The ref called {{ video.org_decision }}. {{ video.result.total_votes }} squash fans voted Stroke / Let / No Let — see the community verdict on this controversial call.{% endblock %}
+{% block og_type %}video.other{% endblock %}
+{% block og_title %}{{ video.video_title }} — SquashVote{% endblock %}
+{% block og_description %}The ref called {{ video.org_decision }}. {{ video.result.total_votes }} fans voted Stroke / Let / No Let — see where you stand.{% endblock %}
+{% block og_image %}https://img.youtube.com/vi/{{ video.video_id }}/maxresdefault.jpg{% endblock %}
 {% block content %}
 
 <!-- Full-bleed background: YouTube thumbnail, blurred -->
@@ -50,19 +55,20 @@
   <!-- Vote / Post-vote area -->
   <div id="post-vote-area" class="w-full">
     {% if already_voted %}
-      {% include "vote/partials/post_vote_inline.html" %}
+      {% include "vote/partials/post_vote.html" %}
     {% else %}
       <!-- Vote form -->
       <form x-data="{ vote: '' }"
-            hx-post="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
+            hx-post="{{ video.get_absolute_url }}"
             hx-target="#post-vote-area"
             hx-swap="innerHTML">
         {% csrf_token %}
 
         <!-- Vote buttons -->
-        <div class="flex w-full pt-4 md:pt-5 gap-2 md:gap-2.5">
+        <fieldset class="flex w-full pt-4 md:pt-5 gap-2 md:gap-2.5 border-0 p-0 m-0">
+          <legend class="sr-only">Your call</legend>
           <!-- Stroke -->
-          <label class="flex items-center justify-center grow shrink basis-[0%] h-11 md:h-12 rounded-lg cursor-pointer transition-all"
+          <label class="flex items-center justify-center grow shrink basis-[0%] h-11 md:h-12 rounded-lg cursor-pointer transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-white"
                  :class="vote === 'stroke'
                    ? 'bg-[#FFFFFF1A] border-2 border-solid border-white'
                    : '[border-width:1.5px] border-solid border-[#FFFFFF4D] hover:border-[#FFFFFF80]'">
@@ -74,7 +80,7 @@
             </span>
           </label>
           <!-- Let -->
-          <label class="flex items-center justify-center grow shrink basis-[0%] h-11 md:h-12 rounded-lg cursor-pointer transition-all"
+          <label class="flex items-center justify-center grow shrink basis-[0%] h-11 md:h-12 rounded-lg cursor-pointer transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-white"
                  :class="vote === 'let'
                    ? 'bg-[#FFFFFF1A] border-2 border-solid border-white'
                    : '[border-width:1.5px] border-solid border-[#FFFFFF4D] hover:border-[#FFFFFF80]'">
@@ -86,7 +92,7 @@
             </span>
           </label>
           <!-- No Let -->
-          <label class="flex items-center justify-center grow shrink basis-[0%] h-11 md:h-12 rounded-lg cursor-pointer transition-all"
+          <label class="flex items-center justify-center grow shrink basis-[0%] h-11 md:h-12 rounded-lg cursor-pointer transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-white"
                  :class="vote === 'nolet'
                    ? 'bg-[#FFFFFF1A] border-2 border-solid border-white'
                    : '[border-width:1.5px] border-solid border-[#FFFFFF4D] hover:border-[#FFFFFF80]'">
@@ -97,12 +103,12 @@
               No Let
             </span>
           </label>
-        </div>
+        </fieldset>
 
         <!-- Vote to unlock divider -->
         <div class="flex items-center justify-center w-full pt-4 md:pt-5 gap-2 md:gap-3">
           <div class="grow shrink basis-[0%] h-px bg-[#FFFFFF26]"></div>
-          <span class="text-[#FFFFFF59] font-body text-xs/4 md:text-[13px]/4.5" x-show="!vote">make your call to view results &amp; comments</span>
+          <span class="text-[#FFFFFF80] font-body text-xs/4 md:text-[13px]/4.5" x-show="!vote">make your call to view results &amp; comments</span>
           <div class="grow shrink basis-[0%] h-px bg-[#FFFFFF26]"></div>
         </div>
 
@@ -172,45 +178,11 @@
       More decisions
     </h2>
     <div class="flex flex-col gap-3">
-      {% for v in suggested_videos %}
+      {% for video in suggested_videos %}
       {% if not forloop.first %}
       <div class="w-full h-px bg-[#FFFFFF0F] shrink-0"></div>
       {% endif %}
-      <a href="{% url 'video_result' pk=v.id slug=v.video_title|slugify %}"
-         class="flex gap-3 md:gap-4 group py-0 md:py-1">
-        <!-- Thumbnail -->
-        <div class="flex items-center justify-center w-25 h-16 md:w-[130px] md:h-[72px] relative rounded-md bg-[#FFFFFF0F] border border-solid border-[#FFFFFF14] shrink-0 overflow-hidden">
-          <img src="https://img.youtube.com/vi/{{ v.video_id }}/default.jpg"
-               alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-               class="relative z-10 shrink-0">
-            <polygon points="9,6 18,12 9,18" fill="#FFFFFF66" />
-          </svg>
-        </div>
-        <!-- Info -->
-        <div class="flex flex-col grow shrink basis-[0%] justify-center gap-1 md:gap-1.5 min-w-0">
-          <div class="text-white font-body font-semibold text-sm/4.5 md:text-[15px]/5 line-clamp-2">
-            {{ v.video_title }}
-          </div>
-          <div class="flex items-center gap-1.5 md:gap-2">
-            <span class="text-[#FFFFFF59] font-body text-[11px]/3.5 md:text-xs/4">
-              {{ v.result.total_votes|default:"0" }} votes
-            </span>
-            <div class="rounded-[3px] py-px px-1.5 bg-[#FFFFFF0F]">
-              <span class="text-[#FFFFFF66] font-body font-medium text-[10px]/3 md:text-[11px]/3.5">
-                {{ v.category }}
-              </span>
-            </div>
-          </div>
-        </div>
-        <!-- Chevron -->
-        <div class="flex items-center shrink-0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF33" stroke-width="2"
-               xmlns="http://www.w3.org/2000/svg" class="shrink-0">
-            <polyline points="9,18 15,12 9,6" />
-          </svg>
-        </div>
-      </a>
+      {% include "vote/partials/_clip_row.html" %}
       {% endfor %}
     </div>
   </div>
@@ -218,4 +190,24 @@
 
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+  "name": "{{ video.video_title|escapejs }}",
+  "description": "Disputed squash call — the ref called {{ video.org_decision|escapejs }}. {{ video.result.total_votes }} community votes on Stroke / Let / No Let.",
+  "thumbnailUrl": "https://img.youtube.com/vi/{{ video.video_id }}/maxresdefault.jpg",
+  "uploadDate": "{{ video.date|date:'c' }}",
+  "embedUrl": "https://www.youtube-nocookie.com/embed/{{ video.video_id }}",
+  "contentUrl": "https://www.youtube.com/watch?v={{ video.video_id }}",
+  "interactionStatistic": {
+    "@type": "InteractionCounter",
+    "interactionType": "https://schema.org/VoteAction",
+    "userInteractionCount": {{ video.result.total_votes|default:"0" }}
+  }
+}
+</script>
 {% endblock %}
