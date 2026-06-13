@@ -1,10 +1,28 @@
-# HANDOVER - 2026-04-14
+# HANDOVER - 2026-06-13
 
 ## Summary
 
-Full UI/UX redesign of SquashVote (squashvote.wtf). Three core screens + hamburger menu + footer designed in Paper (paper.design), then implemented as Django templates. Code is on the `uiux-redesign` branch in `~/My Code/SquashVote` (worktree was removed, branch checked out directly). Previous commit exists (`c9755a4`), current changes are **uncommitted on top of that**.
+Full UI/UX redesign of SquashVote (squashvote.wtf). Three core screens + hamburger menu + footer designed in Paper (paper.design), then implemented as Django templates. Code is on the `uiux-redesign` branch in `~/My Code/SquashVote`.
 
-**Status: Implemented, tested on localhost (port 8080), copy/brand audit done, NOT committed, NOT pushed.**
+**Status: COMPLETE and shipped to PRs.** Implemented, rebased onto the latest upstream `main`, conflicts resolved, upstream's suggested-videos + `/guide/` feature re-integrated into the new design, verified end-to-end locally, and split into two PRs against `yoyocatw/main`.
+
+## Current state (2026-06-13)
+
+- **Rebased** `uiux-redesign` onto `origin/main` (`d95a4e0`, "added videos inside the result page for quick suggestion and recommendation"). Resolved conflicts in `views.py`, `settings.py`, `base.html`, `index.html`, `already_voted.html`, `video_result.html`, `output.css`.
+- **Re-integrated upstream's feature** so we don't regress it: kept the `suggested_videos` query, surfaced it as a redesign-styled "More decisions" section on the clip page (replacing the old DaisyUI `video_grid`), added "Upload Guide" links to the new menu + footer, and restyled `guide.html` to the dark theme.
+- **Verified**: `manage.py check` clean; all routes 200; vote → results (CSS bars) → 7 suggested clips → comments → next-decision flow works against the seeded 20-video DB.
+
+### Open PRs (against `yoyocatw/SquashVote`)
+- **#2** — Foundation: product identity, brand & design system (**docs only**, `redesign/docs` branch). MERGEABLE.
+- **#3** — The UI/UX redesign implementation (`redesign/app` branch, off `origin/main`). MERGEABLE.
+- **#1** — CLOSED, superseded by #2 + #3.
+
+### Why only 2 PRs (not a stack of 3)
+The redesign's theme/chrome/screens/backend are **one atomic, deployable unit** — `base.html` links to the `/browse/` route, whose view/template ship with the screens, so a theme-only PR 500s on every page. Upstream **auto-deploys on every merge to `main`**, so a partial merge would deploy a broken site. Only docs separates cleanly. Don't try to split the implementation further.
+
+### What's left
+- Maintainer review/merge of #2 and #3 (the maintainer, YoYo Chan, had not engaged with the old #1 since April — a nudge + screenshots will help).
+- After merge, the local `backup/uiux-pre-rebase` tag and stale `fork/Anvith-Reddy-N/uiux-redesign` branch can be cleaned up.
 
 ---
 
@@ -61,6 +79,8 @@ Full UI/UX redesign of SquashVote (squashvote.wtf). Three core screens + hamburg
 ---
 
 ## Next steps (prioritized)
+
+> **Superseded (2026-06-13):** every item below was completed — see "Current state" at the top. Kept for historical record.
 
 ### Before committing
 1. **Restyle `comment_section.html`** — match dark minimal aesthetic (Inter font, #FFFFFF opacity colors, no DaisyUI component classes)
