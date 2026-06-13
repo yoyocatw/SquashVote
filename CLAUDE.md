@@ -13,13 +13,7 @@ npm install
 
 # Set up environment
 cp .env.example .env
-# Edit .env with your values (DATABASE_URL, SECRET_KEY, Google API keys)
-
-# Local dev settings changes needed in squashvote/settings.py:
-# - Add '127.0.0.1' and 'localhost' to ALLOWED_HOSTS
-# - Set SESSION_COOKIE_SECURE = False
-# - Set CSRF_COOKIE_SECURE = False
-# - Comment out 'vote.middleware.CanonicalUrlMiddleware' in MIDDLEWARE
+# Edit .env with your values (DATABASE_URL, SECRET_KEY, Google API keys); set DEBUG=True
 
 # Run database migrations
 python manage.py migrate
@@ -27,9 +21,14 @@ python manage.py migrate
 # Start CSS watcher (terminal 1)
 npm run dev
 
-# Start Django dev server (terminal 2)
-python manage.py runserver
+# Start Django dev server (terminal 2) — DEBUG=True is all you need now
+DEBUG=True python manage.py runserver
 ```
+
+> With `DEBUG=True`, local dev needs **no manual settings edits** — cookie
+> security and `CanonicalUrlMiddleware` are `DEBUG`-conditional, and
+> `127.0.0.1`/`localhost` are in `ALLOWED_HOSTS`. (This was not always true; older
+> notes about editing `settings.py` for local dev are obsolete.)
 
 ## Tech stack
 
@@ -48,21 +47,24 @@ python manage.py runserver
 ```
 squashvote/          # Django project settings (settings.py, urls.py, wsgi.py)
 vote/                # Main app — all application code lives here
-  models.py          # Video, Result, VoteUser, Comment, CommentLike, CommentReport
-  views.py           # All views (function-based, never CBV)
+  models.py          # Video (+ get_absolute_url/slug), Result, VoteUser, Comment, CommentLike, CommentReport
+  views.py           # All views (function-based, never CBV); helpers: get_voted_video_ids, vote_percentages, get_next_decision
   forms.py           # VideoForm, VoteForm, CommentForm
-  urls.py            # App routes
+  urls.py            # App routes (+ sitemap.xml, robots.txt)
+  sitemaps.py        # VideoSitemap + StaticViewSitemap (SEO)
   signals.py         # post_save: auto-create Result when Video created
-  middleware.py      # CanonicalUrlMiddleware (domain redirect)
+  middleware.py      # CanonicalUrlMiddleware (domain redirect; DEBUG-conditional)
   admin.py           # Custom admin with reported comment actions
+  tests.py           # Vote-app test suite (run under Python 3.13 — see Key commands)
+  test_moderation.py # Access-control tests for accept/reject video
   templatetags/      # timestamp.py — comment_time filter (relative dates)
   utils/             # youtube_title.py — fetch title via Google API
   templates/vote/    # Full page templates
-  templates/vote/partials/  # HTMX partial templates
+  templates/vote/partials/  # HTMX partials + shared _clip_row.html, footer.html
 static/
-  css/input.css      # Tailwind source (themes, fonts, utilities)
-  css/output.css     # Compiled CSS (run npm run dev to rebuild)
-  js/                # chart.js, confetti.js, plyr.js, modal.js, etc.
+  css/input.css      # Tailwind source (themes, fonts, :focus-visible, x-cloak)
+  css/output.css     # Compiled CSS — generated; rebuild, never hand-edit
+  js/                # plyr.js (the rest were removed in the redesign)
 docs/                # Product, brand, and design system documentation
 ```
 
@@ -76,7 +78,8 @@ docs/                # Product, brand, and design system documentation
 | New migration | `python manage.py makemigrations vote` |
 | Create admin | `python manage.py createsuperuser` |
 | Collect static | `python manage.py collectstatic --noinput` |
-| Tests | `python manage.py test` |
+| Tests | `python manage.py test` — **must run under Python 3.13** (Django 5.1.5's test client crashes on the repo's 3.14 `.venv`; prod/Docker is 3.13) |
+| Rebuild CSS (one-shot) | `npx @tailwindcss/cli -i ./static/css/input.css -o ./static/css/output.css` |
 | Deploy | Push to `main` (auto-deploys via GitHub Actions) or `flyctl deploy --remote-only` |
 
 ## Architecture patterns
@@ -113,8 +116,7 @@ Every view is a plain function. No class-based views. Keep it that way.
 - Two DaisyUI themes: `customblack` (dark, default) and `customlight`
 - Defined in `static/css/input.css`
 - Persisted via `localStorage.getItem('theme')`
-- Chart.js uses `MutationObserver` on `data-theme` to update colors dynamically
-- Theme toggle uses `theme-change` library with checkbox `.theme-controller`
+- Vote results are server-computed CSS bars (Chart.js was removed in the redesign)
 
 ### Plyr video player
 - Clips play a 20-second window from `start` to `start + 20`
@@ -157,7 +159,7 @@ CommentLike / CommentReport (per comment per session)
 - **URLs:** lowercase, underscores, verb-object naming: `post_comment`, `like_comment`
 - **Commits:** informal, descriptive. No strict conventional commits.
 - **No linting/formatting tools configured.** No pre-commit hooks.
-- **No tests currently.** `vote/tests.py` is a placeholder.
+- **Tests:** `vote/tests.py` (vote-app suite) + `vote/test_moderation.py`. Run them under **Python 3.13** (`python manage.py test`); the 3.14 `.venv` breaks Django's test client. There is no CI test runner — CI only deploys.
 - **Comments in code:** minimal. Code should be self-documenting. Remove debug prints before committing.
 
 ## Deployment
@@ -182,7 +184,12 @@ REFRESH_TOKEN        # YouTube API refresh token
 GOOGLE_API           # YouTube Data API key
 ```
 
-## Design direction (current redesign)
+## Design direction (redesign)
+
+> **Status (2026-06-13): the redesign is implemented and shipped to PRs** against
+> `yoyocatw/main` — see Contribution workflow below. The specs in this section are
+> the design intent; the code on `uiux-redesign` is the source of truth. See
+> `HANDOVER.md` for the full delivery state, open PRs, and gotchas.
 
 This branch (`uiux-redesign`) is a full UI/UX reimagination. Key docs:
 
@@ -200,7 +207,7 @@ Designs finalized in Paper (paper.design). The user flow is: Homepage → Browse
 - Full-bleed hero image (static, stored in `static/images/`) + dark gradient overlay
 - Hero text: "The crowd's verdict on controversial calls."
 - Subtext: "Watch the clip. Make your call. See where you stand."
-- CTA: "Start Voting →" links to `/browse/`
+- CTA: "Make Your Call →" links to `/browse/`
 - "New this week" section: horizontal scrolling clip cards (date < 7 days)
 - Photo credit attribution at bottom of hero
 - Dark background (#0A0A0A)
@@ -219,10 +226,11 @@ Designs finalized in Paper (paper.design). The user flow is: Homepage → Browse
 - Plyr video player at top (keep existing 20s clip setup)
 - Title + metadata (votes, category badge)
 - Vote form: Stroke / Let / No Let radio options (no emoji, custom styled)
-- Post-vote reveal: "YOU VOTED" / "REF SAID" verdict cards
-- CSS horizontal bar chart (replace Chart.js): server-computed percentages
+- Post-vote reveal: "YOUR CALL" / "THE REF SAID" verdict cards
+- CSS horizontal bar chart (replaces Chart.js): server-computed percentages
 - Comments section (gated behind vote, keep HTMX patterns)
-- "Next Decision →" CTA at bottom (links to newest unvoted clip)
+- "Next One →" CTA at bottom (newest unvoted clip; "Browse all" fallback on the last clip)
+- "More decisions" suggestions list (upstream's recommendation feature, restyled)
 
 ### Implementation decisions
 
@@ -238,10 +246,19 @@ Designs finalized in Paper (paper.design). The user flow is: Homepage → Browse
 
 ### Contribution workflow
 
-- **Upstream:** `origin` → `https://github.com/yoyocatw/SquashVote` (main repo)
-- **Fork:** `fork` → `https://github.com/SpunkyMartian/SquashVote`
-- **Branch:** `uiux-redesign` (push to fork, PR against origin/main)
-- **CI/CD:** Push to `main` on origin auto-deploys to Fly.io via GitHub Actions
+- **Upstream:** `origin` → `https://github.com/yoyocatw/SquashVote` (main repo, the live site)
+- **Fork:** `fork` → `https://github.com/SpunkyMartian/SquashVote` (PR branches live here)
+- **Branch:** `uiux-redesign` (canonical local dev branch; push topic branches to fork, PR against origin/main)
+- **CI/CD:** Push to `main` on origin auto-deploys to Fly.io via GitHub Actions — so **never merge a partial/broken change**; `main` must always be deployable.
+
+**Open PRs (as of 2026-06-13)** — all independent & mergeable; see `HANDOVER.md`:
+- **#2** `redesign/docs` — docs / design system (docs only)
+- **#3** `redesign/app` — the redesign + tests + review fixes
+- **#4** `fix/comment-user-default` — `default="Anonymous"` FK bug + migration
+- **#5** `fix/moderation-auth` — gate accept/reject video actions (security)
+
+The redesign implementation is **atomic for deploy** (theme/chrome/screens/backend
+depend on each other) — only docs separates cleanly; don't try to split #3 further.
 
 ### Do NOT
 
