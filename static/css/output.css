@@ -2179,6 +2179,9 @@
   .z-50 {
     z-index: 50;
   }
+  .col-span-full {
+    grid-column: 1 / -1;
+  }
   .hero {
     display: grid;
     width: 100%;
@@ -2467,9 +2470,6 @@
   }
   .mb-10 {
     margin-bottom: calc(var(--spacing) * 10);
-  }
-  .mb-32 {
-    margin-bottom: calc(var(--spacing) * 32);
   }
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);

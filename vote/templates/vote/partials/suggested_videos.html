@@ -1,0 +1,33 @@
+<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 w-full bg-base-100">
+  {% for video in videos %}
+    <a 
+      href="{% url 'video_result' pk=video.id slug=video.video_title|slugify %}"
+      aria-label="{{ video.video_title }}"
+      class="card relative bg-base-100 card-xl w-full md:card-xl p-1 transform transition duration-300 ease-in-out hover:scale-105 shadow-lgx">
+      <div class="card-body relative p-3 gap-y-0.5 group">
+        <figure class="w-full aspect-video relative overflow-hidden rounded">
+          <img
+            loading="lazy"
+            src="https://img.youtube.com/vi/{{ video.video_id }}/hqdefault.jpg"
+            alt="{{ video.video_title }}"
+            class="w-full h-full object-cover"
+          />
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-red-600" viewBox="0 0 100 70">
+              <rect width="100" height="70" rx="14" fill="currentColor"/>
+              <polygon points="40,20 40,50 70,35" fill="#fff"/>
+            </svg>
+          </div>
+        </figure>
+        <h2 class="justify-start text-base-content text-xl font-videotitle font-normal break-all w-full truncate text-ellipsis whitespace-nowrap overflow-hidden min-w-0">
+          {{ video.video_title }}
+        </h2>
+        <p class="inline-block font-body">
+          {{ video.result.total_votes|default:"0" }} votes
+        </p>
+      </div>
+    </a>
+  {% empty %}
+    <p class="col-span-full text-center text-gray-500 font-body">You've voted on every clip. Legend.</p>
+  {% endfor %}
+</div>

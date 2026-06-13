@@ -120,10 +120,15 @@ def video_result(request, pk, slug=None):
         session_id=session_id, comment__video__video_id=video.video_id
     ).values_list("comment_id", flat=True)
     
-    voted_video_ids = VoteUser.objects.filter(
-        user=request.user if request.user.is_authenticated else None,
-        session_id=session_id,
-    ).values_list("video_id", flat=True)
+    if request.user.is_authenticated:
+        voted_video_ids = VoteUser.objects.filter(
+            user=request.user
+        ).values_list("video_id", flat=True)
+    else:
+        voted_video_ids = VoteUser.objects.filter(
+            session_id=session_id
+        ).values_list("video_id", flat=True)
+
 
     suggested_videos = (
         Video.objects.filter(is_active=True, needs_review=False)
