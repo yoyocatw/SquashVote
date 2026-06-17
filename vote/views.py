@@ -3,6 +3,7 @@ from .forms import VideoForm, VoteForm, CommentForm
 from .models import Video, VoteUser, Comment, CommentReport, CommentLike
 from django.http import JsonResponse, HttpResponseNotAllowed, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.db.models import Count
 from django.core.paginator import Paginator
 from .utils.youtube_title import get_youtube_title
@@ -213,6 +214,8 @@ def review(request):
     return render(request, "vote/review.html", {"videos": videos})
 
 
+@login_required
+@require_POST
 def accept_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     video.is_active = True
@@ -221,6 +224,8 @@ def accept_video(request, video_id):
     return HttpResponse("Accepted")
 
 
+@login_required
+@require_POST
 def reject_video(request, video_id):
     video = get_object_or_404(Video, id=video_id)
     video.delete()
